@@ -57,65 +57,65 @@ class ModernDialog:
     
     def setup_style(self):
         """Configure le style de la fenêtre."""
-        self.dialog.configure(bg='#2d2d30')
+        self.dialog.configure(bg='#ffffff')
         
         # Couleurs selon le type
         if self.dialog_type == "success":
-            self.accent_color = '#107c10'
+            self.accent_color = '#16a34a'
             self.icon = "✓"
         elif self.dialog_type == "warning":
-            self.accent_color = '#ffb900'
+            self.accent_color = '#ca8a04'
             self.icon = "⚠"
         elif self.dialog_type == "error":
-            self.accent_color = '#d13438'
+            self.accent_color = '#dc2626'
             self.icon = "✗"
         else:
-            self.accent_color = '#0078d4'
+            self.accent_color = '#2563eb'
             self.icon = "ℹ"
     
     def create_widgets(self):
         """Crée les widgets de la fenêtre."""
         # Frame principal
-        main_frame = tk.Frame(self.dialog, bg='#2d2d30', relief='flat', bd=0)
+        main_frame = tk.Frame(self.dialog, bg='#ffffff', relief='flat', bd=0)
         main_frame.pack(fill='both', expand=True, padx=20, pady=20)
         
         # Icône et titre
         icon_label = tk.Label(main_frame, text=self.icon, font=('Segoe UI', 24), 
-                             bg='#2d2d30', fg=self.accent_color)
+                             bg='#ffffff', fg=self.accent_color)
         icon_label.pack(pady=(0, 10))
         
         title_label = tk.Label(main_frame, text=self.title, font=('Segoe UI', 14, 'bold'),
-                              bg='#2d2d30', fg='#ffffff')
+                              bg='#ffffff', fg='#18181b')
         title_label.pack(pady=(0, 15))
         
         # Message
         message_label = tk.Label(main_frame, text=self.message, font=('Segoe UI', 10),
-                                bg='#2d2d30', fg='#cccccc', wraplength=350, justify='center')
+                                bg='#ffffff', fg='#71717a', wraplength=350, justify='center')
         message_label.pack(pady=(0, 25))
         
         # Boutons
-        button_frame = tk.Frame(main_frame, bg='#2d2d30')
+        button_frame = tk.Frame(main_frame, bg='#ffffff')
         button_frame.pack()
         
         if self.dialog_type == "confirm":
             # Boutons Oui/Non
             yes_btn = tk.Button(button_frame, text="Oui", font=('Segoe UI', 10, 'bold'),
-                               bg='#2d2d30', fg=self.accent_color, bd=1, relief='solid',
+                               bg='#f4faff', fg=self.accent_color, bd=1, relief='solid',
                                padx=20, pady=6, command=self.yes_clicked,
-                               activebackground='#3e3e42', activeforeground=self.accent_color)
+                               activebackground='#e0f2fe', activeforeground=self.accent_color)
             yes_btn.pack(side='left', padx=(0, 10))
             
             no_btn = tk.Button(button_frame, text="Non", font=('Segoe UI', 10, 'bold'),
-                              bg='#2d2d30', fg='#999999', bd=1, relief='solid',
+                              bg='#f4faff', fg='#71717a', bd=1, relief='solid',
                               padx=20, pady=6, command=self.no_clicked,
-                              activebackground='#3e3e42', activeforeground='#999999')
+                              activebackground='#e0f2fe', activeforeground='#71717a')
             no_btn.pack(side='left')
         else:
             # Bouton OK
             ok_btn = tk.Button(button_frame, text="OK", font=('Segoe UI', 10, 'bold'),
-                              bg='#2d2d30', fg=self.accent_color, bd=1, relief='solid',
+                              bg='#f4faff', fg=self.accent_color, bd=1, relief='solid',
                               padx=30, pady=6, command=self.ok_clicked,
-                              activebackground='#3e3e42', activeforeground=self.accent_color)
+                              activebackground='#e0f2fe', activeforeground=self.accent_color)
             ok_btn.pack()
     
     def yes_clicked(self):
@@ -191,21 +191,21 @@ class AuditGUI:
         self._setup_widget_styles(style)
     
     def _setup_colors(self):
-        """Configure la palette de couleurs Windows 10 moderne."""
+        """Configure la palette de couleurs moderne claire."""
         self.colors = {
-            'bg_dark': '#2d2d30',      # Fond principal (gris foncé Windows)
-            'bg_medium': '#3e3e42',    # Fond secondaire
-            'bg_light': '#505054',     # Fond clair
-            'text_primary': '#ffffff', # Texte principal
-            'text_secondary': '#cccccc', # Texte secondaire
-            'text_muted': '#999999',   # Texte atténué
-            'accent_blue': '#0078d4',  # Bleu Windows 10
-            'accent_green': '#107c10', # Vert Windows 10
-            'accent_red': '#d13438',   # Rouge Windows 10
-            'accent_yellow': '#ffb900', # Jaune Windows 10
-            'accent_orange': '#ff8c00', # Orange Windows 10
-            'accent_purple': '#5c2d91', # Violet Windows 10
-            'border': '#6b6b6b'        # Bordure
+            'bg_dark': '#ffffff',      # Fond principal - blanc
+            'bg_medium': '#f4faff',    # Surfaces/panneaux - bleu très clair
+            'bg_light': '#ffffff',     # Fond clair - blanc
+            'text_primary': '#18181b', # Texte principal - noir
+            'text_secondary': '#71717a', # Texte secondaire - gris foncé
+            'text_muted': '#a1a1aa',   # Texte atténué - gris moyen
+            'accent_blue': '#2563eb',  # Bleu principal foncé
+            'accent_green': '#16a34a', # Vert succès foncé
+            'accent_red': '#dc2626',   # Rouge erreur foncé
+            'accent_yellow': '#ca8a04', # Jaune avertissement foncé
+            'accent_orange': '#ea580c', # Orange
+            'accent_purple': '#7c3aed', # Violet
+            'border': '#b6c6e3'        # Bordures - gris bleuté clair
         }
     
     def _setup_frame_styles(self, style):
@@ -234,36 +234,36 @@ class AuditGUI:
         """Configure les styles pour les boutons."""
         # Bouton primaire
         style.configure('Primary.TButton',
-                       background=self.colors['bg_medium'],
-                       foreground=self.colors['accent_blue'],
+                       background=self.colors['accent_blue'],
+                       foreground='#ffffff',
                        borderwidth=0,
                        focuscolor='none',
                        font=('Segoe UI', 10, 'bold'),
                        padding=(16, 8))
         style.map('Primary.TButton',
-                 background=[('active', self.colors['bg_light'])])
+                 background=[('active', '#1d4ed8')])
         
         # Bouton succès
         style.configure('Success.TButton',
-                       background=self.colors['bg_medium'],
-                       foreground=self.colors['accent_green'],
+                       background=self.colors['accent_green'],
+                       foreground='#ffffff',
                        borderwidth=0,
                        focuscolor='none',
                        font=('Segoe UI', 10, 'bold'),
                        padding=(16, 8))
         style.map('Success.TButton',
-                 background=[('active', self.colors['bg_light'])])
+                 background=[('active', '#15803d')])
         
         # Bouton danger
         style.configure('Danger.TButton',
-                       background=self.colors['bg_medium'],
-                       foreground=self.colors['accent_red'],
+                       background=self.colors['accent_red'],
+                       foreground='#ffffff',
                        borderwidth=0,
                        focuscolor='none',
                        font=('Segoe UI', 10, 'bold'),
                        padding=(16, 8))
         style.map('Danger.TButton',
-                 background=[('active', self.colors['bg_light'])])
+                 background=[('active', '#b91c1c')])
     
     def _setup_widget_styles(self, style):
         """Configure les styles pour les autres widgets."""
@@ -282,7 +282,7 @@ class AuditGUI:
         
         # Entry
         style.configure('Dark.TEntry',
-                       fieldbackground=self.colors['bg_light'],
+                       fieldbackground='#ffffff',
                        foreground=self.colors['text_primary'],
                        borderwidth=1,
                        relief='solid',
@@ -291,10 +291,10 @@ class AuditGUI:
         
         # Listbox
         style.configure('Dark.TListbox',
-                       background=self.colors['bg_light'],
+                       background='#ffffff',
                        foreground=self.colors['text_primary'],
                        selectbackground=self.colors['accent_blue'],
-                       selectforeground=self.colors['text_primary'],
+                       selectforeground='#ffffff',
                        borderwidth=1,
                        relief='solid',
                        bordercolor=self.colors['border'])
@@ -302,7 +302,7 @@ class AuditGUI:
         # Progressbar
         style.configure('Dark.Horizontal.TProgressbar',
                        background=self.colors['accent_blue'],
-                       troughcolor=self.colors['bg_light'],
+                       troughcolor='#e2e8f0',
                        borderwidth=0)
     
     def create_widgets(self):
@@ -417,11 +417,11 @@ class AuditGUI:
             logs_frame, 
             wrap=tk.WORD, 
             font=('Consolas', 9),
-            bg=self.colors['bg_light'],
+            bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
             selectbackground=self.colors['accent_blue'],
-            selectforeground=self.colors['text_primary'],
+            selectforeground='#ffffff',
             relief='flat',
             borderwidth=1,
             highlightthickness=1,
@@ -450,10 +450,10 @@ class AuditGUI:
         self.recent_listbox = tk.Listbox(
             recent_frame, 
             height=3,
-            bg=self.colors['bg_light'],
+            bg='#ffffff',
             fg=self.colors['text_primary'],
             selectbackground=self.colors['accent_blue'],
-            selectforeground=self.colors['text_primary'],
+            selectforeground='#ffffff',
             relief='flat',
             borderwidth=1,
             highlightthickness=1,
@@ -495,7 +495,7 @@ class AuditGUI:
         
         # Indicateur circulaire
         self.ai_indicator = tk.Canvas(ai_frame, width=20, height=20, 
-                                     bg=self.colors['bg_dark'], 
+                                     bg=self.colors['bg_medium'], 
                                      highlightthickness=0, relief='flat')
         self.ai_indicator.pack(side='left', padx=(0, 8))
         
@@ -549,7 +549,7 @@ class AuditGUI:
             tooltip.wm_geometry(f"+{event.x_root+10}+{event.y_root+10}")
             
             label = tk.Label(tooltip, text=tooltip_text, 
-                           bg=self.colors['bg_light'], 
+                           bg='#ffffff', 
                            fg=self.colors['text_primary'],
                            font=('Segoe UI', 9),
                            relief='solid', borderwidth=1)
@@ -581,11 +581,11 @@ class AuditGUI:
             viz_frame,
             wrap=tk.WORD,
             font=('Consolas', 10),
-            bg=self.colors['bg_light'],
+            bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
             selectbackground=self.colors['accent_blue'],
-            selectforeground=self.colors['text_primary'],
+            selectforeground='#ffffff',
             relief='flat',
             borderwidth=1,
             highlightthickness=1,
