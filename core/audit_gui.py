@@ -525,46 +525,32 @@ class AuditGUI:
         """Crée la section d'actions principales simplifiée."""
         main_frame = ttk.LabelFrame(parent, text="Actions Principales", style='Dark.TLabelframe', padding="8")
         main_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(0, 12))
-        main_frame.columnconfigure(1, weight=1)
+        main_frame.columnconfigure(0, weight=1)
         
-        # Sélection de projet
-        ttk.Label(main_frame, text="Projet:", style='Subtitle.TLabel').grid(row=0, column=0, sticky=tk.W, padx=(0, 12))
+        # Menu pour ajouter un projet
+        menu_frame = ttk.Frame(main_frame, style='Dark.TFrame')
+        menu_frame.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=(0, 8))
         
-        self.project_entry = ttk.Entry(main_frame, textvariable=self.selected_project, style='Dark.TEntry')
-        self.project_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=(0, 8))
+        add_project_btn = tk.Button(menu_frame, text="➕ Ajouter un projet", 
+                                   command=self.show_add_project_menu,
+                                   bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                                   relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=6,
+                                   activebackground='#f0f9ff', activeforeground='#1d4ed8')
+        add_project_btn.pack(side='left')
+        ButtonAnimator.add_hover_effects(add_project_btn, "Ajouter un nouveau projet à auditer")
         
-        browse_btn = tk.Button(main_frame, text="📂", command=self.browse_project, 
-                              bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                              relief='solid', borderwidth=1, cursor='hand2', padx=4, pady=2,
-                              activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        browse_btn.grid(row=0, column=2, padx=(0, 8))
-        ButtonAnimator.add_hover_effects(browse_btn, "Sélectionner un dossier de projet")
-        
-        # Boutons d'action principaux
-        actions_frame = ttk.Frame(main_frame, style='Dark.TFrame')
-        actions_frame.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(12, 0))
-        
-        # Bouton Audit principal
-        self.audit_btn = tk.Button(actions_frame, text="🔍 Audit", 
-                                   command=self.run_audit,
-                                   bg='#ffffff', fg='#10b981', font=('Inter', 9, 'bold'),
-                                   relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=4,
-                                   activebackground='#f0fdf4', activeforeground='#059669')
-        self.audit_btn.pack(side='left', padx=(0, 6))
-        ButtonAnimator.add_hover_effects(self.audit_btn, "Démarrer l'analyse complète du projet")
-        
-        # Bouton Stop
-        self.stop_btn = tk.Button(actions_frame, text="⏹️", 
+        # Bouton Stop uniquement
+        self.stop_btn = tk.Button(menu_frame, text="⏹️ Arrêter", 
                                   command=self.stop_audit,
-                                  bg='#ffffff', fg='#ef4444', font=('Inter', 9, 'bold'),
-                                  relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=4,
+                                  bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
+                                  relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=6,
                                   activebackground='#fef2f2', activeforeground='#dc2626')
-        self.stop_btn.pack(side='left', padx=(0, 6))
+        self.stop_btn.pack(side='right')
         ButtonAnimator.add_hover_effects(self.stop_btn, "Interrompre l'audit en cours")
         
         # Informations du projet
-        self.project_info_label = ttk.Label(main_frame, text="Aucun projet sélectionné", style='Info.TLabel')
-        self.project_info_label.grid(row=2, column=0, columnspan=3, sticky=tk.W, pady=(8, 0))
+        self.project_info_label = ttk.Label(main_frame, text="Sélectionnez un projet dans le tableau pour voir les détails", style='Info.TLabel')
+        self.project_info_label.grid(row=1, column=0, sticky=tk.W, pady=(8, 0))
     
     def create_projects_table_section(self, parent):
         """Crée le tableau des projets avec rapports."""
@@ -621,6 +607,36 @@ class AuditGUI:
             print(f"Erreur lors du chargement du tableau: {e}")
             # Créer un tableau vide en cas d'erreur
             pass
+    
+    def show_add_project_menu(self):
+        """Affiche le menu pour ajouter un projet."""
+        project_path = filedialog.askdirectory(
+            title="Sélectionner le dossier du projet à auditer",
+            initialdir=os.path.expanduser("~")
+        )
+        
+        if project_path:
+            # Ajouter le projet à la liste
+            self.add_recent_project(project_path)
+            
+            # Sélectionner automatiquement le nouveau projet
+            self.selected_project.set(project_path)
+            self.update_project_info()
+            
+            self.log_message(f"✅ Projet ajouté: {Path(project_path).name}")
+    
+    def run_audit_for_project(self, project_path):
+        """Lance l'audit pour un projet spécifique."""
+        if self.project_running:
+            ModernDialog(self.root, "Information", "Un audit est déjà en cours.", "info")
+            return
+        
+        # Sélectionner le projet
+        self.selected_project.set(project_path)
+        self.update_project_info()
+        
+        # Lancer l'audit
+        self.run_audit()
     
     def create_logs_section(self, parent):
         """Crée la section des logs."""
@@ -701,7 +717,7 @@ class AuditGUI:
                             item_id = self.projects_tree.insert('', 'end', values=(
                                 project_name,
                                 last_audit,
-                                "📄 📂"
+                                "🔍 📄 📂"
                             ))
                             
                             # Stocker le chemin complet dans les tags
@@ -753,10 +769,21 @@ class AuditGUI:
                     project_path = self.projects_tree.set(item, 'project')
                     if project_path:
                         self.show_project_actions_menu(event, project_path)
+            elif column == '#1':  # Colonne Projet
+                # Sélectionner le projet
+                selection = self.projects_tree.selection()
+                if selection:
+                    item = selection[0]
+                    project_path = self.projects_tree.set(item, 'project')
+                    if project_path:
+                        self.selected_project.set(project_path)
+                        self.update_project_info()
     
     def show_project_actions_menu(self, event, project_path):
         """Affiche le menu d'actions pour un projet."""
         menu = tk.Menu(self.root, tearoff=0)
+        menu.add_command(label="🔍 Lancer Audit", command=lambda: self.run_audit_for_project(project_path))
+        menu.add_separator()
         menu.add_command(label="📄 Voir Rapport", command=lambda: self.load_report_for_project(project_path))
         menu.add_command(label="📂 Ouvrir Dossier", command=lambda: self.open_project_folder(project_path))
         menu.add_separator()
@@ -903,17 +930,7 @@ Bienvenue dans le panneau de visualisation !
         self.viz_text.insert(tk.END, welcome_text)
         self.viz_text.config(state=tk.DISABLED)
     
-    def browse_project(self):
-        """Ouvre le dialogue de sélection de dossier."""
-        project_path = filedialog.askdirectory(
-            title="Sélectionner le dossier du projet",
-            initialdir=os.path.expanduser("~")
-        )
-        
-        if project_path:
-            self.selected_project.set(project_path)
-            self.update_project_info()
-            self.add_recent_project(project_path)
+
     
     def update_project_info(self):
         """Met à jour les informations du projet."""
@@ -959,7 +976,6 @@ Bienvenue dans le panneau de visualisation !
         self.project_running = True
         self.audit_stopped = False
         
-        self.audit_btn.config(state='disabled')
         self.progress.start()
         self.status_var.set("Audit en cours...")
         
@@ -1061,7 +1077,6 @@ Bienvenue dans le panneau de visualisation !
         self.project_running = False
         self.audit_stopped = False
         
-        self.audit_btn.config(state='normal')
         self.progress.stop()
     
     def view_report(self):
