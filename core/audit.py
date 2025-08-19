@@ -402,15 +402,9 @@ class UniversalAuditor:
         print(f"   - {latest_report}")
         print(f"   - {latest_html}")
         
-        # Ouvrir automatiquement le rapport HTML
-        try:
-            import webbrowser
-            print(f"\n🌐 Ouverture automatique du rapport HTML...")
-            webbrowser.open(f"file://{html_file.absolute()}")
-            print(f"✅ Rapport HTML ouvert dans le navigateur")
-        except Exception as e:
-            print(f"⚠️ Impossible d'ouvrir le rapport HTML automatiquement: {e}")
-            print(f"   Ouvrez manuellement: {html_file}")
+        # Informer sur le rapport HTML généré
+        print(f"\n📄 Rapport HTML généré: {html_file}")
+        print(f"   Ouvrez le fichier manuellement si nécessaire")
         
         # Nettoyage automatique après l'audit
         await self._run_automatic_cleanup()

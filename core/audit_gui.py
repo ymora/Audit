@@ -874,7 +874,7 @@ Bienvenue dans le panneau de visualisation !
                 # Mettre à jour les informations
                 self.root.after(0, self.update_project_info)
                 
-                # Charger automatiquement le rapport
+                # Charger automatiquement le rapport dans la visualisation
                 if not self.audit_stopped:
                     self.root.after(0, self.load_report)
                     
@@ -945,27 +945,15 @@ Bienvenue dans le panneau de visualisation !
                 with open(report_path, 'r', encoding='utf-8') as f:
                     html_content = f.read()
                 
-                # Convertir HTML en texte
-                text_content = self.html_to_text(html_content)
-                
-                # Afficher dans la visualisation
+                # Afficher le HTML directement dans la visualisation
                 self.viz_text.config(state=tk.NORMAL)
                 self.viz_text.delete(1.0, tk.END)
                 self.viz_text.insert(tk.END, f"📄 RAPPORT D'AUDIT - {project_path.name}\n")
                 self.viz_text.insert(tk.END, "=" * 60 + "\n\n")
-                self.viz_text.insert(tk.END, text_content)
+                self.viz_text.insert(tk.END, html_content)
                 self.viz_text.config(state=tk.DISABLED)
                 
-                self.log_message(f"📄 Rapport chargé: {report_path}")
-                
-                # Ouvrir automatiquement le rapport HTML dans le navigateur
-                try:
-                    import webbrowser
-                    self.log_message("🌐 Ouverture du rapport HTML dans le navigateur...")
-                    webbrowser.open(f"file://{report_path.absolute()}")
-                    self.log_message("✅ Rapport HTML ouvert dans le navigateur")
-                except Exception as e:
-                    self.log_message(f"⚠️ Impossible d'ouvrir le rapport HTML: {e}")
+                self.log_message(f"📄 Rapport HTML chargé dans la visualisation: {report_path}")
                 
             except Exception as e:
                 self.log_message(f"❌ Erreur lors du chargement: {e}")
@@ -973,26 +961,7 @@ Bienvenue dans le panneau de visualisation !
         else:
             ModernDialog(self.root, "Attention", "Aucun rapport HTML trouvé.", "warning")
     
-    def html_to_text(self, html_content):
-        """Convertit le HTML en texte lisible."""
-        import re
-        
-        # Supprimer les balises HTML
-        text = re.sub(r'<[^>]+>', '', html_content)
-        
-        # Nettoyer les espaces
-        text = re.sub(r'\s+', ' ', text)
-        
-        # Remplacer les entités HTML
-        text = text.replace('&nbsp;', ' ')
-        text = text.replace('&lt;', '<')
-        text = text.replace('&gt;', '>')
-        text = text.replace('&amp;', '&')
-        
-        # Formater les sections
-        text = re.sub(r'([A-Z][A-Z\s]+:)', r'\n\n\1', text)
-        
-        return text.strip()
+
     
     def refresh_viz(self):
         """Actualise la visualisation."""
