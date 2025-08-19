@@ -926,7 +926,9 @@ Bienvenue dans le panneau de visualisation !
                     self.html_frame.destroy()
                 
                 self.html_frame = tk.Frame(self.viz_frame, bg=self.colors['bg_light'])
-                self.html_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+                self.html_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=10, pady=10)
+                self.viz_frame.columnconfigure(0, weight=1)
+                self.viz_frame.rowconfigure(0, weight=1)
                 
                 # Créer un fichier temporaire pour le HTML
                 import tempfile
@@ -942,7 +944,9 @@ Bienvenue dans le panneau de visualisation !
                     import tkinterweb
                     webview = tkinterweb.HtmlFrame(self.html_frame)
                     webview.load_html(html_content)
-                    webview.pack(fill=tk.BOTH, expand=True)
+                    webview.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+                    self.html_frame.columnconfigure(0, weight=1)
+                    self.html_frame.rowconfigure(0, weight=1)
                 except ImportError:
                     # Fallback: afficher le HTML dans un widget Text avec balises
                     html_text = tk.Text(self.html_frame, 
@@ -951,17 +955,17 @@ Bienvenue dans le panneau de visualisation !
                                        font=('Consolas', 10),
                                        wrap=tk.WORD,
                                        padx=10, pady=10)
-                    html_text.pack(fill=tk.BOTH, expand=True)
+                    html_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+                    
+                    # Ajouter une scrollbar
+                    scrollbar = ttk.Scrollbar(self.html_frame, orient=tk.VERTICAL, command=html_text.yview)
+                    scrollbar.grid(row=0, column=1, sticky=(tk.N, tk.S))
+                    html_text.configure(yscrollcommand=scrollbar.set)
                     
                     # Insérer le HTML avec formatage basique
                     html_text.insert(tk.END, f"📄 RAPPORT D'AUDIT - {project_path.name}\n")
                     html_text.insert(tk.END, "=" * 60 + "\n\n")
                     html_text.insert(tk.END, html_content)
-                    
-                    # Ajouter une scrollbar
-                    scrollbar = ttk.Scrollbar(self.html_frame, orient=tk.VERTICAL, command=html_text.yview)
-                    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-                    html_text.configure(yscrollcommand=scrollbar.set)
                     
                     # Désactiver l'édition
                     html_text.config(state=tk.DISABLED)
@@ -993,7 +997,7 @@ Bienvenue dans le panneau de visualisation !
                                font=('Inter', 12),
                                wrap=tk.WORD,
                                padx=10, pady=10)
-        self.viz_text.pack(fill=tk.BOTH, expand=True)
+        self.viz_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         welcome_text = """🔍 SYSTÈME D'AUDIT UNIVERSEL
 
