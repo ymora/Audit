@@ -25,7 +25,7 @@ from collections import defaultdict
 class CodeAnalyzer:
     def __init__(self, project_dir: Path = None, audit_dir: Path = None):
         self.project_dir = project_dir or Path(__file__).resolve().parent.parent.parent
-        self.audit_dir = audit_dir or Path(__file__).resolve().parent.parent
+        self.project_dir = audit_dir or Path(__file__).resolve().parent.parent
         self.rules = self.load_rules()
         self.excluded_patterns = self.load_excluded_patterns()
         self.quality_standards = self.load_quality_standards()
@@ -38,7 +38,7 @@ class CodeAnalyzer:
         
     def load_rules(self) -> Dict[str, Any]:
         """Charge les règles d'audit."""
-        rules_file = self.audit_dir / "rules" / "audit_rules.json"
+        rules_file = self.project_dir / "rules" / "audit_rules.json"
         try:
             with open(rules_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
@@ -48,7 +48,7 @@ class CodeAnalyzer:
     
     def load_excluded_patterns(self) -> Dict[str, Any]:
         """Charge les patterns à exclure."""
-        patterns_file = self.audit_dir / "rules" / "excluded_patterns.json"
+        patterns_file = self.project_dir / "rules" / "excluded_patterns.json"
         try:
             with open(patterns_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
@@ -58,7 +58,7 @@ class CodeAnalyzer:
     
     def load_quality_standards(self) -> Dict[str, Any]:
         """Charge les standards de qualité."""
-        standards_file = self.audit_dir / "rules" / "quality_standards.json"
+        standards_file = self.project_dir / "rules" / "quality_standards.json"
         try:
             with open(standards_file, 'r', encoding='utf-8') as f:
                 return json.load(f)

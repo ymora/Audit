@@ -34,7 +34,7 @@ class SecurityChecker:
         log_file: str | None = None,
     ):
         self.project_dir = project_dir or Path(__file__).resolve().parent.parent.parent
-        self.audit_dir = audit_dir or Path(__file__).resolve().parent.parent
+        self.project_dir = audit_dir or Path(__file__).resolve().parent.parent
         self.include_pyi = include_pyi
         self.include_configs = include_configs
         self.include_shell = include_shell

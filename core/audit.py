@@ -30,7 +30,7 @@ class UniversalAuditor:
     
     def __init__(self, project_path: Path):
         self.project_path = project_path
-        self.audit_dir = Path(__file__).parent
+        self.project_dir = Path(__file__).parent
         self.project_name = self._detect_project_name()
         self.project_type = self._detect_project_type()
         self.config = self._load_project_config()
@@ -85,7 +85,7 @@ class UniversalAuditor:
     
     def _setup_project_audit_structure(self) -> Path:
         """Configure la structure d'audit dans le projet."""
-        project_audit_dir = self.project_path / ".audit"
+        project_audit_dir = self.project_path / ".project"
         
         # Créer la structure de dossiers
         directories = [
@@ -100,14 +100,14 @@ class UniversalAuditor:
             directory.mkdir(parents=True, exist_ok=True)
         
         # Copier la configuration du projet si elle existe
-        source_config = self.audit_dir / "projects" / self.project_name / "config.json"
+        source_config = self.project_dir / "projects" / self.project_name / "config.json"
         target_config = project_audit_dir / "config" / "project_config.json"
         
         if source_config.exists():
             shutil.copy2(source_config, target_config)
         
         # Copier les tests spécifiques au projet
-        source_tests_dir = self.audit_dir / "projects" / self.project_name / "tests"
+        source_tests_dir = self.project_dir / "projects" / self.project_name / "tests"
         target_tests_dir = project_audit_dir / "tests"
         
         if source_tests_dir.exists():
@@ -119,10 +119,10 @@ class UniversalAuditor:
     def _load_project_config(self) -> Dict[str, Any]:
         """Charge la configuration spécifique au projet."""
         # Priorité 1: Configuration dans le projet
-        project_config_path = self.project_path / ".audit" / "config" / "project_config.json"
+        project_config_path = self.project_path / ".project" / "config" / "project_config.json"
         
         # Priorité 2: Configuration dans le système d'audit
-        audit_config_path = self.audit_dir / "projects" / self.project_name / "config.json"
+        audit_config_path = self.project_dir / "projects" / self.project_name / "config.json"
         
         if project_config_path.exists():
             with open(project_config_path, 'r', encoding='utf-8') as f:
@@ -190,7 +190,7 @@ class UniversalAuditor:
         project_tests_dir = self.project_audit_dir / "tests"
         
         # Priorité 2: Tests dans le système d'audit
-        audit_tests_dir = self.audit_dir / "projects" / self.project_name / "tests"
+        audit_tests_dir = self.project_dir / "projects" / self.project_name / "tests"
         
         tests = []
         
@@ -214,7 +214,7 @@ class UniversalAuditor:
         project_test_path = self.project_audit_dir / "tests" / f"{test_name}.py"
         
         # Priorité 2: Test dans le système d'audit
-        audit_test_path = self.audit_dir / "projects" / self.project_name / "tests" / f"{test_name}.py"
+        audit_test_path = self.project_dir / "projects" / self.project_name / "tests" / f"{test_name}.py"
         
         test_path = None
         if project_test_path.exists():
@@ -335,7 +335,7 @@ class UniversalAuditor:
         print(f"🔍 Exécution de l'audit générique pour {self.project_type}...")
         
         # Charger les outils d'audit génériques
-        generic_audit_path = self.audit_dir / "tools" / "generic_auditor.py"
+        generic_audit_path = self.project_dir / "tools" / "generic_auditor.py"
         
         if generic_audit_path.exists():
             try:

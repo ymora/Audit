@@ -39,7 +39,7 @@ class AuditOrganizer:
     """Système d'auto-organisation du dossier audit."""
     
     def __init__(self, audit_dir: Path):
-        self.audit_dir = audit_dir
+        self.project_dir = audit_dir
         self.structure = {
             "tools": ["code_analyzer.py", "security_checker.py", "dead_code_detector.py", "incomplete_implementation_detector.py"],
             "scripts": [],
@@ -54,7 +54,7 @@ class AuditOrganizer:
         
         # 1. Créer les dossiers essentiels
         for folder in self.structure.keys():
-            folder_path = self.audit_dir / folder
+            folder_path = self.project_dir / folder
             folder_path.mkdir(exist_ok=True)
             print(f"  ✅ Dossier {folder}")
         
@@ -62,7 +62,7 @@ class AuditOrganizer:
         for folder, subfolders in self.structure.items():
             if isinstance(subfolders, list) and folder in ["reports", "logs"]:
                 for subfolder in subfolders:
-                    subfolder_path = self.audit_dir / folder / subfolder
+                    subfolder_path = self.project_dir / folder / subfolder
                     subfolder_path.mkdir(exist_ok=True)
                     print(f"  ✅ Sous-dossier {folder}/{subfolder}")
         
@@ -83,7 +83,7 @@ class AuditOrganizer:
         
         # Déplacer les fichiers selon leur type
         orphaned_files = []
-        for file_path in self.audit_dir.iterdir():
+        for file_path in self.project_dir.iterdir():
             if file_path.is_file() and file_path.name != "Audit IA.py":
                 orphaned_files.append(file_path)
         
@@ -98,13 +98,13 @@ class AuditOrganizer:
                     script_name.startswith("test_") or
                     script_name.endswith("_analysis.py")
                 )
-                target_dir = self.audit_dir / ("scripts" if script_patterns else "tools")
+                target_dir = self.project_dir / ("scripts" if script_patterns else "tools")
                 if not (target_dir / file_path.name).exists():
                     shutil.move(str(file_path), str(target_dir / file_path.name))
                     print(f"    📁 Déplacé {file_path.name} vers {target_dir.name}/")
             
             elif file_path.suffix == '.json':
-                target_dir = self.audit_dir / "rules"
+                target_dir = self.project_dir / "rules"
                 if not (target_dir / file_path.name).exists():
                     shutil.move(str(file_path), str(target_dir / file_path.name))
                     print(f"    📁 Déplacé {file_path.name} vers rules/")
@@ -120,7 +120,7 @@ class AuditOrganizer:
         
         cache_patterns = ["__pycache__", "*.pyc", "*.pyo"]
         for pattern in cache_patterns:
-            for cache_path in self.audit_dir.rglob(pattern):
+            for cache_path in self.project_dir.rglob(pattern):
                 if cache_path.is_dir():
                     shutil.rmtree(cache_path, ignore_errors=True)
                     print(f"    🗑️ Supprimé {cache_path}")
@@ -136,13 +136,13 @@ class AuditOrganizer:
         
         # Vérifier les outils
         for tool in self.structure["tools"]:
-            tool_path = self.audit_dir / "tools" / tool
+            tool_path = self.project_dir / "tools" / tool
             if not tool_path.exists():
                 missing_files.append(f"tools/{tool}")
         
         # Vérifier les règles
         for rule in self.structure["rules"]:
-            rule_path = self.audit_dir / "rules" / rule
+            rule_path = self.project_dir / "rules" / rule
             if not rule_path.exists():
                 missing_files.append(f"rules/{rule}")
         
@@ -156,7 +156,7 @@ class AuditOrganizer:
         print("  📋 Nettoyage des rapports...")
         
         # 1) Garder seulement les 2 derniers rapports dans latest
-        latest_dir = self.audit_dir / "reports" / "latest"
+        latest_dir = self.project_dir / "reports" / "latest"
         if latest_dir.exists():
             reports = list(latest_dir.glob("*.json"))
             reports.extend(list(latest_dir.glob("*.md")))
@@ -167,13 +167,13 @@ class AuditOrganizer:
                 reports.sort(key=lambda x: x.stat().st_mtime)
                 
                 # Déplacer les anciens vers archive
-                archive_dir = self.audit_dir / "reports" / "archive"
+                archive_dir = self.project_dir / "reports" / "archive"
                 for old_report in reports[:-2]:
                     shutil.move(str(old_report), str(archive_dir / old_report.name))
                     print(f"    📁 Archivé {old_report.name}")
 
         # 2) Ne garder que les 2 plus récents dans archive
-        archive_dir = self.audit_dir / "reports" / "archive"
+        archive_dir = self.project_dir / "reports" / "archive"
         if archive_dir.exists():
             archived = list(archive_dir.glob("*.json")) + list(archive_dir.glob("*.md")) + list(archive_dir.glob("*.html"))
             if len(archived) > 2:
@@ -190,7 +190,7 @@ class AuditOrganizer:
         print("  📝 Nettoyage des logs...")
         
         # 1) Garder seulement les 10 derniers logs dans current
-        current_dir = self.audit_dir / "logs" / "current"
+        current_dir = self.project_dir / "logs" / "current"
         if current_dir.exists():
             logs = list(current_dir.glob("*.log"))
             
@@ -198,13 +198,13 @@ class AuditOrganizer:
                 logs.sort(key=lambda x: x.stat().st_mtime)
                 
                 # Déplacer les anciens vers archive
-                archive_dir = self.audit_dir / "logs" / "archive"
+                archive_dir = self.project_dir / "logs" / "archive"
                 for old_log in logs[:-10]:
                     shutil.move(str(old_log), str(archive_dir / old_log.name))
                     print(f"    📁 Archivé {old_log.name}")
 
         # 2) Ne garder que les 2 plus récents dans archive
-        archive_dir = self.audit_dir / "logs" / "archive"
+        archive_dir = self.project_dir / "logs" / "archive"
         if archive_dir.exists():
             archived_logs = list(archive_dir.glob("*.log"))
             if len(archived_logs) > 2:
@@ -219,20 +219,20 @@ class AuditOrganizer:
 class AuditIA:
     def __init__(self):
         self.project_dir = Path(__file__).resolve().parent.parent
-        self.audit_dir = Path(__file__).resolve().parent
+        self.project_dir = Path(__file__).resolve().parent
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
         # Initialiser l'organisateur
-        self.organizer = AuditOrganizer(self.audit_dir)
+        self.organizer = AuditOrganizer(self.project_dir)
         
         # Organiser la structure avant tout
         self.organizer.organize_structure()
         
         # Initialiser les analyseurs
-        self.code_analyzer = CodeAnalyzer(self.project_dir, self.audit_dir)
-        self.security_checker = SecurityChecker(self.project_dir, self.audit_dir)
-        self.dead_code_detector = DeadCodeDetector(self.project_dir, self.audit_dir)
-        self.incomplete_implementation_detector = IncompleteImplementationDetector(self.project_dir, self.audit_dir)
+        self.code_analyzer = CodeAnalyzer(self.project_dir, self.project_dir)
+        self.security_checker = SecurityChecker(self.project_dir, self.project_dir)
+        self.dead_code_detector = DeadCodeDetector(self.project_dir, self.project_dir)
+        self.incomplete_implementation_detector = IncompleteImplementationDetector(self.project_dir, self.project_dir)
     
     async def run_full_audit(self):
         """Exécute un audit complet du projet."""
@@ -482,19 +482,19 @@ class AuditIA:
         }
         
         # Sauvegarder le rapport JSON
-        report_file = self.audit_dir / "reports" / "latest" / f"audit_{self.timestamp}.json"
+        report_file = self.project_dir / "reports" / "latest" / f"audit_{self.timestamp}.json"
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, ensure_ascii=False)
         
         # Générer le rapport Markdown
         markdown_report = self.generate_markdown_report(report)
-        markdown_file = self.audit_dir / "reports" / "latest" / f"audit_{self.timestamp}.md"
+        markdown_file = self.project_dir / "reports" / "latest" / f"audit_{self.timestamp}.md"
         with open(markdown_file, 'w', encoding='utf-8') as f:
             f.write(markdown_report)
         
         # Générer le rapport HTML pour visualisation
         html_report = self.generate_html_report(report)
-        html_file = self.audit_dir / "reports" / "latest" / f"audit_{self.timestamp}.html"
+        html_file = self.project_dir / "reports" / "latest" / f"audit_{self.timestamp}.html"
         with open(html_file, 'w', encoding='utf-8') as f:
             f.write(html_report)
         
@@ -828,7 +828,7 @@ Le rapport complet est disponible au format JSON : `audit_{self.timestamp}.json`
             font-size: 1.2em;
         }}
         
-        .audit-process-section {{
+        .project-process-section {{
             margin-bottom: 50px;
         }}
         

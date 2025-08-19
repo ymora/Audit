@@ -27,8 +27,8 @@ class AuditGUI:
         
         # Variables
         self.selected_project = tk.StringVar()
-        self.audit_running = False
-        self.audit_dir = Path(__file__).parent
+        self.project_running = False
+        self.project_dir = Path(__file__).parent
         
         # Configuration du style
         self.setup_styles()
@@ -114,9 +114,9 @@ class AuditGUI:
         actions_frame.grid(row=2, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 10))
         
         # Boutons d'action
-        self.audit_btn = ttk.Button(actions_frame, text="🔍 Lancer l'Audit", 
+        self.project_btn = ttk.Button(actions_frame, text="🔍 Lancer l'Audit", 
                                    command=self.run_audit, style='Accent.TButton')
-        self.audit_btn.grid(row=0, column=0, padx=(0, 10))
+        self.project_btn.grid(row=0, column=0, padx=(0, 10))
         
         self.open_report_btn = ttk.Button(actions_frame, text="📄 Ouvrir Rapport", 
                                          command=self.open_latest_report, state='disabled')
@@ -211,7 +211,7 @@ class AuditGUI:
             return
         
         # Vérifier si c'est un projet avec audit
-        audit_dir = project_path / ".audit"
+        audit_dir = project_path / ".project"
         if audit_dir.exists():
             # Compter les rapports
             reports_dir = audit_dir / "reports"
@@ -243,7 +243,7 @@ class AuditGUI:
             messagebox.showwarning("Attention", "Veuillez sélectionner un projet.")
             return
         
-        if self.audit_running:
+        if self.project_running:
             messagebox.showinfo("Information", "Un audit est déjà en cours.")
             return
         
@@ -253,8 +253,8 @@ class AuditGUI:
             return
         
         # Lancer l'audit dans un thread séparé
-        self.audit_running = True
-        self.audit_btn.config(state='disabled')
+        self.project_running = True
+        self.project_btn.config(state='disabled')
         self.progress.start()
         self.status_var.set("Audit en cours...")
         
@@ -273,7 +273,7 @@ class AuditGUI:
             
             # Lancer l'audit
             result = subprocess.run([
-                sys.executable, str(self.audit_dir / "universal_auditor.py"),
+                sys.executable, str(self.project_dir / "universal_auditor.py"),
                 project_path
             ], capture_output=True, text=True, encoding='utf-8')
             
@@ -309,8 +309,8 @@ class AuditGUI:
     
     def _audit_finished(self):
         """Appelé quand l'audit est terminé."""
-        self.audit_running = False
-        self.audit_btn.config(state='normal')
+        self.project_running = False
+        self.project_btn.config(state='normal')
         self.progress.stop()
     
     def ask_open_report(self):
@@ -321,7 +321,7 @@ class AuditGUI:
     def open_latest_report(self):
         """Ouvre le dernier rapport HTML."""
         project_path = Path(self.selected_project.get())
-        report_path = project_path / ".audit" / "reports" / "latest_report.html"
+        report_path = project_path / ".project" / "reports" / "latest_report.html"
         
         if report_path.exists():
             try:
@@ -335,7 +335,7 @@ class AuditGUI:
     def open_audit_folder(self):
         """Ouvre le dossier d'audit du projet."""
         project_path = Path(self.selected_project.get())
-        audit_path = project_path / ".audit"
+        audit_path = project_path / ".project"
         
         if audit_path.exists():
             try:
@@ -380,7 +380,7 @@ class AuditGUI:
     
     def load_recent_projects(self):
         """Charge la liste des projets récents."""
-        config_file = self.audit_dir / "gui_config.json"
+        config_file = self.project_dir / "gui_config.json"
         
         if config_file.exists():
             try:
@@ -396,7 +396,7 @@ class AuditGUI:
     
     def save_recent_projects(self):
         """Sauvegarde la liste des projets récents."""
-        config_file = self.audit_dir / "gui_config.json"
+        config_file = self.project_dir / "gui_config.json"
         
         try:
             recent_projects = list(self.recent_listbox.get(0, tk.END))

@@ -18,7 +18,7 @@ class IncompleteImplementationDetector:
     
     def __init__(self, project_dir: Path, audit_dir: Path):
         self.project_dir = project_dir
-        self.audit_dir = audit_dir
+        self.project_dir = audit_dir
         self.excluded_patterns = [
             r'__pycache__',
             r'\.git',

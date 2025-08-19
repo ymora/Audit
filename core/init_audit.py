@@ -143,7 +143,7 @@ def init_audit_in_project(project_path: Path, audit_dir: Path) -> bool:
         print()
         
         # Créer la structure d'audit dans le projet
-        project_audit_dir = project_path / ".audit"
+        project_audit_dir = project_path / ".project"
         
         directories = [
             project_audit_dir,
@@ -235,7 +235,7 @@ Ce dossier contient la configuration et les rapports d'audit pour le projet {pro
 
 ### Exécuter l'audit depuis le projet
 ```bash
-python .audit/run_audit.py
+python .project/run_audit.py
 ```
 
 ### Exécuter l'audit depuis le système central

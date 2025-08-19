@@ -91,7 +91,7 @@ def demo_audit_ligne_commande():
         
         if success:
             print_step(3, "Vérification des rapports")
-            audit_dir = current_project / ".audit"
+            audit_dir = current_project / ".project"
             if audit_dir.exists():
                 reports_dir = audit_dir / "reports"
                 if reports_dir.exists():
@@ -136,7 +136,7 @@ def demo_migration():
     
     if success:
         print("✅ Migration terminée avec succès!")
-        print("📊 Vérifiez le dossier .audit/ pour voir les fichiers migrés.")
+        print("📊 Vérifiez le dossier .project/ pour voir les fichiers migrés.")
 
 def demo_types_projets():
     """Démonstration des types de projets supportés."""

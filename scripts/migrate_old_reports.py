@@ -21,7 +21,7 @@ def migrate_old_reports(audit_dir: Path, project_path: Path):
     print()
     
     # Créer le dossier d'audit dans le projet s'il n'existe pas
-    project_audit_dir = project_path / ".audit"
+    project_audit_dir = project_path / ".project"
     project_audit_dir.mkdir(parents=True, exist_ok=True)
     
     # Migrer les rapports
