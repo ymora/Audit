@@ -27,7 +27,7 @@ def main():
     print("\n2️⃣ Relance de l'audit complet...")
     try:
         result = subprocess.run([
-            sys.executable, "Audit IA.py"
+            sys.executable, "audit.py"
         ], cwd=Path("."), capture_output=True, text=True, timeout=300)
         
         if result.returncode == 0:

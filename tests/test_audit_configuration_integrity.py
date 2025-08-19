@@ -105,7 +105,7 @@ def test_main_audit_script():
     """Test du script principal d'audit"""
     print("\n🔍 Test du script principal d'audit...")
     
-    main_script = "Audit IA.py"
+    main_script = "audit.py"
     if not Path(main_script).exists():
         print(f"  ❌ {main_script} manquant")
         return False
