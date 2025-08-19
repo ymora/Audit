@@ -278,12 +278,12 @@ class AuditGUI:
         style.configure('Subtitle.TLabel', 
                        background=self.colors['bg_medium'], 
                        foreground=self.colors['text_secondary'],
-                       font=('Inter', 14, 'medium'))
+                       font=('Inter', 12, 'medium'))
         
         style.configure('Info.TLabel',
                        background=self.colors['bg_medium'],
                        foreground=self.colors['text_secondary'],
-                       font=('Inter', 12, 'normal'))
+                       font=('Inter', 10, 'normal'))
     
     def _setup_button_styles(self, style):
         """Configure les styles pour les boutons unifiés avec animations."""
@@ -519,7 +519,13 @@ class AuditGUI:
         
         # Informations du projet
         self.project_info_label = ttk.Label(project_frame, text="Aucun projet sélectionné", style='Info.TLabel')
-        self.project_info_label.grid(row=1, column=0, columnspan=3, sticky=tk.W, pady=(12, 0))
+        self.project_info_label.grid(row=1, column=0, columnspan=3, sticky=tk.W, pady=(8, 0))
+        
+        # Explication
+        explanation_label = ttk.Label(project_frame, 
+                                     text="Sélectionnez le dossier racine du projet à auditer. L'audit analysera tous les fichiers du projet.",
+                                     style='Info.TLabel', font=('TkDefaultFont', 9))
+        explanation_label.grid(row=2, column=0, columnspan=3, sticky=tk.W, pady=(4, 0))
     
     def create_actions_section(self, parent):
         """Crée la section des actions."""
@@ -564,7 +570,13 @@ class AuditGUI:
         
         # Barre de progression
         self.progress = ttk.Progressbar(actions_frame, mode='indeterminate', style='Dark.Horizontal.TProgressbar')
-        self.progress.grid(row=1, column=0, sticky=(tk.W, tk.E))
+        self.progress.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(8, 0))
+        
+        # Explication des actions
+        actions_explanation = ttk.Label(actions_frame, 
+                                      text="🔍 Lancer l'Audit : Analyse complète du projet | ⏹️ Arrêter : Interrompre l'audit | 📄 Voir Rapport : Afficher les résultats | 📂 Dossier : Ouvrir le dossier d'audit",
+                                      style='Info.TLabel', font=('TkDefaultFont', 9))
+        actions_explanation.grid(row=2, column=0, sticky=tk.W, pady=(8, 0))
     
     def create_logs_section(self, parent):
         """Crée la section des logs."""
@@ -577,7 +589,7 @@ class AuditGUI:
         self.logs_text = scrolledtext.ScrolledText(
             logs_frame, 
             wrap=tk.WORD, 
-            font=('JetBrains Mono', 12),
+            font=('JetBrains Mono', 10),
             bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
@@ -605,11 +617,17 @@ class AuditGUI:
         
         copy_btn = tk.Button(logs_buttons_frame, text="Copier", 
                              command=self.copy_logs,
-                             bg='#ffffff', fg='#3b82f6', font=('Inter', 12, 'bold'),
-                             relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=4,
+                             bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                             relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
                              activebackground='#f0f9ff', activeforeground='#1d4ed8')
         copy_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(copy_btn, "Copier les logs dans le presse-papiers")
+        
+        # Explication des logs
+        logs_explanation = ttk.Label(logs_frame, 
+                                   text="Les logs affichent les détails de l'exécution de l'audit en temps réel. Utilisez 'Effacer' pour vider et 'Copier' pour sauvegarder.",
+                                   style='Info.TLabel', font=('TkDefaultFont', 9))
+        logs_explanation.grid(row=2, column=0, sticky=tk.W, pady=(4, 0))
     
     def create_recent_projects_section(self, parent):
         """Crée la section des projets récents."""
@@ -630,7 +648,7 @@ class AuditGUI:
             highlightthickness=1,
             highlightbackground=self.colors['border'],
             highlightcolor=self.colors['accent_blue'],
-            font=('Inter', 12)
+            font=('Inter', 10)
         )
         self.recent_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=(0, 12))
         self.recent_listbox.bind('<Double-Button-1>', self.select_recent_project)
@@ -654,6 +672,12 @@ class AuditGUI:
                                activebackground='#fef2f2', activeforeground='#dc2626')
         remove_btn.pack()
         ButtonAnimator.add_hover_effects(remove_btn, "Retirer le projet de la liste")
+        
+        # Explication des projets récents
+        recent_explanation = ttk.Label(recent_frame, 
+                                     text="Liste des projets récemment audités. Double-cliquez ou utilisez 'Sélectionner' pour charger un projet.",
+                                     style='Info.TLabel', font=('TkDefaultFont', 9))
+        recent_explanation.grid(row=1, column=0, columnspan=2, sticky=tk.W, pady=(8, 0))
     
     def create_status_bar(self, parent):
         """Crée la barre de statut."""
@@ -677,7 +701,7 @@ class AuditGUI:
         self.viz_text = scrolledtext.ScrolledText(
             self.viz_frame,
             wrap=tk.WORD,
-            font=('JetBrains Mono', 14),
+            font=('JetBrains Mono', 11),
             bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
@@ -719,6 +743,12 @@ class AuditGUI:
         clear_viz_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(clear_viz_btn, "Vider la zone de visualisation")
         
+        # Explication de la visualisation
+        viz_explanation = ttk.Label(self.viz_frame, 
+                                  text="Zone d'affichage des rapports d'audit. Les résultats s'affichent ici après l'exécution d'un audit.",
+                                  style='Info.TLabel', font=('TkDefaultFont', 9))
+        viz_explanation.grid(row=2, column=0, sticky=tk.W, pady=(8, 0))
+        
         # Message d'accueil
         welcome_text = """🔍 SYSTÈME D'AUDIT UNIVERSEL
 
@@ -735,8 +765,7 @@ Bienvenue dans le panneau de visualisation !
 • Métriques et statistiques
 • Recommandations
 
-💡 Conseil : Lancez un audit pour voir les résultats ici !
-"""
+💡 Conseil : Lancez un audit pour voir les résultats ici !"""
         self.viz_text.insert(tk.END, welcome_text)
         self.viz_text.config(state=tk.DISABLED)
     
