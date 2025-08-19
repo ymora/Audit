@@ -524,12 +524,20 @@ class UniversalAuditor:
 async def main():
     """Fonction principale."""
     try:
-        # Détecter le chemin du projet (répertoire parent du dossier audit)
-        audit_dir = Path(__file__).parent
-        project_path = audit_dir.parent
+        import sys
         
-        print(f"[TARGET] Audit Universel - Detection automatique du projet")
-        print(f"📁 Projet détecté: {project_path}")
+        # Vérifier si un chemin de projet est fourni en argument
+        if len(sys.argv) > 1:
+            project_path = Path(sys.argv[1])
+            print(f"[TARGET] Audit Universel - Projet specifie")
+            print(f"📁 Projet: {project_path}")
+        else:
+            # Détecter le chemin du projet (répertoire parent du dossier audit)
+            audit_dir = Path(__file__).parent
+            project_path = audit_dir.parent
+            print(f"[TARGET] Audit Universel - Detection automatique du projet")
+            print(f"📁 Projet détecté: {project_path}")
+        
         print()
         
         # Créer l'auditeur
