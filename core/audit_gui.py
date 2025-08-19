@@ -777,7 +777,7 @@ Bienvenue dans le panneau de visualisation !
         # Vérifier si c'est un projet avec audit
         audit_system_dir = self.project_dir.parent
         project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
-                    reports_dir = audit_system_dir / "audit_results" / "audit_reports" / project_name
+        reports_dir = audit_system_dir / "audit_results" / "audit_reports" / project_name
         
         if reports_dir.exists():
             report_count = len(list(reports_dir.glob("*.html")))
