@@ -21,16 +21,53 @@ class ButtonAnimator:
     """Classe pour gérer les animations des boutons."""
     
     @staticmethod
-    def add_hover_effects(button, scale_factor=1.05):
-        """Ajoute des effets de hover avec scale."""
+    def add_hover_effects(button, tooltip_text=None):
+        """Ajoute des effets de hover et tooltip contextuel."""
         def on_enter(event):
             button.configure(relief='raised')
+            if tooltip_text:
+                ButtonAnimator.show_tooltip(button, tooltip_text, event)
         
         def on_leave(event):
             button.configure(relief='solid')
+            ButtonAnimator.hide_tooltip()
         
         button.bind('<Enter>', on_enter)
         button.bind('<Leave>', on_leave)
+    
+    @staticmethod
+    def show_tooltip(widget, text, event):
+        """Affiche un tooltip contextuel."""
+        # Créer le tooltip
+        tooltip = tk.Toplevel(widget)
+        tooltip.wm_overrideredirect(True)
+        tooltip.wm_geometry(f"+{event.x_root+10}+{event.y_root+10}")
+        
+        # Style du tooltip
+        tooltip.configure(bg='#1f2937', relief='solid', borderwidth=1)
+        
+        label = tk.Label(tooltip, text=text, 
+                       bg='#1f2937', 
+                       fg='#ffffff',
+                       font=('Inter', 12),
+                       padx=8, pady=4)
+        label.pack()
+        
+        # Stocker la référence pour pouvoir la fermer
+        ButtonAnimator.current_tooltip = tooltip
+        
+        # Fermer automatiquement après 3 secondes
+        tooltip.after(3000, ButtonAnimator.hide_tooltip)
+    
+    @staticmethod
+    def hide_tooltip():
+        """Cache le tooltip actuel."""
+        if hasattr(ButtonAnimator, 'current_tooltip') and ButtonAnimator.current_tooltip:
+            try:
+                ButtonAnimator.current_tooltip.destroy()
+            except:
+                pass
+            ButtonAnimator.current_tooltip = None
 
 class ModernDialog:
     """Fenêtre contextuelle moderne et épurée."""
@@ -115,29 +152,29 @@ class ModernDialog:
         if self.dialog_type == "confirm":
             # Boutons Oui/Non avec styles unifiés
             yes_btn = tk.Button(button_frame, text="Oui", font=('Inter', 14, 'medium'),
-                               bg='#3b82f6', fg='#ffffff', bd=1, relief='solid',
+                               bg='#ffffff', fg='#3b82f6', bd=1, relief='solid',
                                padx=20, pady=6, command=self.yes_clicked,
-                               activebackground='#1d4ed8', activeforeground='#ffffff',
+                               activebackground='#f0f9ff', activeforeground='#1d4ed8',
                                cursor='hand2')
             yes_btn.pack(side='left', padx=(0, 10))
-            ButtonAnimator.add_hover_effects(yes_btn)
+            ButtonAnimator.add_hover_effects(yes_btn, "Confirmer l'action")
             
             no_btn = tk.Button(button_frame, text="Non", font=('Inter', 14, 'medium'),
-                              bg='#6b7280', fg='#ffffff', bd=1, relief='solid',
+                              bg='#ffffff', fg='#6b7280', bd=1, relief='solid',
                               padx=20, pady=6, command=self.no_clicked,
-                              activebackground='#4b5563', activeforeground='#ffffff',
+                              activebackground='#f9fafb', activeforeground='#4b5563',
                               cursor='hand2')
             no_btn.pack(side='left')
-            ButtonAnimator.add_hover_effects(no_btn)
+            ButtonAnimator.add_hover_effects(no_btn, "Annuler l'action")
         else:
             # Bouton OK avec style unifié
             ok_btn = tk.Button(button_frame, text="OK", font=('Inter', 14, 'medium'),
-                              bg='#3b82f6', fg='#ffffff', bd=1, relief='solid',
+                              bg='#ffffff', fg='#3b82f6', bd=1, relief='solid',
                               padx=30, pady=6, command=self.ok_clicked,
-                              activebackground='#1d4ed8', activeforeground='#ffffff',
+                              activebackground='#f0f9ff', activeforeground='#1d4ed8',
                               cursor='hand2')
             ok_btn.pack()
-            ButtonAnimator.add_hover_effects(ok_btn)
+            ButtonAnimator.add_hover_effects(ok_btn, "Fermer la fenêtre")
     
     def yes_clicked(self):
         self.result = True
@@ -265,62 +302,68 @@ class AuditGUI:
         
         # Bouton Primary (Bleu)
         style.configure('Primary.TButton',
-                       background='#3b82f6',
-                       foreground='#ffffff',
+                       background='#ffffff',
+                       foreground='#3b82f6',
                        bordercolor='#3b82f6',
                        **base_config)
         style.map('Primary.TButton',
-                 background=[('active', '#1d4ed8'), ('pressed', '#1d4ed8')],
+                 background=[('active', '#f0f9ff'), ('pressed', '#e0f2fe')],
+                 foreground=[('active', '#1d4ed8'), ('pressed', '#1d4ed8')],
                  bordercolor=[('active', '#1d4ed8'), ('pressed', '#1d4ed8')])
         
         # Bouton Secondary (Gris)
         style.configure('Secondary.TButton',
-                       background='#6b7280',
-                       foreground='#ffffff',
+                       background='#ffffff',
+                       foreground='#6b7280',
                        bordercolor='#6b7280',
                        **base_config)
         style.map('Secondary.TButton',
-                 background=[('active', '#4b5563'), ('pressed', '#4b5563')],
+                 background=[('active', '#f9fafb'), ('pressed', '#f3f4f6')],
+                 foreground=[('active', '#4b5563'), ('pressed', '#4b5563')],
                  bordercolor=[('active', '#4b5563'), ('pressed', '#4b5563')])
         
         # Bouton Success (Vert)
         style.configure('Success.TButton',
-                       background='#10b981',
-                       foreground='#ffffff',
+                       background='#ffffff',
+                       foreground='#10b981',
                        bordercolor='#10b981',
                        **base_config)
         style.map('Success.TButton',
-                 background=[('active', '#059669'), ('pressed', '#059669')],
+                 background=[('active', '#f0fdf4'), ('pressed', '#dcfce7')],
+                 foreground=[('active', '#059669'), ('pressed', '#059669')],
                  bordercolor=[('active', '#059669'), ('pressed', '#059669')])
         
         # Bouton Warning (Jaune)
         style.configure('Warning.TButton',
-                       background='#f59e0b',
-                       foreground='#ffffff',
+                       background='#ffffff',
+                       foreground='#f59e0b',
                        bordercolor='#f59e0b',
                        **base_config)
         style.map('Warning.TButton',
-                 background=[('active', '#d97706'), ('pressed', '#d97706')],
+                 background=[('active', '#fffbeb'), ('pressed', '#fef3c7')],
+                 foreground=[('active', '#d97706'), ('pressed', '#d97706')],
                  bordercolor=[('active', '#d97706'), ('pressed', '#d97706')])
         
         # Bouton Danger (Rouge)
         style.configure('Danger.TButton',
-                       background='#ef4444',
-                       foreground='#ffffff',
+                       background='#ffffff',
+                       foreground='#ef4444',
                        bordercolor='#ef4444',
                        **base_config)
         style.map('Danger.TButton',
-                 background=[('active', '#dc2626'), ('pressed', '#dc2626')],
+                 background=[('active', '#fef2f2'), ('pressed', '#fee2e2')],
+                 foreground=[('active', '#dc2626'), ('pressed', '#dc2626')],
                  bordercolor=[('active', '#dc2626'), ('pressed', '#dc2626')])
         
         # Bouton Info (Violet)
         style.configure('Info.TButton',
-                       background='#8b5cf6',
-                       foreground='#ffffff',
+                       background='#ffffff',
+                       foreground='#8b5cf6',
                        bordercolor='#8b5cf6',
                        **base_config)
         style.map('Info.TButton',
-                 background=[('active', '#7c3aed'), ('pressed', '#7c3aed')],
+                 background=[('active', '#faf5ff'), ('pressed', '#f3e8ff')],
+                 foreground=[('active', '#7c3aed'), ('pressed', '#7c3aed')],
                  bordercolor=[('active', '#7c3aed'), ('pressed', '#7c3aed')])
     
     def _setup_widget_styles(self, style):
@@ -429,7 +472,7 @@ class AuditGUI:
         
         browse_btn = ttk.Button(project_frame, text="📂", command=self.browse_project, style='Primary.TButton')
         browse_btn.grid(row=0, column=2)
-        ButtonAnimator.add_hover_effects(browse_btn)
+        ButtonAnimator.add_hover_effects(browse_btn, "Sélectionner un dossier de projet")
         
         # Informations du projet
         self.project_info_label = ttk.Label(project_frame, text="Aucun projet sélectionné", style='Info.TLabel')
@@ -447,22 +490,22 @@ class AuditGUI:
         self.audit_btn = ttk.Button(button_frame, text="🔍 Lancer l'Audit", 
                                    command=self.run_audit, style='Success.TButton')
         self.audit_btn.pack(side='left', padx=(0, 8))
-        ButtonAnimator.add_hover_effects(self.audit_btn)
+        ButtonAnimator.add_hover_effects(self.audit_btn, "Démarrer l'analyse complète du projet")
         
         self.stop_btn = ttk.Button(button_frame, text="⏹️ Arrêter", 
                                   command=self.stop_audit, style='Danger.TButton')
         self.stop_btn.pack(side='left', padx=(0, 8))
-        ButtonAnimator.add_hover_effects(self.stop_btn)
+        ButtonAnimator.add_hover_effects(self.stop_btn, "Interrompre l'audit en cours")
         
         self.view_btn = ttk.Button(button_frame, text="📄 Voir Rapport", 
                                   command=self.view_report, style='Primary.TButton')
         self.view_btn.pack(side='left', padx=(0, 8))
-        ButtonAnimator.add_hover_effects(self.view_btn)
+        ButtonAnimator.add_hover_effects(self.view_btn, "Afficher le dernier rapport d'audit")
         
         self.folder_btn = ttk.Button(button_frame, text="📂 Dossier", 
                                     command=self.open_folder, style='Primary.TButton')
         self.folder_btn.pack(side='left')
-        ButtonAnimator.add_hover_effects(self.folder_btn)
+        ButtonAnimator.add_hover_effects(self.folder_btn, "Ouvrir le dossier d'audit du projet")
         
         # Barre de progression
         self.progress = ttk.Progressbar(actions_frame, mode='indeterminate', style='Dark.Horizontal.TProgressbar')
@@ -500,12 +543,12 @@ class AuditGUI:
         clear_btn = ttk.Button(logs_buttons_frame, text="Effacer", 
                               command=self.clear_logs, style='Danger.TButton')
         clear_btn.pack(side='left', padx=(0, 8))
-        ButtonAnimator.add_hover_effects(clear_btn)
+        ButtonAnimator.add_hover_effects(clear_btn, "Vider tous les logs")
         
         copy_btn = ttk.Button(logs_buttons_frame, text="Copier", 
                              command=self.copy_logs, style='Primary.TButton')
         copy_btn.pack(side='left')
-        ButtonAnimator.add_hover_effects(copy_btn)
+        ButtonAnimator.add_hover_effects(copy_btn, "Copier les logs dans le presse-papiers")
     
     def create_recent_projects_section(self, parent):
         """Crée la section des projets récents."""
@@ -538,12 +581,12 @@ class AuditGUI:
         select_btn = ttk.Button(recent_buttons_frame, text="Sélectionner", 
                                command=self.select_recent_project, style='Primary.TButton')
         select_btn.pack(pady=(0, 8))
-        ButtonAnimator.add_hover_effects(select_btn)
+        ButtonAnimator.add_hover_effects(select_btn, "Charger le projet sélectionné")
         
         remove_btn = ttk.Button(recent_buttons_frame, text="Supprimer", 
                                command=self.remove_recent_project, style='Danger.TButton')
         remove_btn.pack()
-        ButtonAnimator.add_hover_effects(remove_btn)
+        ButtonAnimator.add_hover_effects(remove_btn, "Retirer le projet de la liste")
     
     def create_status_bar(self, parent):
         """Crée la barre de statut."""
@@ -672,17 +715,17 @@ class AuditGUI:
         load_btn = ttk.Button(viz_buttons_frame, text="Charger Rapport", 
                              command=self.load_report, style='Primary.TButton')
         load_btn.pack(side='left', padx=(0, 8))
-        ButtonAnimator.add_hover_effects(load_btn)
+        ButtonAnimator.add_hover_effects(load_btn, "Charger le rapport d'audit dans la visualisation")
         
         refresh_btn = ttk.Button(viz_buttons_frame, text="Actualiser", 
                                command=self.refresh_viz, style='Primary.TButton')
         refresh_btn.pack(side='left', padx=(0, 8))
-        ButtonAnimator.add_hover_effects(refresh_btn)
+        ButtonAnimator.add_hover_effects(refresh_btn, "Mettre à jour la visualisation")
         
         clear_viz_btn = ttk.Button(viz_buttons_frame, text="Effacer", 
                                  command=self.clear_viz, style='Danger.TButton')
         clear_viz_btn.pack(side='left')
-        ButtonAnimator.add_hover_effects(clear_viz_btn)
+        ButtonAnimator.add_hover_effects(clear_viz_btn, "Vider la zone de visualisation")
         
         # Message d'accueil
         welcome_text = """🔍 SYSTÈME D'AUDIT UNIVERSEL
