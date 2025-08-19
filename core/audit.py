@@ -528,7 +528,7 @@ async def main():
         audit_dir = Path(__file__).parent
         project_path = audit_dir.parent
         
-        print(f"🎯 Audit Universel - Détection automatique du projet")
+        print(f"[TARGET] Audit Universel - Detection automatique du projet")
         print(f"📁 Projet détecté: {project_path}")
         print()
         
@@ -541,7 +541,7 @@ async def main():
     except KeyboardInterrupt:
         print("\n⚠️ Audit interrompu par l'utilisateur")
     except Exception as e:
-        print(f"\n❌ Erreur lors de l'audit: {e}")
+        print(f"\n[ERROR] Erreur lors de l'audit: {e}")
         import traceback
         traceback.print_exc()
 

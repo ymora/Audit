@@ -1,9 +1,19 @@
 {
-  "timestamp": "2025-08-19T11:22:04.741406",
-  "total_tests": 4,
-  "passed": 4,
+  "timestamp": "2025-08-19T11:28:18.632136",
+  "total_tests": 6,
+  "passed": 6,
   "failed": 0,
   "results": [
+    {
+      "test": "test_audit_configuration_integrity.py",
+      "success": true,
+      "message": "Test test_audit_configuration_integrity.py exécuté avec succès"
+    },
+    {
+      "test": "test_security_checker_unit.py",
+      "success": true,
+      "message": "Test test_security_checker_unit.py exécuté avec succès"
+    },
     {
       "project": "docusense_ai",
       "test": "test_ai_providers.py",
