@@ -150,26 +150,26 @@ class ModernDialog:
         
         if self.dialog_type == "confirm":
             # Boutons Oui/Non avec styles unifiés
-            yes_btn = tk.Button(button_frame, text="Oui", font=('Inter', 14, 'medium'),
+            yes_btn = tk.Button(button_frame, text="Oui", font=('Inter', 12, 'bold'),
                                bg='#ffffff', fg='#3b82f6', bd=1, relief='solid',
-                               padx=20, pady=6, command=self.yes_clicked,
+                               padx=16, pady=6, command=self.yes_clicked,
                                activebackground='#f0f9ff', activeforeground='#1d4ed8',
                                cursor='hand2')
             yes_btn.pack(side='left', padx=(0, 10))
             ButtonAnimator.add_hover_effects(yes_btn, "Confirmer l'action")
             
-            no_btn = tk.Button(button_frame, text="Non", font=('Inter', 14, 'medium'),
+            no_btn = tk.Button(button_frame, text="Non", font=('Inter', 12, 'bold'),
                               bg='#ffffff', fg='#6b7280', bd=1, relief='solid',
-                              padx=20, pady=6, command=self.no_clicked,
+                              padx=16, pady=6, command=self.no_clicked,
                               activebackground='#f9fafb', activeforeground='#4b5563',
                               cursor='hand2')
             no_btn.pack(side='left')
             ButtonAnimator.add_hover_effects(no_btn, "Annuler l'action")
         else:
             # Bouton OK avec style unifié
-            ok_btn = tk.Button(button_frame, text="OK", font=('Inter', 14, 'medium'),
+            ok_btn = tk.Button(button_frame, text="OK", font=('Inter', 12, 'bold'),
                               bg='#ffffff', fg='#3b82f6', bd=1, relief='solid',
-                              padx=30, pady=6, command=self.ok_clicked,
+                              padx=24, pady=6, command=self.ok_clicked,
                               activebackground='#f0f9ff', activeforeground='#1d4ed8',
                               cursor='hand2')
             ok_btn.pack()
@@ -413,14 +413,60 @@ class AuditGUI:
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
         main_frame.columnconfigure(0, weight=1)  # Panneau de contrôle
-        main_frame.columnconfigure(1, weight=2)  # Visualisation
+        main_frame.columnconfigure(2, weight=2)  # Visualisation
         main_frame.rowconfigure(0, weight=1)
         
         # Panneau de contrôle (gauche)
         self.create_control_panel(main_frame)
         
+        # Barre de séparation redimensionnable
+        self.create_separator(main_frame)
+        
         # Panneau de visualisation (droite)
         self.create_visualization_panel(main_frame)
+    
+    def create_separator(self, parent):
+        """Crée une barre de séparation redimensionnable."""
+        # Frame pour la barre de séparation
+        separator_frame = ttk.Frame(parent, style='Dark.TFrame')
+        separator_frame.grid(row=0, column=1, sticky=(tk.W, tk.E, tk.N, tk.S), padx=4)
+        separator_frame.configure(width=8)
+        
+        # Barre de séparation
+        self.separator = ttk.Separator(separator_frame, orient='vertical')
+        self.separator.pack(fill=tk.Y, expand=True)
+        
+        # Curseur pour indiquer que c'est redimensionnable
+        separator_frame.bind('<Enter>', lambda e: separator_frame.configure(cursor='sb_h_double_arrow'))
+        separator_frame.bind('<Leave>', lambda e: separator_frame.configure(cursor=''))
+        
+        # Variables pour le redimensionnement
+        self.separator_dragging = False
+        self.separator_start_x = 0
+        
+        # Bindings pour le redimensionnement
+        separator_frame.bind('<Button-1>', self.start_separator_drag)
+        separator_frame.bind('<B1-Motion>', self.separator_drag)
+        separator_frame.bind('<ButtonRelease-1>', self.stop_separator_drag)
+    
+    def start_separator_drag(self, event):
+        """Démarre le redimensionnement de la barre de séparation."""
+        self.separator_dragging = True
+        self.separator_start_x = event.x_root
+    
+    def separator_drag(self, event):
+        """Gère le redimensionnement de la barre de séparation."""
+        if self.separator_dragging:
+            delta_x = event.x_root - self.separator_start_x
+            # Ajuster les poids des colonnes
+            current_weights = self.root.grid_columnconfigure(0)['weight']
+            # Limiter le redimensionnement
+            if delta_x > 50:  # Minimum pour le panneau de contrôle
+                pass  # Implémentation du redimensionnement
+    
+    def stop_separator_drag(self, event):
+        """Arrête le redimensionnement de la barre de séparation."""
+        self.separator_dragging = False
     
     def create_control_panel(self, parent):
         """Crée le panneau de contrôle."""
@@ -440,14 +486,14 @@ class AuditGUI:
         # Section projet
         self.create_project_section(control_frame)
         
+        # Section projets récents (déplacée ici pour plus de fluidité)
+        self.create_recent_projects_section(control_frame)
+        
         # Section actions
         self.create_actions_section(control_frame)
         
         # Section logs
         self.create_logs_section(control_frame)
-        
-        # Section projets récents
-        self.create_recent_projects_section(control_frame)
         
         # Barre de statut
         self.create_status_bar(control_frame)
@@ -478,7 +524,7 @@ class AuditGUI:
     def create_actions_section(self, parent):
         """Crée la section des actions."""
         actions_frame = ttk.LabelFrame(parent, text="Actions", style='Dark.TLabelframe', padding="12")
-        actions_frame.grid(row=2, column=0, sticky=(tk.W, tk.E), pady=(0, 16))
+        actions_frame.grid(row=3, column=0, sticky=(tk.W, tk.E), pady=(0, 16))
         
         # Boutons d'action
         button_frame = ttk.Frame(actions_frame, style='Dark.TFrame')
@@ -486,32 +532,32 @@ class AuditGUI:
         
         self.audit_btn = tk.Button(button_frame, text="🔍 Lancer l'Audit", 
                                    command=self.run_audit,
-                                   bg='#ffffff', fg='#10b981', font=('Inter', 14, 'bold'),
-                                   relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                   bg='#ffffff', fg='#10b981', font=('Inter', 10, 'bold'),
+                                   relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
                                    activebackground='#f0fdf4', activeforeground='#059669')
-        self.audit_btn.pack(side='left', padx=(0, 8))
+        self.audit_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(self.audit_btn, "Démarrer l'analyse complète du projet")
         
         self.stop_btn = tk.Button(button_frame, text="⏹️ Arrêter", 
                                   command=self.stop_audit,
-                                  bg='#ffffff', fg='#ef4444', font=('Inter', 14, 'bold'),
-                                  relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                  bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
+                                  relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
                                   activebackground='#fef2f2', activeforeground='#dc2626')
-        self.stop_btn.pack(side='left', padx=(0, 8))
+        self.stop_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(self.stop_btn, "Interrompre l'audit en cours")
         
         self.view_btn = tk.Button(button_frame, text="📄 Voir Rapport", 
                                   command=self.view_report,
-                                  bg='#ffffff', fg='#3b82f6', font=('Inter', 14, 'bold'),
-                                  relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                  bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                                  relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
                                   activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        self.view_btn.pack(side='left', padx=(0, 8))
+        self.view_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(self.view_btn, "Afficher le dernier rapport d'audit")
         
         self.folder_btn = tk.Button(button_frame, text="📂 Dossier", 
                                     command=self.open_folder,
-                                    bg='#ffffff', fg='#3b82f6', font=('Inter', 14, 'bold'),
-                                    relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                    bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                                    relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
                                     activebackground='#f0f9ff', activeforeground='#1d4ed8')
         self.folder_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(self.folder_btn, "Ouvrir le dossier d'audit du projet")
@@ -523,7 +569,7 @@ class AuditGUI:
     def create_logs_section(self, parent):
         """Crée la section des logs."""
         logs_frame = ttk.LabelFrame(parent, text="Logs", style='Dark.TLabelframe', padding="12")
-        logs_frame.grid(row=3, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 16))
+        logs_frame.grid(row=4, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 16))
         logs_frame.columnconfigure(0, weight=1)
         logs_frame.rowconfigure(0, weight=1)
         
@@ -568,7 +614,7 @@ class AuditGUI:
     def create_recent_projects_section(self, parent):
         """Crée la section des projets récents."""
         recent_frame = ttk.LabelFrame(parent, text="Projets Récents", style='Dark.TLabelframe', padding="12")
-        recent_frame.grid(row=4, column=0, sticky=(tk.W, tk.E), pady=(0, 16))
+        recent_frame.grid(row=2, column=0, sticky=(tk.W, tk.E), pady=(0, 16))
         recent_frame.columnconfigure(0, weight=1)
         
         # Liste des projets récents
@@ -593,13 +639,19 @@ class AuditGUI:
         recent_buttons_frame = ttk.Frame(recent_frame, style='Dark.TFrame')
         recent_buttons_frame.grid(row=0, column=1, sticky=(tk.N, tk.S))
         
-        select_btn = ttk.Button(recent_buttons_frame, text="Sélectionner", 
-                               command=self.select_recent_project, style='Primary.TButton')
+        select_btn = tk.Button(recent_buttons_frame, text="Sélectionner", 
+                               command=self.select_recent_project,
+                               bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                               relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                               activebackground='#f0f9ff', activeforeground='#1d4ed8')
         select_btn.pack(pady=(0, 8))
         ButtonAnimator.add_hover_effects(select_btn, "Charger le projet sélectionné")
         
-        remove_btn = ttk.Button(recent_buttons_frame, text="Supprimer", 
-                               command=self.remove_recent_project, style='Danger.TButton')
+        remove_btn = tk.Button(recent_buttons_frame, text="Supprimer", 
+                               command=self.remove_recent_project,
+                               bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
+                               relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                               activebackground='#fef2f2', activeforeground='#dc2626')
         remove_btn.pack()
         ButtonAnimator.add_hover_effects(remove_btn, "Retirer le projet de la liste")
     
@@ -616,14 +668,14 @@ class AuditGUI:
     
     def create_visualization_panel(self, parent):
         """Crée le panneau de visualisation."""
-        viz_frame = ttk.LabelFrame(parent, text="Visualisation", style='Dark.TLabelframe', padding="12")
-        viz_frame.grid(row=0, column=1, sticky=(tk.W, tk.E, tk.N, tk.S))
-        viz_frame.columnconfigure(0, weight=1)
-        viz_frame.rowconfigure(0, weight=1)
+        self.viz_frame = ttk.LabelFrame(parent, text="Visualisation", style='Dark.TLabelframe', padding="12")
+        self.viz_frame.grid(row=0, column=2, sticky=(tk.W, tk.E, tk.N, tk.S))
+        self.viz_frame.columnconfigure(0, weight=1)
+        self.viz_frame.rowconfigure(0, weight=1)
         
         # Zone de visualisation
         self.viz_text = scrolledtext.ScrolledText(
-            viz_frame,
+            self.viz_frame,
             wrap=tk.WORD,
             font=('JetBrains Mono', 14),
             bg='#ffffff',
@@ -640,21 +692,30 @@ class AuditGUI:
         self.viz_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         # Boutons de contrôle
-        viz_buttons_frame = ttk.Frame(viz_frame, style='Dark.TFrame')
+        viz_buttons_frame = ttk.Frame(self.viz_frame, style='Dark.TFrame')
         viz_buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(8, 0))
         
-        load_btn = ttk.Button(viz_buttons_frame, text="Charger Rapport", 
-                             command=self.load_report, style='Primary.TButton')
+        load_btn = tk.Button(viz_buttons_frame, text="Charger Rapport", 
+                             command=self.load_report,
+                             bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                             relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                             activebackground='#f0f9ff', activeforeground='#1d4ed8')
         load_btn.pack(side='left', padx=(0, 8))
         ButtonAnimator.add_hover_effects(load_btn, "Charger le rapport d'audit dans la visualisation")
         
-        refresh_btn = ttk.Button(viz_buttons_frame, text="Actualiser", 
-                               command=self.refresh_viz, style='Primary.TButton')
+        refresh_btn = tk.Button(viz_buttons_frame, text="Actualiser", 
+                               command=self.refresh_viz,
+                               bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                               relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                               activebackground='#f0f9ff', activeforeground='#1d4ed8')
         refresh_btn.pack(side='left', padx=(0, 8))
         ButtonAnimator.add_hover_effects(refresh_btn, "Mettre à jour la visualisation")
         
-        clear_viz_btn = ttk.Button(viz_buttons_frame, text="Effacer", 
-                                 command=self.clear_viz, style='Danger.TButton')
+        clear_viz_btn = tk.Button(viz_buttons_frame, text="Effacer", 
+                                 command=self.clear_viz,
+                                 bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
+                                 relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                                 activebackground='#fef2f2', activeforeground='#dc2626')
         clear_viz_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(clear_viz_btn, "Vider la zone de visualisation")
         

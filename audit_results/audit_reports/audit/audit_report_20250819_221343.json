@@ -2,7 +2,7 @@
   "audit_info": {
     "project_name": "audit",
     "project_type": "python",
-    "timestamp": "2025-08-19T22:19:13.741970",
+    "timestamp": "2025-08-19T22:13:43.316292",
     "audit_version": "2.0.0",
     "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_reports\\audit"
   },
@@ -76,7 +76,7 @@
             "message": "Audit générique terminé avec succès",
             "details": {
               "analysis_type": "generic",
-              "timestamp": "2025-08-19T22:19:10.675602",
+              "timestamp": "2025-08-19T22:13:40.374170",
               "project_path": "C:\\Users\\ymora\\Desktop\\audit",
               "findings": [
                 {
@@ -89,7 +89,7 @@
                   "type": "code_quality",
                   "severity": "warning",
                   "file": "core\\audit_gui.py",
-                  "line": 669,
+                  "line": 623,
                   "message": "Fonction 'create_visualization_panel' très longue (21 lignes)"
                 },
                 {
@@ -136,26 +136,26 @@
                 }
               ],
               "metrics": {
-                "total_files": 568,
+                "total_files": 565,
                 "file_types": {
                   "": 439,
                   ".py": 35,
                   ".md": 11,
                   ".txt": 4,
                   ".pb": 1,
-                  ".json": 21,
+                  ".json": 20,
                   ".pyc": 21,
-                  ".log": 10,
-                  ".html": 12,
+                  ".log": 9,
+                  ".html": 11,
                   ".sample": 14
                 },
                 "code_files": 35,
                 "python": {
                   "total_files": 35,
-                  "total_lines": 8019,
-                  "total_functions": 250,
+                  "total_lines": 7973,
+                  "total_functions": 246,
                   "total_classes": 20,
-                  "avg_lines_per_file": 229.11428571428573
+                  "avg_lines_per_file": 227.8
                 }
               },
               "recommendations": [
@@ -167,7 +167,7 @@
             }
           },
           "structure": {
-            "total_files": 568,
+            "total_files": 565,
             "python_files": 35,
             "test_files": 13,
             "doc_files": 15,
@@ -188,9 +188,9 @@
     "tests_passed": 1,
     "tests_failed": 1,
     "total_tests": 2,
-    "start_time": "2025-08-19T22:19:10.651411",
-    "end_time": "2025-08-19T22:19:12.277723",
-    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit\\audit_20250819_221910.log"
+    "start_time": "2025-08-19T22:13:40.357194",
+    "end_time": "2025-08-19T22:13:41.919279",
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit\\audit_20250819_221340.log"
   },
   "generic_audit": {
     "generic_audit": {
@@ -198,7 +198,7 @@
       "message": "Audit générique terminé avec succès",
       "details": {
         "analysis_type": "generic",
-        "timestamp": "2025-08-19T22:19:12.278916",
+        "timestamp": "2025-08-19T22:13:41.920925",
         "project_path": "C:\\Users\\ymora\\Desktop\\audit",
         "findings": [
           {
@@ -211,7 +211,7 @@
             "type": "code_quality",
             "severity": "warning",
             "file": "core\\audit_gui.py",
-            "line": 669,
+            "line": 623,
             "message": "Fonction 'create_visualization_panel' très longue (21 lignes)"
           },
           {
@@ -258,26 +258,26 @@
           }
         ],
         "metrics": {
-          "total_files": 568,
+          "total_files": 565,
           "file_types": {
             "": 439,
             ".py": 35,
             ".md": 11,
             ".txt": 4,
             ".pb": 1,
-            ".json": 21,
+            ".json": 20,
             ".pyc": 21,
-            ".log": 10,
-            ".html": 12,
+            ".log": 9,
+            ".html": 11,
             ".sample": 14
           },
           "code_files": 35,
           "python": {
             "total_files": 35,
-            "total_lines": 8019,
-            "total_functions": 250,
+            "total_lines": 7973,
+            "total_functions": 246,
             "total_classes": 20,
-            "avg_lines_per_file": 229.11428571428573
+            "avg_lines_per_file": 227.8
           }
         },
         "recommendations": [
