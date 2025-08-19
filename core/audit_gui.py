@@ -562,10 +562,6 @@ class AuditGUI:
         self.stop_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(self.stop_btn, "Interrompre l'audit en cours")
         
-        # Barre de progression
-        self.progress = ttk.Progressbar(actions_frame, mode='indeterminate', style='Dark.Horizontal.TProgressbar')
-        self.progress.pack(side='left', fill='x', expand=True, padx=(8, 0))
-        
         # Informations du projet
         self.project_info_label = ttk.Label(main_frame, text="Aucun projet sélectionné", style='Info.TLabel')
         self.project_info_label.grid(row=2, column=0, columnspan=3, sticky=tk.W, pady=(8, 0))
@@ -677,6 +673,10 @@ class AuditGUI:
                                    text="Les logs affichent les détails de l'exécution de l'audit en temps réel. Utilisez 'Effacer' pour vider et 'Copier' pour sauvegarder.",
                                    style='Info.TLabel', font=('TkDefaultFont', 9))
         logs_explanation.grid(row=2, column=0, sticky=tk.W, pady=(4, 0))
+        
+        # Barre de progression
+        self.progress = ttk.Progressbar(logs_frame, mode='indeterminate', style='Dark.Horizontal.TProgressbar')
+        self.progress.grid(row=3, column=0, sticky=(tk.W, tk.E), pady=(8, 0))
     
     def load_projects_table(self):
         """Charge les projets dans le tableau."""
