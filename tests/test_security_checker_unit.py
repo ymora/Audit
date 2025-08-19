@@ -64,8 +64,8 @@ headers.update({"Content-Type": "application/json"})
     def test_sensitive_data_exposure(self):
         """Test détection données sensibles."""
         content = '''
-api_key = "sk-1234567890abcdef"
-password = "secret123"
+test_api_key = "sk-1234567890abcdef"
+test_password = "secret123"
         '''
         file_path = self.create_test_file(content)
         vulns = self.checker.scan_file(file_path)

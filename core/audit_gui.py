@@ -178,7 +178,20 @@ class AuditGUI:
         style = ttk.Style()
         style.theme_use('clam')
         
-        # Palette de couleurs Windows 10 moderne
+        # Initialiser les couleurs
+        self._setup_colors()
+        
+        # Configuration du thème
+        self.root.configure(bg=self.colors['bg_dark'])
+        
+        # Configurer les styles
+        self._setup_frame_styles(style)
+        self._setup_label_styles(style)
+        self._setup_button_styles(style)
+        self._setup_widget_styles(style)
+    
+    def _setup_colors(self):
+        """Configure la palette de couleurs Windows 10 moderne."""
         self.colors = {
             'bg_dark': '#2d2d30',      # Fond principal (gris foncé Windows)
             'bg_medium': '#3e3e42',    # Fond secondaire
@@ -194,15 +207,14 @@ class AuditGUI:
             'accent_purple': '#5c2d91', # Violet Windows 10
             'border': '#6b6b6b'        # Bordure
         }
-        
-        # Configuration du thème
-        self.root.configure(bg=self.colors['bg_dark'])
-        
-        # Styles pour les frames
+    
+    def _setup_frame_styles(self, style):
+        """Configure les styles pour les frames."""
         style.configure('Dark.TFrame', background=self.colors['bg_dark'])
         style.configure('Medium.TFrame', background=self.colors['bg_medium'])
-        
-        # Styles pour les labels
+    
+    def _setup_label_styles(self, style):
+        """Configure les styles pour les labels."""
         style.configure('Title.TLabel', 
                        background=self.colors['bg_dark'], 
                        foreground=self.colors['text_primary'],
@@ -217,8 +229,10 @@ class AuditGUI:
                        background=self.colors['bg_medium'],
                        foreground=self.colors['text_secondary'],
                        font=('Segoe UI', 9))
-        
-        # Styles pour les boutons
+    
+    def _setup_button_styles(self, style):
+        """Configure les styles pour les boutons."""
+        # Bouton primaire
         style.configure('Primary.TButton',
                        background=self.colors['bg_medium'],
                        foreground=self.colors['accent_blue'],
@@ -226,10 +240,10 @@ class AuditGUI:
                        focuscolor='none',
                        font=('Segoe UI', 10, 'bold'),
                        padding=(16, 8))
-        
         style.map('Primary.TButton',
                  background=[('active', self.colors['bg_light'])])
         
+        # Bouton succès
         style.configure('Success.TButton',
                        background=self.colors['bg_medium'],
                        foreground=self.colors['accent_green'],
@@ -237,10 +251,10 @@ class AuditGUI:
                        focuscolor='none',
                        font=('Segoe UI', 10, 'bold'),
                        padding=(16, 8))
-        
         style.map('Success.TButton',
                  background=[('active', self.colors['bg_light'])])
         
+        # Bouton danger
         style.configure('Danger.TButton',
                        background=self.colors['bg_medium'],
                        foreground=self.colors['accent_red'],
@@ -248,11 +262,12 @@ class AuditGUI:
                        focuscolor='none',
                        font=('Segoe UI', 10, 'bold'),
                        padding=(16, 8))
-        
         style.map('Danger.TButton',
                  background=[('active', self.colors['bg_light'])])
-        
-        # Styles pour les labelframes
+    
+    def _setup_widget_styles(self, style):
+        """Configure les styles pour les autres widgets."""
+        # Labelframes
         style.configure('Dark.TLabelframe',
                        background=self.colors['bg_medium'],
                        foreground=self.colors['text_primary'],
@@ -265,7 +280,7 @@ class AuditGUI:
                        foreground=self.colors['accent_blue'],
                        font=('Segoe UI', 11, 'bold'))
         
-        # Styles pour les entry
+        # Entry
         style.configure('Dark.TEntry',
                        fieldbackground=self.colors['bg_light'],
                        foreground=self.colors['text_primary'],
@@ -274,7 +289,7 @@ class AuditGUI:
                        bordercolor=self.colors['border'],
                        padding=(8, 6))
         
-        # Styles pour les listbox
+        # Listbox
         style.configure('Dark.TListbox',
                        background=self.colors['bg_light'],
                        foreground=self.colors['text_primary'],
@@ -284,7 +299,7 @@ class AuditGUI:
                        relief='solid',
                        bordercolor=self.colors['border'])
         
-        # Styles pour la progressbar
+        # Progressbar
         style.configure('Dark.Horizontal.TProgressbar',
                        background=self.colors['accent_blue'],
                        troughcolor=self.colors['bg_light'],
