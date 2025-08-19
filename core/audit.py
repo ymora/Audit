@@ -25,6 +25,15 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
+# Import du système de nettoyage
+try:
+    from .project_cleaner import ProjectCleaner, GlobalProjectCleaner
+except ImportError:
+    # Import absolu si l'import relatif échoue
+    import sys
+    sys.path.append(str(Path(__file__).parent))
+    from project_cleaner import ProjectCleaner, GlobalProjectCleaner
+
 class UniversalAuditor:
     """Auditeur universel pour tous les types de projets."""
     
@@ -428,6 +437,9 @@ class UniversalAuditor:
         print(f"   - {latest_report}")
         print(f"   - {latest_html}")
         
+        # Nettoyage automatique après l'audit
+        await self._run_automatic_cleanup()
+        
         return full_results
     
     def _generate_html_report(self, results: Dict[str, Any]) -> str:
@@ -520,6 +532,40 @@ class UniversalAuditor:
 </html>"""
         
         return html
+    
+    async def _run_automatic_cleanup(self):
+        """Exécute le nettoyage automatique après l'audit."""
+        try:
+            print("\n🧹 Nettoyage automatique du projet...")
+            
+            # Créer le nettoyeur pour ce projet
+            cleaner = ProjectCleaner(self.project_path)
+            
+            # Vérifier si le nettoyage doit être exécuté
+            if cleaner.should_run_cleanup():
+                print(f"   📁 Nettoyage du projet: {self.project_name}")
+                
+                # Exécuter le nettoyage
+                cleanup_results = cleaner.cleanup_project_directory()
+                
+                if cleanup_results["status"] == "success":
+                    # Calculer l'espace libéré
+                    total_space_freed = sum(
+                        subdir.get("space_freed", 0) 
+                        for subdir in cleanup_results.get("cleaned", {}).values()
+                    )
+                    
+                    if total_space_freed > 0:
+                        print(f"   ✅ Nettoyage terminé - Espace libéré: {total_space_freed / 1024:.2f} KB")
+                    else:
+                        print(f"   ✅ Nettoyage terminé - Aucun fichier à nettoyer")
+                else:
+                    print(f"   ⚠️ Nettoyage ignoré: {cleanup_results.get('reason', 'Raison inconnue')}")
+            else:
+                print(f"   ⏭️ Nettoyage non nécessaire pour {self.project_name}")
+                
+        except Exception as e:
+            print(f"   ❌ Erreur lors du nettoyage automatique: {e}")
 
 async def main():
     """Fonction principale."""

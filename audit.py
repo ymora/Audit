@@ -72,6 +72,25 @@ def launch_cli(project_path):
         print(f"Erreur lors de l'audit: {e}")
         return 1
 
+def launch_cleanup():
+    """Lance le nettoyage global des projets."""
+    print("🧹 Nettoyage global des projets")
+    print("=" * 50)
+    
+    audit_dir = Path(__file__).parent
+    cleanup_script = audit_dir / "core" / "project_cleaner.py"
+    
+    if not cleanup_script.exists():
+        print(f"Script de nettoyage introuvable: {cleanup_script}")
+        return 1
+    
+    try:
+        subprocess.run([sys.executable, str(cleanup_script)], check=True)
+        return 0
+    except subprocess.CalledProcessError as e:
+        print(f"Erreur lors du nettoyage: {e}")
+        return 1
+
 def show_help():
     """Affiche l'aide."""
     help_text = """
@@ -82,11 +101,13 @@ USAGE:
     python audit.py                    # Lance l'interface graphique
     python audit.py --gui              # Lance l'interface graphique
     python audit.py --cli <projet>     # Audit en ligne de commande
+    python audit.py --cleanup          # Nettoyage global des projets
     python audit.py --help             # Affiche cette aide
 
 EXEMPLES:
     python audit.py                    # Interface graphique moderne
     python audit.py --cli ./mon_projet # Audit du projet ./mon_projet
+    python audit.py --cleanup          # Nettoyage automatique des projets
 
 FONCTIONNALITES:
     Interface graphique moderne avec theme sombre
@@ -95,6 +116,7 @@ FONCTIONNALITES:
     Verification de securite
     Rapports detailles en HTML, Markdown et JSON
     Support pour tous types de projets
+    Nettoyage automatique des dossiers .project
 
 DOCUMENTATION:
     docs/README_PROJET.md          # Documentation detaillee
@@ -113,6 +135,7 @@ def main():
     )
     parser.add_argument('--gui', action='store_true', help='Lance l interface graphique')
     parser.add_argument('--cli', metavar='PROJET', help='Audit en ligne de commande du projet specifie')
+    parser.add_argument('--cleanup', action='store_true', help='Nettoyage global des projets')
     parser.add_argument('--help', action='store_true', help='Affiche l aide')
     
     if len(sys.argv) == 1:
@@ -131,6 +154,8 @@ def main():
             print(f"Erreur: Le projet {project_path} n'existe pas")
             return 1
         return launch_cli(project_path)
+    elif args.cleanup:
+        return launch_cleanup()
     else:
         return launch_gui()
 
