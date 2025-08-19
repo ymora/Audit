@@ -204,7 +204,7 @@ class UniversalAuditor:
             spec.loader.exec_module(module)
             return module
         except Exception as e:
-            print(f"❌ Erreur chargement test {test_name}: {e}")
+            print(f"[ERROR] Erreur chargement test {test_name}: {e}")
             return None
     
     def _setup_logging(self):
@@ -251,12 +251,12 @@ class UniversalAuditor:
         test_modules = self._get_project_tests()
         
         if not test_modules:
-            print(f"ℹ️ Aucun test spécifique trouvé pour {self.project_name}")
+            print(f"[INFO] Aucun test spécifique trouvé pour {self.project_name}")
             logger.info("Aucun test spécifique trouvé")
             return results
         
         for test_name in test_modules:
-            print(f"  🔍 Exécution du test: {test_name}")
+            print(f"  [TEST] Exécution du test: {test_name}")
             logger.info(f"Exécution du test: {test_name}")
             
             module = self._load_test_module(test_name)
@@ -285,11 +285,11 @@ class UniversalAuditor:
                     
                     results["total_tests"] += 1
                 else:
-                    print(f"  ⚠️ Module {test_name} n'a pas de fonction run_test")
+                    print(f"  [WARN] Module {test_name} n'a pas de fonction run_test")
                     logger.warning(f"Module {test_name} n'a pas de fonction run_test")
                     
             except Exception as e:
-                print(f"  ❌ Erreur lors de l'exécution du test {test_name}: {e}")
+                print(f"  [ERROR] Erreur lors de l'exécution du test {test_name}: {e}")
                 logger.error(f"Erreur lors de l'exécution du test {test_name}: {e}")
                 results["tests_executed"].append({
                     "name": test_name,
@@ -305,10 +305,10 @@ class UniversalAuditor:
     
     async def run_generic_audit(self) -> Dict[str, Any]:
         """Exécute l'audit générique basé sur le type de projet."""
-        print(f"🔍 Exécution de l'audit générique pour {self.project_type}...")
+        print(f"[GENERIC] Exécution de l'audit générique pour {self.project_type}...")
         
         # Charger les outils d'audit génériques
-        generic_audit_path = self.project_dir / "tools" / "generic_auditor.py"
+        generic_audit_path = self.project_dir.parent / "tools" / "generic_auditor.py"
         
         if generic_audit_path.exists():
             try:
@@ -319,7 +319,7 @@ class UniversalAuditor:
                 if hasattr(generic_auditor, 'run_generic_audit'):
                     return await generic_auditor.run_generic_audit(self.project_path, self.config)
             except Exception as e:
-                print(f"❌ Erreur lors de l'audit générique: {e}")
+                print(f"[ERROR] Erreur lors de l'audit générique: {e}")
         
         return {
             "generic_audit": {
@@ -331,12 +331,12 @@ class UniversalAuditor:
     
     async def run_full_audit(self) -> Dict[str, Any]:
         """Exécute l'audit complet du projet."""
-        print(f"🚀 Démarrage de l'audit complet pour {self.project_name}")
+        print(f"[START] Démarrage de l'audit complet pour {self.project_name}")
         print(f"[PROJECT] Projet: {self.project_path}")
-        print(f"🏷️ Type: {self.project_type}")
-        print(f"⚙️ Configuration: {self.config.get('name', 'Par défaut')}")
-        print(f"📂 Tests spécifiques: {self.project_audit_dir}")
-        print(f"📂 Rapports: {self.project_dir.parent / 'projects' / self.project_name}")
+        print(f"[TYPE] Type: {self.project_type}")
+        print(f"[CONFIG] Configuration: {self.config.get('name', 'Par défaut')}")
+        print(f"[TESTS] Tests spécifiques: {self.project_audit_dir}")
+        print(f"[REPORTS] Rapports: {self.project_dir.parent / 'projects' / self.project_name}")
         print()
         
         # Exécuter les tests spécifiques au projet
@@ -388,19 +388,29 @@ class UniversalAuditor:
         shutil.copy2(report_file, latest_report)
         shutil.copy2(html_file, latest_html)
         
-        print(f"\n✅ Audit terminé avec succès!")
-        print(f"📊 Résultats:")
+        print(f"\n[SUCCESS] Audit terminé avec succès!")
+        print(f"[RESULTS] Résultats:")
         print(f"   - Tests exécutés: {project_results['total_tests']}")
         print(f"   - Tests réussis: {project_results['tests_passed']}")
         print(f"   - Tests échoués: {project_results['tests_failed']}")
         print(f"   - Taux de succès: {full_results['summary']['success_rate']:.1f}%")
-        print(f"📄 Rapports:")
+        print(f"[REPORTS] Rapports:")
         print(f"   - JSON: {report_file}")
         print(f"   - HTML: {html_file}")
         print(f"   - Log: {project_results.get('log_file', 'N/A')}")
         print(f"🔗 Rapport le plus récent:")
         print(f"   - {latest_report}")
         print(f"   - {latest_html}")
+        
+        # Ouvrir automatiquement le rapport HTML
+        try:
+            import webbrowser
+            print(f"\n🌐 Ouverture automatique du rapport HTML...")
+            webbrowser.open(f"file://{html_file.absolute()}")
+            print(f"✅ Rapport HTML ouvert dans le navigateur")
+        except Exception as e:
+            print(f"⚠️ Impossible d'ouvrir le rapport HTML automatiquement: {e}")
+            print(f"   Ouvrez manuellement: {html_file}")
         
         # Nettoyage automatique après l'audit
         await self._run_automatic_cleanup()
@@ -443,7 +453,7 @@ class UniversalAuditor:
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔍 Audit Universel</h1>
+            <h1>[AUDIT] Audit Universel</h1>
             <p>Rapport d'audit pour {project_name} - {timestamp}</p>
         </div>
         
@@ -479,7 +489,7 @@ class UniversalAuditor:
                 <div class="{item_class}">
                     <h4>{test['name']}</h4>
                     <div class="status {status_class}">
-                        {'✅ Réussi' if test['success'] else '❌ Échoué'}
+                        {'[SUCCESS] Réussi' if test['success'] else '[ERROR] Échoué'}
                     </div>
                     <p>{test['message']}</p>
                 </div>
@@ -521,16 +531,16 @@ class UniversalAuditor:
                     )
                     
                     if total_space_freed > 0:
-                        print(f"   ✅ Nettoyage terminé - Espace libéré: {total_space_freed / 1024:.2f} KB")
+                        print(f"   [SUCCESS] Nettoyage terminé - Espace libéré: {total_space_freed / 1024:.2f} KB")
                     else:
-                        print(f"   ✅ Nettoyage terminé - Aucun fichier à nettoyer")
+                        print(f"   [SUCCESS] Nettoyage terminé - Aucun fichier à nettoyer")
                 else:
-                    print(f"   ⚠️ Nettoyage ignoré: {cleanup_results.get('reason', 'Raison inconnue')}")
+                    print(f"   [WARN] Nettoyage ignoré: {cleanup_results.get('reason', 'Raison inconnue')}")
             else:
-                print(f"   ⏭️ Nettoyage non nécessaire pour {self.project_name}")
+                print(f"   [SKIP] Nettoyage non nécessaire pour {self.project_name}")
                 
         except Exception as e:
-            print(f"   ❌ Erreur lors du nettoyage automatique: {e}")
+            print(f"   [ERROR] Erreur lors du nettoyage automatique: {e}")
 
 async def main():
     """Fonction principale."""
@@ -558,7 +568,7 @@ async def main():
         await auditor.run_full_audit()
         
     except KeyboardInterrupt:
-        print("\n⚠️ Audit interrompu par l'utilisateur")
+        print("\n[WARN] Audit interrompu par l'utilisateur")
     except Exception as e:
         print(f"\n[ERROR] Erreur lors de l'audit: {e}")
         import traceback

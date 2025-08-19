@@ -1,0 +1,323 @@
+{
+  "audit_info": {
+    "project_name": "",
+    "project_type": "python",
+    "timestamp": "2025-08-19T15:57:41.363072",
+    "audit_version": "2.0.0",
+    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\projects"
+  },
+  "project_tests": {
+    "project_name": "",
+    "project_type": "python",
+    "tests_executed": [
+      {
+        "name": "test_advanced_audit",
+        "success": true,
+        "message": "Audit avancé terminé: 10/10 points",
+        "details": {
+          "dead_code": {
+            "dead_functions": 0,
+            "dead_classes": 0,
+            "total_functions": 0,
+            "total_classes": 0
+          },
+          "duplications": {
+            "total_duplications": 0,
+            "files_analyzed": 0
+          },
+          "generic_audit": {
+            "success": true,
+            "message": "Audit générique terminé avec succès",
+            "details": {
+              "analysis_type": "generic",
+              "timestamp": "2025-08-19T15:57:37.283586",
+              "project_path": ".",
+              "findings": [
+                {
+                  "type": "structure",
+                  "severity": "info",
+                  "message": "Dossiers recommandés manquants: src, lib, app, main, utils",
+                  "recommendation": "Créer une structure de projet standardisée"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "core\\audit_gui.py",
+                  "line": 176,
+                  "message": "Fonction 'setup_styles' très longue (21 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "core\\audit_gui_broken.py",
+                  "line": 0,
+                  "message": "Erreur de syntaxe Python"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "core\\audit_gui_clean.py",
+                  "line": 292,
+                  "message": "Fonction 'setup_styles' très longue (26 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "scripts\\migrate_old_reports.py",
+                  "line": 15,
+                  "message": "Fonction 'migrate_old_reports' très longue (26 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "tools\\security_checker.py",
+                  "line": 572,
+                  "message": "Fonction 'main' très longue (23 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "scripts\\debug\\analyze_code_duplications_detailed.py",
+                  "line": 28,
+                  "message": "Fonction 'analyze_duplications_detailed' très longue (38 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "core\\project_audits\\test_exhaustive_audit.py",
+                  "line": 221,
+                  "message": "Fonction '_calculate_exhaustive_score' très longue (25 lignes)"
+                },
+                {
+                  "type": "security",
+                  "severity": "high",
+                  "file": "tests\\test_security_checker_unit.py",
+                  "message": "Pattern de sécurité détecté: password",
+                  "recommendation": "Vérifier et sécuriser les données sensibles"
+                },
+                {
+                  "type": "security",
+                  "severity": "high",
+                  "file": "tests\\test_security_checker_unit.py",
+                  "message": "Pattern de sécurité détecté: api_key",
+                  "recommendation": "Vérifier et sécuriser les données sensibles"
+                }
+              ],
+              "metrics": {
+                "total_files": 406,
+                "file_types": {
+                  "": 262,
+                  ".py": 41,
+                  ".md": 12,
+                  ".txt": 4,
+                  ".json": 26,
+                  ".pyc": 15,
+                  ".log": 15,
+                  ".html": 17,
+                  ".sample": 14
+                },
+                "code_files": 41,
+                "python": {
+                  "total_files": 41,
+                  "total_lines": 11871,
+                  "total_functions": 302,
+                  "total_classes": 24,
+                  "avg_lines_per_file": 289.5365853658537
+                }
+              },
+              "recommendations": [
+                "Projet de grande taille - Considérer une architecture modulaire",
+                "Fichiers très longs - Diviser en modules plus petits",
+                "Problèmes de sécurité détectés - Audit de sécurité recommandé",
+                "Problèmes de qualité détectés - Refactoring recommandé"
+              ]
+            }
+          },
+          "structure": {
+            "total_files": 406,
+            "python_files": 41,
+            "test_files": 16,
+            "doc_files": 16,
+            "missing_essential": []
+          },
+          "quality_score": 10
+        }
+      },
+      {
+        "name": "test_debug_scripts",
+        "success": false,
+        "message": "Tests de debug terminés: 0/5 scripts réussis",
+        "details": {
+          "duplications_detailed": {
+            "success": false,
+            "output": "Erreur: Impossible d'importer CodeAnalyzer\nTools dir: C:\\Users\\ymora\\Desktop\\audit\\scripts\\tools\nFiles in tools: []\n",
+            "error": ""
+          },
+          "debug_duplications": {
+            "success": false,
+            "output": "",
+            "error": "Traceback (most recent call last):\n  File \"C:\\Users\\ymora\\Desktop\\audit\\scripts\\debug\\debug_code_duplications_analysis.py\", line 10, in <module>\n    from tools.code_analyzer import CodeAnalyzer\nModuleNotFoundError: No module named 'tools'\n"
+          },
+          "debug_security": {
+            "success": false,
+            "output": "",
+            "error": "Traceback (most recent call last):\n  File \"C:\\Users\\ymora\\Desktop\\audit\\scripts\\debug\\debug_security_detection.py\", line 28, in <module>\n    print(\"\\U0001f50d DEBUG DE LA DÉTECTION DE SÉCURITÉ\")\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ymora\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f50d' in position 0: character maps to <undefined>\n"
+          },
+          "fix_vulnerabilities": {
+            "success": false,
+            "output": "",
+            "error": "Traceback (most recent call last):\n  File \"C:\\Users\\ymora\\Desktop\\audit\\scripts\\debug\\fix_final_vulnerabilities.py\", line 77, in <module>\n    main()\n    ~~~~^^\n  File \"C:\\Users\\ymora\\Desktop\\audit\\scripts\\debug\\fix_final_vulnerabilities.py\", line 11, in main\n    print(\"\\U0001f527 CORRECTION FINALE DES VULNÉRABILITÉS\")\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ymora\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f527' in position 0: character maps to <undefined>\n"
+          },
+          "demo_script": {
+            "success": false,
+            "output": "\n============================================================\n",
+            "error": "Traceback (most recent call last):\n  File \"C:\\Users\\ymora\\Desktop\\audit\\scripts\\demo.py\", line 243, in <module>\n    main()\n    ~~~~^^\n  File \"C:\\Users\\ymora\\Desktop\\audit\\scripts\\demo.py\", line 191, in main\n    print_header(\"Démonstration - Système d'Audit Universel\")\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ymora\\Desktop\\audit\\scripts\\demo.py\", line 17, in print_header\n    print(f\"\\U0001f50d {title}\")\n    ~~~~~^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ymora\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f50d' in position 0: character maps to <undefined>\n"
+          },
+          "debug_score": 0.0
+        }
+      },
+      {
+        "name": "test_exhaustive_audit",
+        "success": false,
+        "message": "Erreur lors de l'audit exhaustif: 'SecurityChecker' object has no attribute 'analyze_project'",
+        "details": {
+          "error": "'SecurityChecker' object has no attribute 'analyze_project'"
+        }
+      },
+      {
+        "name": "test_simple_audit",
+        "success": true,
+        "message": "Test terminé - 41 fichiers Python trouvés",
+        "details": {
+          "python_files_count": 41,
+          "test_files_count": 16,
+          "missing_essential_files": [],
+          "project_path": ".",
+          "project_type": "python"
+        }
+      }
+    ],
+    "tests_passed": 2,
+    "tests_failed": 2,
+    "total_tests": 4,
+    "start_time": "2025-08-19T15:57:37.272111",
+    "end_time": "2025-08-19T15:57:39.727884",
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\projects\\logs\\audit_20250819_155737.log"
+  },
+  "generic_audit": {
+    "generic_audit": {
+      "success": true,
+      "message": "Audit générique terminé avec succès",
+      "details": {
+        "analysis_type": "generic",
+        "timestamp": "2025-08-19T15:57:39.729299",
+        "project_path": ".",
+        "findings": [
+          {
+            "type": "structure",
+            "severity": "info",
+            "message": "Dossiers recommandés manquants: src, lib, app, main, utils",
+            "recommendation": "Créer une structure de projet standardisée"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "core\\audit_gui.py",
+            "line": 176,
+            "message": "Fonction 'setup_styles' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "core\\audit_gui_broken.py",
+            "line": 0,
+            "message": "Erreur de syntaxe Python"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "core\\audit_gui_clean.py",
+            "line": 292,
+            "message": "Fonction 'setup_styles' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "scripts\\migrate_old_reports.py",
+            "line": 15,
+            "message": "Fonction 'migrate_old_reports' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "tools\\security_checker.py",
+            "line": 572,
+            "message": "Fonction 'main' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "scripts\\debug\\analyze_code_duplications_detailed.py",
+            "line": 28,
+            "message": "Fonction 'analyze_duplications_detailed' très longue (38 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "core\\project_audits\\test_exhaustive_audit.py",
+            "line": 221,
+            "message": "Fonction '_calculate_exhaustive_score' très longue (25 lignes)"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "tests\\test_security_checker_unit.py",
+            "message": "Pattern de sécurité détecté: password",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "tests\\test_security_checker_unit.py",
+            "message": "Pattern de sécurité détecté: api_key",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          }
+        ],
+        "metrics": {
+          "total_files": 410,
+          "file_types": {
+            "": 262,
+            ".py": 41,
+            ".md": 12,
+            ".txt": 4,
+            ".json": 26,
+            ".pyc": 19,
+            ".log": 15,
+            ".html": 17,
+            ".sample": 14
+          },
+          "code_files": 41,
+          "python": {
+            "total_files": 41,
+            "total_lines": 11871,
+            "total_functions": 302,
+            "total_classes": 24,
+            "avg_lines_per_file": 289.5365853658537
+          }
+        },
+        "recommendations": [
+          "Projet de grande taille - Considérer une architecture modulaire",
+          "Fichiers très longs - Diviser en modules plus petits",
+          "Problèmes de sécurité détectés - Audit de sécurité recommandé",
+          "Problèmes de qualité détectés - Refactoring recommandé"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 4,
+    "tests_passed": 2,
+    "tests_failed": 2,
+    "success_rate": 50.0
+  }
+}

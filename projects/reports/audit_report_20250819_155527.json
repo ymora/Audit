@@ -1,0 +1,268 @@
+{
+  "audit_info": {
+    "project_name": "",
+    "project_type": "python",
+    "timestamp": "2025-08-19T15:55:27.298879",
+    "audit_version": "2.0.0",
+    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\projects"
+  },
+  "project_tests": {
+    "project_name": "",
+    "project_type": "python",
+    "tests_executed": [
+      {
+        "name": "test_advanced_audit",
+        "success": true,
+        "message": "Audit avancé terminé: 10/10 points",
+        "details": {
+          "dead_code": {
+            "dead_functions": 0,
+            "dead_classes": 0,
+            "total_functions": 0,
+            "total_classes": 0
+          },
+          "duplications": {
+            "total_duplications": 0,
+            "files_analyzed": 0
+          },
+          "generic_audit": {
+            "success": true,
+            "message": "Audit générique terminé avec succès",
+            "details": {
+              "analysis_type": "generic",
+              "timestamp": "2025-08-19T15:55:24.497878",
+              "project_path": ".",
+              "findings": [
+                {
+                  "type": "structure",
+                  "severity": "info",
+                  "message": "Dossiers recommandés manquants: src, lib, app, main, utils",
+                  "recommendation": "Créer une structure de projet standardisée"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "core\\audit_gui.py",
+                  "line": 176,
+                  "message": "Fonction 'setup_styles' très longue (21 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "core\\audit_gui_broken.py",
+                  "line": 0,
+                  "message": "Erreur de syntaxe Python"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "core\\audit_gui_clean.py",
+                  "line": 292,
+                  "message": "Fonction 'setup_styles' très longue (26 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "scripts\\migrate_old_reports.py",
+                  "line": 15,
+                  "message": "Fonction 'migrate_old_reports' très longue (26 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "tools\\security_checker.py",
+                  "line": 572,
+                  "message": "Fonction 'main' très longue (23 lignes)"
+                },
+                {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "scripts\\debug\\analyze_code_duplications_detailed.py",
+                  "line": 28,
+                  "message": "Fonction 'analyze_duplications_detailed' très longue (38 lignes)"
+                },
+                {
+                  "type": "security",
+                  "severity": "high",
+                  "file": "tests\\test_security_checker_unit.py",
+                  "message": "Pattern de sécurité détecté: password",
+                  "recommendation": "Vérifier et sécuriser les données sensibles"
+                },
+                {
+                  "type": "security",
+                  "severity": "high",
+                  "file": "tests\\test_security_checker_unit.py",
+                  "message": "Pattern de sécurité détecté: api_key",
+                  "recommendation": "Vérifier et sécuriser les données sensibles"
+                }
+              ],
+              "metrics": {
+                "total_files": 401,
+                "file_types": {
+                  "": 262,
+                  ".py": 39,
+                  ".md": 12,
+                  ".txt": 4,
+                  ".json": 25,
+                  ".pyc": 15,
+                  ".log": 14,
+                  ".html": 16,
+                  ".sample": 14
+                },
+                "code_files": 39,
+                "python": {
+                  "total_files": 39,
+                  "total_lines": 11471,
+                  "total_functions": 300,
+                  "total_classes": 24,
+                  "avg_lines_per_file": 294.12820512820514
+                }
+              },
+              "recommendations": [
+                "Projet de grande taille - Considérer une architecture modulaire",
+                "Fichiers très longs - Diviser en modules plus petits",
+                "Problèmes de sécurité détectés - Audit de sécurité recommandé",
+                "Problèmes de qualité détectés - Refactoring recommandé"
+              ]
+            }
+          },
+          "structure": {
+            "total_files": 401,
+            "python_files": 39,
+            "test_files": 14,
+            "doc_files": 16,
+            "missing_essential": []
+          },
+          "quality_score": 10
+        }
+      },
+      {
+        "name": "test_simple_audit",
+        "success": true,
+        "message": "Test terminé - 39 fichiers Python trouvés",
+        "details": {
+          "python_files_count": 39,
+          "test_files_count": 14,
+          "missing_essential_files": [],
+          "project_path": ".",
+          "project_type": "python"
+        }
+      }
+    ],
+    "tests_passed": 2,
+    "tests_failed": 0,
+    "total_tests": 2,
+    "start_time": "2025-08-19T15:55:24.478619",
+    "end_time": "2025-08-19T15:55:25.954322",
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\projects\\logs\\audit_20250819_155524.log"
+  },
+  "generic_audit": {
+    "generic_audit": {
+      "success": true,
+      "message": "Audit générique terminé avec succès",
+      "details": {
+        "analysis_type": "generic",
+        "timestamp": "2025-08-19T15:55:25.955444",
+        "project_path": ".",
+        "findings": [
+          {
+            "type": "structure",
+            "severity": "info",
+            "message": "Dossiers recommandés manquants: src, lib, app, main, utils",
+            "recommendation": "Créer une structure de projet standardisée"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "core\\audit_gui.py",
+            "line": 176,
+            "message": "Fonction 'setup_styles' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "core\\audit_gui_broken.py",
+            "line": 0,
+            "message": "Erreur de syntaxe Python"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "core\\audit_gui_clean.py",
+            "line": 292,
+            "message": "Fonction 'setup_styles' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "scripts\\migrate_old_reports.py",
+            "line": 15,
+            "message": "Fonction 'migrate_old_reports' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "tools\\security_checker.py",
+            "line": 572,
+            "message": "Fonction 'main' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "scripts\\debug\\analyze_code_duplications_detailed.py",
+            "line": 28,
+            "message": "Fonction 'analyze_duplications_detailed' très longue (38 lignes)"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "tests\\test_security_checker_unit.py",
+            "message": "Pattern de sécurité détecté: password",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "tests\\test_security_checker_unit.py",
+            "message": "Pattern de sécurité détecté: api_key",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          }
+        ],
+        "metrics": {
+          "total_files": 401,
+          "file_types": {
+            "": 262,
+            ".py": 39,
+            ".md": 12,
+            ".txt": 4,
+            ".json": 25,
+            ".pyc": 15,
+            ".log": 14,
+            ".html": 16,
+            ".sample": 14
+          },
+          "code_files": 39,
+          "python": {
+            "total_files": 39,
+            "total_lines": 11471,
+            "total_functions": 300,
+            "total_classes": 24,
+            "avg_lines_per_file": 294.12820512820514
+          }
+        },
+        "recommendations": [
+          "Projet de grande taille - Considérer une architecture modulaire",
+          "Fichiers très longs - Diviser en modules plus petits",
+          "Problèmes de sécurité détectés - Audit de sécurité recommandé",
+          "Problèmes de qualité détectés - Refactoring recommandé"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 2,
+    "tests_passed": 2,
+    "tests_failed": 0,
+    "success_rate": 100.0
+  }
+}

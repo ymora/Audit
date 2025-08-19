@@ -2,7 +2,7 @@
   "audit_info": {
     "project_name": "docusense_ai",
     "project_type": "generic",
-    "timestamp": "2025-08-19T14:16:14.756712",
+    "timestamp": "2025-08-19T13:07:06.292594",
     "audit_version": "2.0.0",
     "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\projects\\docusense_ai"
   },
@@ -13,9 +13,9 @@
     "tests_passed": 0,
     "tests_failed": 0,
     "total_tests": 0,
-    "start_time": "2025-08-19T14:13:16.396598",
+    "start_time": "2025-08-19T12:56:30.256705",
     "end_time": null,
-    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\projects\\docusense_ai\\logs\\audit_20250819_141316.log"
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\projects\\docusense_ai\\logs\\audit_20250819_125630.log"
   },
   "generic_audit": {
     "generic_audit": {
@@ -23,7 +23,7 @@
       "message": "Audit générique terminé avec succès",
       "details": {
         "analysis_type": "generic",
-        "timestamp": "2025-08-19T14:13:16.400597",
+        "timestamp": "2025-08-19T12:56:30.263015",
         "project_path": "C:\\Users\\ymora\\Desktop\\Docusense AI",
         "findings": [
           {
@@ -22812,14 +22812,14 @@
           }
         ],
         "metrics": {
-          "total_files": 67406,
+          "total_files": 67404,
           "file_types": {
-            "": 2672,
+            "": 2671,
             ".log": 3,
             ".ps1": 47,
             ".db": 3,
             ".py": 10465,
-            ".md": 1241,
+            ".md": 1240,
             ".html": 43,
             ".pdf": 12,
             ".pb": 1,
@@ -22962,10 +22962,10 @@
           "code_files": 39052,
           "python": {
             "total_files": 10465,
-            "total_lines": 3872703,
+            "total_lines": 3872671,
             "total_functions": 162833,
             "total_classes": 29462,
-            "avg_lines_per_file": 370.0623984710941
+            "avg_lines_per_file": 370.05934065934065
           }
         },
         "recommendations": [
