@@ -79,17 +79,17 @@ class ModernDialog:
         main_frame = tk.Frame(self.dialog, bg='#ffffff', relief='flat', bd=0)
         main_frame.pack(fill='both', expand=True, padx=20, pady=20)
         
-        # Icône et titre
-        icon_label = tk.Label(main_frame, text=self.icon, font=('Segoe UI', 24), 
+                # Icône et titre
+        icon_label = tk.Label(main_frame, text=self.icon, font=('Inter', 24, 'bold'), 
                              bg='#ffffff', fg=self.accent_color)
         icon_label.pack(pady=(0, 10))
         
-        title_label = tk.Label(main_frame, text=self.title, font=('Segoe UI', 14, 'bold'),
-                              bg='#ffffff', fg='#18181b')
+        title_label = tk.Label(main_frame, text=self.title, font=('Inter', 18, 'semibold'),
+                               bg='#ffffff', fg='#18181b')
         title_label.pack(pady=(0, 15))
         
         # Message
-        message_label = tk.Label(main_frame, text=self.message, font=('Segoe UI', 10),
+        message_label = tk.Label(main_frame, text=self.message, font=('Inter', 14, 'normal'),
                                 bg='#ffffff', fg='#71717a', wraplength=350, justify='center')
         message_label.pack(pady=(0, 25))
         
@@ -99,20 +99,20 @@ class ModernDialog:
         
         if self.dialog_type == "confirm":
             # Boutons Oui/Non
-            yes_btn = tk.Button(button_frame, text="Oui", font=('Segoe UI', 10, 'bold'),
+            yes_btn = tk.Button(button_frame, text="Oui", font=('Inter', 14, 'semibold'),
                                bg='#f4faff', fg=self.accent_color, bd=1, relief='solid',
                                padx=20, pady=6, command=self.yes_clicked,
                                activebackground='#e0f2fe', activeforeground=self.accent_color)
             yes_btn.pack(side='left', padx=(0, 10))
             
-            no_btn = tk.Button(button_frame, text="Non", font=('Segoe UI', 10, 'bold'),
+            no_btn = tk.Button(button_frame, text="Non", font=('Inter', 14, 'semibold'),
                               bg='#f4faff', fg='#71717a', bd=1, relief='solid',
                               padx=20, pady=6, command=self.no_clicked,
                               activebackground='#e0f2fe', activeforeground='#71717a')
             no_btn.pack(side='left')
         else:
             # Bouton OK
-            ok_btn = tk.Button(button_frame, text="OK", font=('Segoe UI', 10, 'bold'),
+            ok_btn = tk.Button(button_frame, text="OK", font=('Inter', 14, 'semibold'),
                               bg='#f4faff', fg=self.accent_color, bd=1, relief='solid',
                               padx=30, pady=6, command=self.ok_clicked,
                               activebackground='#e0f2fe', activeforeground=self.accent_color)
@@ -218,17 +218,17 @@ class AuditGUI:
         style.configure('Title.TLabel', 
                        background=self.colors['bg_dark'], 
                        foreground=self.colors['text_primary'],
-                       font=('Segoe UI', 20, 'bold'))
+                       font=('Inter', 24, 'bold'))
         
         style.configure('Subtitle.TLabel', 
                        background=self.colors['bg_medium'], 
                        foreground=self.colors['text_secondary'],
-                       font=('Segoe UI', 11))
+                       font=('Inter', 14, 'medium'))
         
         style.configure('Info.TLabel',
                        background=self.colors['bg_medium'],
                        foreground=self.colors['text_secondary'],
-                       font=('Segoe UI', 9))
+                       font=('Inter', 12, 'normal'))
     
     def _setup_button_styles(self, style):
         """Configure les styles pour les boutons."""
@@ -238,7 +238,7 @@ class AuditGUI:
                        foreground='#ffffff',
                        borderwidth=0,
                        focuscolor='none',
-                       font=('Segoe UI', 10, 'bold'),
+                       font=('Inter', 14, 'semibold'),
                        padding=(16, 8))
         style.map('Primary.TButton',
                  background=[('active', '#1d4ed8')])
@@ -249,7 +249,7 @@ class AuditGUI:
                        foreground='#ffffff',
                        borderwidth=0,
                        focuscolor='none',
-                       font=('Segoe UI', 10, 'bold'),
+                       font=('Inter', 14, 'semibold'),
                        padding=(16, 8))
         style.map('Success.TButton',
                  background=[('active', '#15803d')])
@@ -260,7 +260,7 @@ class AuditGUI:
                        foreground='#ffffff',
                        borderwidth=0,
                        focuscolor='none',
-                       font=('Segoe UI', 10, 'bold'),
+                       font=('Inter', 14, 'semibold'),
                        padding=(16, 8))
         style.map('Danger.TButton',
                  background=[('active', '#b91c1c')])
@@ -278,7 +278,7 @@ class AuditGUI:
         style.configure('Dark.TLabelframe.Label',
                        background=self.colors['bg_medium'],
                        foreground=self.colors['accent_blue'],
-                       font=('Segoe UI', 11, 'bold'))
+                       font=('Inter', 14, 'semibold'))
         
         # Entry
         style.configure('Dark.TEntry',
@@ -416,7 +416,7 @@ class AuditGUI:
         self.logs_text = scrolledtext.ScrolledText(
             logs_frame, 
             wrap=tk.WORD, 
-            font=('Consolas', 9),
+            font=('JetBrains Mono', 12),
             bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
@@ -459,7 +459,7 @@ class AuditGUI:
             highlightthickness=1,
             highlightbackground=self.colors['border'],
             highlightcolor=self.colors['accent_blue'],
-            font=('Segoe UI', 9)
+            font=('Inter', 12)
         )
         self.recent_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=(0, 12))
         self.recent_listbox.bind('<Double-Button-1>', self.select_recent_project)
@@ -502,8 +502,8 @@ class AuditGUI:
         # Compteur
         self.ai_count_var = tk.StringVar()
         self.ai_count_var.set("0")
-        ai_count_label = ttk.Label(ai_frame, textvariable=self.ai_count_var, 
-                                  style='Info.TLabel', font=('Segoe UI', 10, 'bold'))
+                ai_count_label = ttk.Label(ai_frame, textvariable=self.ai_count_var, 
+                                   style='Info.TLabel', font=('Inter', 14, 'semibold'))
         ai_count_label.pack(side='left')
         
         # Dessiner l'indicateur initial
@@ -551,7 +551,7 @@ class AuditGUI:
             label = tk.Label(tooltip, text=tooltip_text, 
                            bg='#ffffff', 
                            fg=self.colors['text_primary'],
-                           font=('Segoe UI', 9),
+                           font=('Inter', 12),
                            relief='solid', borderwidth=1)
             label.pack()
             
@@ -580,7 +580,7 @@ class AuditGUI:
         self.viz_text = scrolledtext.ScrolledText(
             viz_frame,
             wrap=tk.WORD,
-            font=('Consolas', 10),
+            font=('JetBrains Mono', 14),
             bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
