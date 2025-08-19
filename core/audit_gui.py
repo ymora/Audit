@@ -429,12 +429,12 @@ class AuditGUI:
         """Crée une barre de séparation redimensionnable."""
         # Frame pour la barre de séparation
         separator_frame = ttk.Frame(parent, style='Dark.TFrame')
-        separator_frame.grid(row=0, column=1, sticky=(tk.W, tk.E, tk.N, tk.S), padx=4)
-        separator_frame.configure(width=8)
+        separator_frame.grid(row=0, column=1, sticky=(tk.W, tk.E, tk.N, tk.S), padx=2)
+        separator_frame.configure(width=6)
         
-        # Barre de séparation
-        self.separator = ttk.Separator(separator_frame, orient='vertical')
-        self.separator.pack(fill=tk.Y, expand=True)
+        # Barre de séparation visible
+        self.separator = tk.Frame(separator_frame, bg='#b6c6e3', width=2)
+        self.separator.pack(fill=tk.Y, expand=True, padx=2)
         
         # Curseur pour indiquer que c'est redimensionnable
         separator_frame.bind('<Enter>', lambda e: separator_frame.configure(cursor='sb_h_double_arrow'))
@@ -453,44 +453,67 @@ class AuditGUI:
         """Démarre le redimensionnement de la barre de séparation."""
         self.separator_dragging = True
         self.separator_start_x = event.x_root
+        
+        # Changer le curseur pour indiquer le redimensionnement
+        event.widget.configure(cursor='sb_h_double_arrow')
     
     def separator_drag(self, event):
         """Gère le redimensionnement de la barre de séparation."""
         if self.separator_dragging:
-            delta_x = event.x_root - self.separator_start_x
+            # Calculer la nouvelle position
+            new_x = event.x_root
+            window_width = self.root.winfo_width()
+            
+            # Limiter le redimensionnement (minimum 200px pour chaque panneau)
+            min_control_width = 200
+            max_control_width = window_width - 300  # Laisser au moins 300px pour la visualisation
+            
+            # Calculer la largeur du panneau de contrôle
+            control_width = new_x - self.root.winfo_rootx()
+            
+            # Appliquer les limites
+            if control_width < min_control_width:
+                control_width = min_control_width
+            elif control_width > max_control_width:
+                control_width = max_control_width
+            
             # Ajuster les poids des colonnes
-            current_weights = self.root.grid_columnconfigure(0)['weight']
-            # Limiter le redimensionnement
-            if delta_x > 50:  # Minimum pour le panneau de contrôle
-                pass  # Implémentation du redimensionnement
+            total_width = window_width
+            control_weight = control_width / total_width
+            viz_weight = (total_width - control_width) / total_width
+            
+            # Mettre à jour les poids (approximation)
+            self.root.grid_columnconfigure(0, weight=int(control_weight * 10))
+            self.root.grid_columnconfigure(2, weight=int(viz_weight * 10))
     
     def stop_separator_drag(self, event):
         """Arrête le redimensionnement de la barre de séparation."""
         self.separator_dragging = False
+        
+        # Remettre le curseur normal
+        event.widget.configure(cursor='sb_h_double_arrow')
     
     def create_control_panel(self, parent):
         """Crée le panneau de contrôle."""
         control_frame = ttk.Frame(parent, style='Dark.TFrame')
         control_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(0, 16))
         control_frame.columnconfigure(0, weight=1)
-        control_frame.rowconfigure(3, weight=1)  # Logs prennent l'espace restant
+        control_frame.rowconfigure(2, weight=2)  # Tableau des projets prend plus d'espace
+        control_frame.rowconfigure(3, weight=1)  # Logs prennent moins d'espace
         
         # Titre
         title_frame = ttk.Frame(control_frame, style='Dark.TFrame')
-        title_frame.grid(row=0, column=0, pady=(0, 20))
+        title_frame.grid(row=0, column=0, pady=(0, 16))
         title_frame.columnconfigure(0, weight=1)
         
         title_label = ttk.Label(title_frame, text="Audit Universel", style='Title.TLabel')
         title_label.grid(row=0, column=0, sticky=tk.W)
         
-        # Section projet
-        self.create_project_section(control_frame)
+        # Section projet et actions principales
+        self.create_main_actions_section(control_frame)
         
-        # Section projets récents (déplacée ici pour plus de fluidité)
-        self.create_recent_projects_section(control_frame)
-        
-        # Section actions
-        self.create_actions_section(control_frame)
+        # Tableau des projets avec rapports
+        self.create_projects_table_section(control_frame)
         
         # Section logs
         self.create_logs_section(control_frame)
@@ -498,90 +521,115 @@ class AuditGUI:
         # Barre de statut
         self.create_status_bar(control_frame)
     
-    def create_project_section(self, parent):
-        """Crée la section de sélection de projet."""
-        project_frame = ttk.LabelFrame(parent, text="Projet", style='Dark.TLabelframe', padding="12")
-        project_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(0, 16))
-        project_frame.columnconfigure(1, weight=1)
+    def create_main_actions_section(self, parent):
+        """Crée la section d'actions principales simplifiée."""
+        main_frame = ttk.LabelFrame(parent, text="Actions Principales", style='Dark.TLabelframe', padding="8")
+        main_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(0, 12))
+        main_frame.columnconfigure(1, weight=1)
         
-        # Label et entry
-        ttk.Label(project_frame, text="Chemin:", style='Subtitle.TLabel').grid(row=0, column=0, sticky=tk.W, padx=(0, 12))
+        # Sélection de projet
+        ttk.Label(main_frame, text="Projet:", style='Subtitle.TLabel').grid(row=0, column=0, sticky=tk.W, padx=(0, 12))
         
-        self.project_entry = ttk.Entry(project_frame, textvariable=self.selected_project, style='Dark.TEntry')
-        self.project_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=(0, 12))
+        self.project_entry = ttk.Entry(main_frame, textvariable=self.selected_project, style='Dark.TEntry')
+        self.project_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=(0, 8))
         
-        browse_btn = tk.Button(project_frame, text="📂", command=self.browse_project, 
-                              bg='#ffffff', fg='#3b82f6', font=('Inter', 14, 'bold'),
-                              relief='solid', borderwidth=1, cursor='hand2',
+        browse_btn = tk.Button(main_frame, text="📂", command=self.browse_project, 
+                              bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
+                              relief='solid', borderwidth=1, cursor='hand2', padx=4, pady=2,
                               activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        browse_btn.grid(row=0, column=2)
+        browse_btn.grid(row=0, column=2, padx=(0, 8))
         ButtonAnimator.add_hover_effects(browse_btn, "Sélectionner un dossier de projet")
         
-        # Informations du projet
-        self.project_info_label = ttk.Label(project_frame, text="Aucun projet sélectionné", style='Info.TLabel')
-        self.project_info_label.grid(row=1, column=0, columnspan=3, sticky=tk.W, pady=(8, 0))
+        # Boutons d'action principaux
+        actions_frame = ttk.Frame(main_frame, style='Dark.TFrame')
+        actions_frame.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(12, 0))
         
-        # Explication
-        explanation_label = ttk.Label(project_frame, 
-                                     text="Sélectionnez le dossier racine du projet à auditer. L'audit analysera tous les fichiers du projet.",
-                                     style='Info.TLabel', font=('TkDefaultFont', 9))
-        explanation_label.grid(row=2, column=0, columnspan=3, sticky=tk.W, pady=(4, 0))
-    
-    def create_actions_section(self, parent):
-        """Crée la section des actions."""
-        actions_frame = ttk.LabelFrame(parent, text="Actions", style='Dark.TLabelframe', padding="12")
-        actions_frame.grid(row=3, column=0, sticky=(tk.W, tk.E), pady=(0, 16))
-        
-        # Boutons d'action
-        button_frame = ttk.Frame(actions_frame, style='Dark.TFrame')
-        button_frame.grid(row=0, column=0, pady=(0, 12))
-        
-        self.audit_btn = tk.Button(button_frame, text="🔍 Lancer l'Audit", 
+        # Bouton Audit principal
+        self.audit_btn = tk.Button(actions_frame, text="🔍 Audit", 
                                    command=self.run_audit,
-                                   bg='#ffffff', fg='#10b981', font=('Inter', 10, 'bold'),
-                                   relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                                   bg='#ffffff', fg='#10b981', font=('Inter', 9, 'bold'),
+                                   relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=4,
                                    activebackground='#f0fdf4', activeforeground='#059669')
         self.audit_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(self.audit_btn, "Démarrer l'analyse complète du projet")
         
-        self.stop_btn = tk.Button(button_frame, text="⏹️ Arrêter", 
+        # Bouton Stop
+        self.stop_btn = tk.Button(actions_frame, text="⏹️", 
                                   command=self.stop_audit,
-                                  bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
-                                  relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                                  bg='#ffffff', fg='#ef4444', font=('Inter', 9, 'bold'),
+                                  relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=4,
                                   activebackground='#fef2f2', activeforeground='#dc2626')
         self.stop_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(self.stop_btn, "Interrompre l'audit en cours")
         
-        self.view_btn = tk.Button(button_frame, text="📄 Voir Rapport", 
-                                  command=self.view_report,
-                                  bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                                  relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
-                                  activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        self.view_btn.pack(side='left', padx=(0, 6))
-        ButtonAnimator.add_hover_effects(self.view_btn, "Afficher le dernier rapport d'audit")
-        
-        self.folder_btn = tk.Button(button_frame, text="📂 Dossier", 
-                                    command=self.open_folder,
-                                    bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                                    relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
-                                    activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        self.folder_btn.pack(side='left')
-        ButtonAnimator.add_hover_effects(self.folder_btn, "Ouvrir le dossier d'audit du projet")
-        
         # Barre de progression
         self.progress = ttk.Progressbar(actions_frame, mode='indeterminate', style='Dark.Horizontal.TProgressbar')
-        self.progress.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(8, 0))
+        self.progress.pack(side='left', fill='x', expand=True, padx=(8, 0))
         
-        # Explication des actions
-        actions_explanation = ttk.Label(actions_frame, 
-                                      text="🔍 Lancer l'Audit : Analyse complète du projet | ⏹️ Arrêter : Interrompre l'audit | 📄 Voir Rapport : Afficher les résultats | 📂 Dossier : Ouvrir le dossier d'audit",
-                                      style='Info.TLabel', font=('TkDefaultFont', 9))
-        actions_explanation.grid(row=2, column=0, sticky=tk.W, pady=(8, 0))
+        # Informations du projet
+        self.project_info_label = ttk.Label(main_frame, text="Aucun projet sélectionné", style='Info.TLabel')
+        self.project_info_label.grid(row=2, column=0, columnspan=3, sticky=tk.W, pady=(8, 0))
+    
+    def create_projects_table_section(self, parent):
+        """Crée le tableau des projets avec rapports."""
+        table_frame = ttk.LabelFrame(parent, text="Projets & Rapports", style='Dark.TLabelframe', padding="8")
+        table_frame.grid(row=2, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 12))
+        table_frame.columnconfigure(0, weight=1)
+        table_frame.rowconfigure(1, weight=1)
+        
+        # En-têtes du tableau
+        headers_frame = ttk.Frame(table_frame, style='Dark.TFrame')
+        headers_frame.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=(0, 8))
+        headers_frame.columnconfigure(1, weight=1)
+        
+        # En-têtes
+        ttk.Label(headers_frame, text="Projet", style='Subtitle.TLabel', font=('TkDefaultFont', 10, 'bold')).grid(row=0, column=0, sticky=tk.W, padx=(0, 16))
+        ttk.Label(headers_frame, text="Dernier Audit", style='Subtitle.TLabel', font=('TkDefaultFont', 10, 'bold')).grid(row=0, column=1, sticky=tk.W, padx=(0, 16))
+        ttk.Label(headers_frame, text="Actions", style='Subtitle.TLabel', font=('TkDefaultFont', 10, 'bold')).grid(row=0, column=2, sticky=tk.W)
+        
+        # Zone de tableau avec scrollbar
+        table_container = ttk.Frame(table_frame, style='Dark.TFrame')
+        table_container.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        table_container.columnconfigure(0, weight=1)
+        table_container.rowconfigure(0, weight=1)
+        
+        # Treeview pour le tableau des projets
+        columns = ('project', 'last_audit', 'actions')
+        self.projects_tree = ttk.Treeview(table_container, columns=columns, show='headings', height=5)
+        
+        # Configuration des colonnes
+        self.projects_tree.heading('project', text='Projet')
+        self.projects_tree.heading('last_audit', text='Dernier Audit')
+        self.projects_tree.heading('actions', text='Actions')
+        
+        self.projects_tree.column('project', width=150, anchor='w')
+        self.projects_tree.column('last_audit', width=120, anchor='w')
+        self.projects_tree.column('actions', width=80, anchor='center')
+        
+        # Scrollbar
+        scrollbar = ttk.Scrollbar(table_container, orient=tk.VERTICAL, command=self.projects_tree.yview)
+        self.projects_tree.configure(yscrollcommand=scrollbar.set)
+        
+        # Placement
+        self.projects_tree.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        scrollbar.grid(row=0, column=1, sticky=(tk.N, tk.S))
+        
+        # Bindings
+        self.projects_tree.bind('<Double-1>', self.on_project_select)
+        self.projects_tree.bind('<Button-1>', self.on_project_click)
+        
+        # Charger les projets existants
+        try:
+            self.load_projects_table()
+        except Exception as e:
+            print(f"Erreur lors du chargement du tableau: {e}")
+            # Créer un tableau vide en cas d'erreur
+            pass
     
     def create_logs_section(self, parent):
         """Crée la section des logs."""
-        logs_frame = ttk.LabelFrame(parent, text="Logs", style='Dark.TLabelframe', padding="12")
-        logs_frame.grid(row=4, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 16))
+        logs_frame = ttk.LabelFrame(parent, text="Logs", style='Dark.TLabelframe', padding="8")
+        logs_frame.grid(row=3, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 12))
         logs_frame.columnconfigure(0, weight=1)
         logs_frame.rowconfigure(0, weight=1)
         
@@ -589,7 +637,8 @@ class AuditGUI:
         self.logs_text = scrolledtext.ScrolledText(
             logs_frame, 
             wrap=tk.WORD, 
-            font=('JetBrains Mono', 10),
+            font=('JetBrains Mono', 9),
+            height=8,  # Hauteur fixe pour les logs
             bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
@@ -609,16 +658,16 @@ class AuditGUI:
         
         clear_btn = tk.Button(logs_buttons_frame, text="Effacer", 
                               command=self.clear_logs,
-                              bg='#ffffff', fg='#ef4444', font=('Inter', 12, 'bold'),
-                              relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=4,
+                              bg='#ffffff', fg='#ef4444', font=('Inter', 9, 'bold'),
+                              relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
                               activebackground='#fef2f2', activeforeground='#dc2626')
-        clear_btn.pack(side='left', padx=(0, 8))
+        clear_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(clear_btn, "Vider tous les logs")
         
         copy_btn = tk.Button(logs_buttons_frame, text="Copier", 
                              command=self.copy_logs,
-                             bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                             relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                             bg='#ffffff', fg='#3b82f6', font=('Inter', 9, 'bold'),
+                             relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
                              activebackground='#f0f9ff', activeforeground='#1d4ed8')
         copy_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(copy_btn, "Copier les logs dans le presse-papiers")
@@ -629,55 +678,140 @@ class AuditGUI:
                                    style='Info.TLabel', font=('TkDefaultFont', 9))
         logs_explanation.grid(row=2, column=0, sticky=tk.W, pady=(4, 0))
     
-    def create_recent_projects_section(self, parent):
-        """Crée la section des projets récents."""
-        recent_frame = ttk.LabelFrame(parent, text="Projets Récents", style='Dark.TLabelframe', padding="12")
-        recent_frame.grid(row=2, column=0, sticky=(tk.W, tk.E), pady=(0, 16))
-        recent_frame.columnconfigure(0, weight=1)
+    def load_projects_table(self):
+        """Charge les projets dans le tableau."""
+        # Vider le tableau
+        for item in self.projects_tree.get_children():
+            self.projects_tree.delete(item)
         
-        # Liste des projets récents
-        self.recent_listbox = tk.Listbox(
-            recent_frame, 
-            height=3,
-            bg='#ffffff',
-            fg=self.colors['text_primary'],
-            selectbackground=self.colors['accent_blue'],
-            selectforeground='#ffffff',
-            relief='flat',
-            borderwidth=1,
-            highlightthickness=1,
-            highlightbackground=self.colors['border'],
-            highlightcolor=self.colors['accent_blue'],
-            font=('Inter', 10)
-        )
-        self.recent_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=(0, 12))
-        self.recent_listbox.bind('<Double-Button-1>', self.select_recent_project)
+        # Charger les projets depuis la configuration
+        config_file = self.project_dir / "gui_config.json"
+        if config_file.exists():
+            try:
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    recent_projects = config.get('recent_projects', [])
+                    
+                    for project_path in recent_projects:
+                        if Path(project_path).exists():
+                            project_name = Path(project_path).name
+                            last_audit = self.get_last_audit_date(project_path)
+                            
+                            # Insérer dans le tableau
+                            item_id = self.projects_tree.insert('', 'end', values=(
+                                project_name,
+                                last_audit,
+                                "📄 📂"
+                            ))
+                            
+                            # Stocker le chemin complet dans les tags
+                            self.projects_tree.set(item_id, 'project', project_path)
+            except Exception as e:
+                self.log_message(f"⚠️ Erreur lors du chargement du tableau: {e}")
+    
+    def get_last_audit_date(self, project_path):
+        """Récupère la date du dernier audit pour un projet."""
+        try:
+            project_name = Path(project_path).name.lower().replace(' ', '_').replace('-', '_')
+            audit_system_dir = self.project_dir.parent
+            report_path = audit_system_dir / "audit_results" / "audit_reports" / project_name / "latest_report.json"
+            
+            if report_path.exists():
+                with open(report_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    timestamp = data.get('timestamp', '')
+                    if timestamp:
+                        # Convertir le timestamp en date lisible
+                        from datetime import datetime
+                        dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+                        return dt.strftime('%d/%m/%Y %H:%M')
+            
+            return "Jamais audité"
+        except:
+            return "Jamais audité"
+    
+    def on_project_select(self, event):
+        """Gère la sélection d'un projet dans le tableau."""
+        selection = self.projects_tree.selection()
+        if selection:
+            item = selection[0]
+            project_path = self.projects_tree.set(item, 'project')
+            if project_path:
+                self.selected_project.set(project_path)
+                self.update_project_info()
+                self.load_report_for_project(project_path)
+    
+    def on_project_click(self, event):
+        """Gère le clic sur les actions dans le tableau."""
+        region = self.projects_tree.identify("region", event.x, event.y)
+        if region == "cell":
+            column = self.projects_tree.identify_column(event.x)
+            if column == '#3':  # Colonne Actions
+                selection = self.projects_tree.selection()
+                if selection:
+                    item = selection[0]
+                    project_path = self.projects_tree.set(item, 'project')
+                    if project_path:
+                        self.show_project_actions_menu(event, project_path)
+    
+    def show_project_actions_menu(self, event, project_path):
+        """Affiche le menu d'actions pour un projet."""
+        menu = tk.Menu(self.root, tearoff=0)
+        menu.add_command(label="📄 Voir Rapport", command=lambda: self.load_report_for_project(project_path))
+        menu.add_command(label="📂 Ouvrir Dossier", command=lambda: self.open_project_folder(project_path))
+        menu.add_separator()
+        menu.add_command(label="🗑️ Supprimer du tableau", command=lambda: self.remove_project_from_table(project_path))
         
-        # Boutons pour les projets récents
-        recent_buttons_frame = ttk.Frame(recent_frame, style='Dark.TFrame')
-        recent_buttons_frame.grid(row=0, column=1, sticky=(tk.N, tk.S))
-        
-        select_btn = tk.Button(recent_buttons_frame, text="Sélectionner", 
-                               command=self.select_recent_project,
-                               bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                               relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
-                               activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        select_btn.pack(pady=(0, 8))
-        ButtonAnimator.add_hover_effects(select_btn, "Charger le projet sélectionné")
-        
-        remove_btn = tk.Button(recent_buttons_frame, text="Supprimer", 
-                               command=self.remove_recent_project,
-                               bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
-                               relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
-                               activebackground='#fef2f2', activeforeground='#dc2626')
-        remove_btn.pack()
-        ButtonAnimator.add_hover_effects(remove_btn, "Retirer le projet de la liste")
-        
-        # Explication des projets récents
-        recent_explanation = ttk.Label(recent_frame, 
-                                     text="Liste des projets récemment audités. Double-cliquez ou utilisez 'Sélectionner' pour charger un projet.",
-                                     style='Info.TLabel', font=('TkDefaultFont', 9))
-        recent_explanation.grid(row=1, column=0, columnspan=2, sticky=tk.W, pady=(8, 0))
+        menu.tk_popup(event.x_root, event.y_root)
+    
+    def load_report_for_project(self, project_path):
+        """Charge le rapport pour un projet spécifique."""
+        self.selected_project.set(project_path)
+        self.load_report()
+    
+    def open_project_folder(self, project_path):
+        """Ouvre le dossier d'audit d'un projet spécifique."""
+        try:
+            project_name = Path(project_path).name.lower().replace(' ', '_').replace('-', '_')
+            audit_system_dir = self.project_dir.parent
+            audit_path = audit_system_dir / "audit_results" / "audit_reports" / project_name
+            
+            if audit_path.exists():
+                if os.name == 'nt':  # Windows
+                    os.startfile(audit_path)
+                else:  # Linux/Mac
+                    subprocess.run(['xdg-open', str(audit_path)])
+                
+                self.log_message(f"📂 Dossier ouvert: {audit_path}")
+            else:
+                ModernDialog(self.root, "Attention", "Dossier d'audit introuvable.", "warning")
+        except Exception as e:
+            self.log_message(f"❌ Erreur lors de l'ouverture: {e}")
+    
+    def remove_project_from_table(self, project_path):
+        """Supprime un projet du tableau."""
+        # Supprimer de la configuration
+        config_file = self.project_dir / "gui_config.json"
+        if config_file.exists():
+            try:
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    recent_projects = config.get('recent_projects', [])
+                    
+                    if project_path in recent_projects:
+                        recent_projects.remove(project_path)
+                        
+                        config['recent_projects'] = recent_projects
+                        config['last_updated'] = datetime.now().isoformat()
+                        
+                        with open(config_file, 'w', encoding='utf-8') as f:
+                            json.dump(config, f, indent=2, ensure_ascii=False)
+                        
+                        # Recharger le tableau
+                        self.load_projects_table()
+                        self.log_message(f"🗑️ Projet supprimé du tableau: {Path(project_path).name}")
+            except Exception as e:
+                self.log_message(f"⚠️ Erreur lors de la suppression: {e}")
     
     def create_status_bar(self, parent):
         """Crée la barre de statut."""
@@ -686,13 +820,13 @@ class AuditGUI:
         
         status_bar = ttk.Label(parent, textvariable=self.status_var, 
                               style='Info.TLabel', anchor=tk.W)
-        status_bar.grid(row=5, column=0, sticky=(tk.W, tk.E))
+        status_bar.grid(row=4, column=0, sticky=(tk.W, tk.E))
     
 
     
     def create_visualization_panel(self, parent):
         """Crée le panneau de visualisation."""
-        self.viz_frame = ttk.LabelFrame(parent, text="Visualisation", style='Dark.TLabelframe', padding="12")
+        self.viz_frame = ttk.LabelFrame(parent, text="Visualisation", style='Dark.TLabelframe', padding="8")
         self.viz_frame.grid(row=0, column=2, sticky=(tk.W, tk.E, tk.N, tk.S))
         self.viz_frame.columnconfigure(0, weight=1)
         self.viz_frame.rowconfigure(0, weight=1)
@@ -701,7 +835,7 @@ class AuditGUI:
         self.viz_text = scrolledtext.ScrolledText(
             self.viz_frame,
             wrap=tk.WORD,
-            font=('JetBrains Mono', 11),
+            font=('JetBrains Mono', 9),
             bg='#ffffff',
             fg=self.colors['text_primary'],
             insertbackground=self.colors['text_primary'],
@@ -719,26 +853,26 @@ class AuditGUI:
         viz_buttons_frame = ttk.Frame(self.viz_frame, style='Dark.TFrame')
         viz_buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(8, 0))
         
-        load_btn = tk.Button(viz_buttons_frame, text="Charger Rapport", 
+        load_btn = tk.Button(viz_buttons_frame, text="📄 Rapport", 
                              command=self.load_report,
-                             bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                             relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                             bg='#ffffff', fg='#3b82f6', font=('Inter', 9, 'bold'),
+                             relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
                              activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        load_btn.pack(side='left', padx=(0, 8))
+        load_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(load_btn, "Charger le rapport d'audit dans la visualisation")
         
-        refresh_btn = tk.Button(viz_buttons_frame, text="Actualiser", 
+        refresh_btn = tk.Button(viz_buttons_frame, text="🔄", 
                                command=self.refresh_viz,
-                               bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                               relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                               bg='#ffffff', fg='#3b82f6', font=('Inter', 9, 'bold'),
+                               relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
                                activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        refresh_btn.pack(side='left', padx=(0, 8))
+        refresh_btn.pack(side='left', padx=(0, 6))
         ButtonAnimator.add_hover_effects(refresh_btn, "Mettre à jour la visualisation")
         
-        clear_viz_btn = tk.Button(viz_buttons_frame, text="Effacer", 
+        clear_viz_btn = tk.Button(viz_buttons_frame, text="🗑️", 
                                  command=self.clear_viz,
-                                 bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
-                                 relief='solid', borderwidth=1, cursor='hand2', padx=8, pady=4,
+                                 bg='#ffffff', fg='#ef4444', font=('Inter', 9, 'bold'),
+                                 relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
                                  activebackground='#fef2f2', activeforeground='#dc2626')
         clear_viz_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(clear_viz_btn, "Vider la zone de visualisation")
@@ -893,6 +1027,9 @@ Bienvenue dans le panneau de visualisation !
                 
                 # Mettre à jour les informations
                 self.root.after(0, self.update_project_info)
+                
+                # Recharger le tableau des projets
+                self.root.after(0, self.load_projects_table)
                 
                 # Charger automatiquement le rapport dans la visualisation
                 if not self.audit_stopped:
@@ -1084,71 +1221,60 @@ Zone de visualisation effacée.
     
     def load_recent_projects(self):
         """Charge la liste des projets récents."""
-        config_file = self.project_dir / "gui_config.json"
-        
-        if config_file.exists():
-            try:
-                with open(config_file, 'r', encoding='utf-8') as f:
-                    config = json.load(f)
-                    recent_projects = config.get('recent_projects', [])
-                    
-                    for project in recent_projects:
-                        if Path(project).exists():
-                            self.recent_listbox.insert(tk.END, project)
-            except Exception as e:
-                self.log_message(f"⚠️ Erreur lors du chargement: {e}")
+        # Cette fonction est maintenant gérée par load_projects_table
+        self.load_projects_table()
     
     def save_recent_projects(self):
         """Sauvegarde la liste des projets récents."""
-        config_file = self.project_dir / "gui_config.json"
-        
-        try:
-            recent_projects = list(self.recent_listbox.get(0, tk.END))
-            
-            config = {
-                'recent_projects': recent_projects,
-                'last_updated': datetime.now().isoformat()
-            }
-            
-            with open(config_file, 'w', encoding='utf-8') as f:
-                json.dump(config, f, indent=2, ensure_ascii=False)
-                
-        except Exception as e:
-            self.log_message(f"⚠️ Erreur lors de la sauvegarde: {e}")
+        # Cette fonction est maintenant gérée par add_recent_project
+        pass
     
     def add_recent_project(self, project_path):
         """Ajoute un projet à la liste des projets récents."""
-        # Supprimer s'il existe déjà
-        for i in range(self.recent_listbox.size()):
-            if self.recent_listbox.get(i) == project_path:
-                self.recent_listbox.delete(i)
-                break
+        config_file = self.project_dir / "gui_config.json"
         
-        # Ajouter au début
-        self.recent_listbox.insert(0, project_path)
-        
-        # Limiter à 10 projets
-        while self.recent_listbox.size() > 10:
-            self.recent_listbox.delete(tk.END)
-        
-        # Sauvegarder
-        self.save_recent_projects()
+        try:
+            # Charger la configuration existante
+            if config_file.exists():
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    recent_projects = config.get('recent_projects', [])
+            else:
+                config = {}
+                recent_projects = []
+            
+            # Supprimer s'il existe déjà
+            if project_path in recent_projects:
+                recent_projects.remove(project_path)
+            
+            # Ajouter au début
+            recent_projects.insert(0, project_path)
+            
+            # Limiter à 10 projets
+            recent_projects = recent_projects[:10]
+            
+            # Sauvegarder
+            config['recent_projects'] = recent_projects
+            config['last_updated'] = datetime.now().isoformat()
+            
+            with open(config_file, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+            
+            # Recharger le tableau
+            self.load_projects_table()
+            
+        except Exception as e:
+            self.log_message(f"⚠️ Erreur lors de l'ajout du projet: {e}")
     
     def select_recent_project(self, event=None):
         """Sélectionne un projet de la liste des projets récents."""
-        selection = self.recent_listbox.curselection()
-        if selection:
-            project_path = self.recent_listbox.get(selection[0])
-            self.selected_project.set(project_path)
-            self.update_project_info()
-            self.add_recent_project(project_path)
+        # Cette fonction est maintenant gérée par on_project_select
+        pass
     
     def remove_recent_project(self):
         """Supprime un projet de la liste des projets récents."""
-        selection = self.recent_listbox.curselection()
-        if selection:
-            self.recent_listbox.delete(selection[0])
-            self.save_recent_projects()
+        # Cette fonction est maintenant gérée par remove_project_from_table
+        pass
 
 def main():
     """Fonction principale."""
