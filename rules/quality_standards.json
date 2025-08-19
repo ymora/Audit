@@ -1,0 +1,205 @@
+{
+  "version": "1.0",
+  "quality_standards": {
+    "code_metrics": {
+      "function_length": {
+        "max_lines": 50,
+        "warning_threshold": 30,
+        "description": "Nombre maximum de lignes par fonction"
+      },
+      "parameters": {
+        "max_count": 5,
+        "warning_threshold": 3,
+        "description": "Nombre maximum de paramètres par fonction"
+      },
+      "line_length": {
+        "max_characters": 120,
+        "warning_threshold": 100,
+        "description": "Nombre maximum de caractères par ligne"
+      },
+      "cyclomatic_complexity": {
+        "max_value": 10,
+        "warning_threshold": 7,
+        "description": "Complexité cyclomatique maximum"
+      },
+      "nesting_depth": {
+        "max_levels": 4,
+        "warning_threshold": 3,
+        "description": "Niveau maximum d'imbrication"
+      }
+    },
+    "documentation": {
+      "docstring_coverage": {
+        "min_percentage": 80,
+        "warning_threshold": 60,
+        "description": "Pourcentage minimum de fonctions documentées"
+      },
+      "docstring_quality": {
+        "required_sections": [
+          "description",
+          "parameters",
+          "returns",
+          "raises"
+        ],
+        "description": "Sections requises dans les docstrings"
+      },
+      "readme_quality": {
+        "required_sections": [
+          "description",
+          "installation",
+          "usage",
+          "configuration"
+        ],
+        "description": "Sections requises dans les README"
+      }
+    },
+    "testing": {
+      "test_coverage": {
+        "min_percentage": 80,
+        "warning_threshold": 60,
+        "description": "Couverture de tests minimum"
+      },
+      "test_quality": {
+        "required_patterns": [
+          "test_*",
+          "*_test",
+          "test_*.py"
+        ],
+        "description": "Patterns requis pour les tests"
+      }
+    },
+    "security": {
+      "input_validation": {
+        "required": true,
+        "patterns": [
+          "validate_*",
+          "sanitize_*",
+          "check_*"
+        ],
+        "description": "Validation d'entrée requise"
+      },
+      "path_validation": {
+        "required": true,
+        "patterns": [
+          "validate_file_path",
+          "secure_path",
+          "sanitize_path"
+        ],
+        "description": "Validation des chemins de fichiers"
+      },
+      "sensitive_data": {
+        "forbidden_patterns": [
+          "password",
+          "secret",
+          "token",
+          "key",
+          "credential"
+        ],
+        "description": "Données sensibles interdites dans les logs"
+      }
+    },
+    "performance": {
+      "memory_usage": {
+        "max_mb": 512,
+        "warning_threshold": 256,
+        "description": "Utilisation mémoire maximum en MB"
+      },
+      "execution_time": {
+        "max_seconds": 30,
+        "warning_threshold": 10,
+        "description": "Temps d'exécution maximum en secondes"
+      },
+      "database_queries": {
+        "max_per_request": 10,
+        "warning_threshold": 5,
+        "description": "Nombre maximum de requêtes par requête"
+      }
+    },
+    "architecture": {
+      "layers": {
+        "required": [
+          "api",
+          "services",
+          "models",
+          "utils"
+        ],
+        "description": "Couches d'architecture requises"
+      },
+      "dependencies": {
+        "max_circular": 0,
+        "description": "Aucune dépendance circulaire autorisée"
+      },
+      "responsibility": {
+        "single_responsibility": true,
+        "description": "Principe de responsabilité unique"
+      }
+    },
+    "style": {
+      "naming": {
+        "functions": "snake_case",
+        "classes": "PascalCase",
+        "constants": "UPPER_SNAKE_CASE",
+        "description": "Conventions de nommage"
+      },
+      "imports": {
+        "max_per_file": 20,
+        "warning_threshold": 15,
+        "description": "Nombre maximum d'imports par fichier"
+      },
+      "comments": {
+        "min_ratio": 0.1,
+        "description": "Ratio minimum de commentaires"
+      }
+    },
+    "maintainability": {
+      "code_duplication": {
+        "max_percentage": 5,
+        "warning_threshold": 3,
+        "description": "Pourcentage maximum de duplication de code"
+      },
+      "technical_debt": {
+        "max_issues": 10,
+        "warning_threshold": 5,
+        "description": "Nombre maximum d'issues de dette technique"
+      },
+      "complexity": {
+        "max_average": 5,
+        "warning_threshold": 3,
+        "description": "Complexité moyenne maximum"
+      }
+    }
+  },
+  "scoring": {
+    "weights": {
+      "security": 0.3,
+      "performance": 0.2,
+      "maintainability": 0.2,
+      "documentation": 0.15,
+      "testing": 0.15
+    },
+    "grades": {
+      "excellent": 90,
+      "good": 80,
+      "acceptable": 70,
+      "needs_improvement": 60,
+      "poor": 50
+    }
+  },
+  "enforcement": {
+    "strict_rules": [
+      "security_vulnerabilities",
+      "data_loss_risks",
+      "critical_performance_issues"
+    ],
+    "warning_rules": [
+      "code_duplication",
+      "documentation_issues",
+      "style_violations"
+    ],
+    "info_rules": [
+      "naming_conventions",
+      "minor_optimizations",
+      "formatting_issues"
+    ]
+  }
+}

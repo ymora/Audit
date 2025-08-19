@@ -1,0 +1,186 @@
+{
+  "version": "1.0",
+  "excluded_patterns": {
+    "directories": [
+      "venv",
+      "node_modules",
+      "__pycache__",
+      ".git",
+      "audit",
+      "codemort",
+      "logs",
+      "temp_downloads",
+      "backup",
+      "*.backup"
+    ],
+    "files": [
+      "*.pyc",
+      "*.pyo",
+      "*.pyd",
+      "*.so",
+      "*.dll",
+      "*.exe",
+      "*.log",
+      "*.tmp",
+      "*.temp",
+      "*.cache",
+      "*.bak",
+      "*.old",
+      "*.orig",
+      "*.rej",
+      "*.swp",
+      "*.swo",
+      "*~",
+      "Thumbs.db",
+      ".DS_Store"
+    ],
+    "file_patterns": [
+      "test_*.py",
+      "*_test.py",
+      "*_tests.py",
+      "mock_*.py",
+      "fake_*.py",
+      "stub_*.py",
+      "fixture_*.py"
+    ],
+    "function_patterns": [
+      "test_*",
+      "*_test",
+      "mock_*",
+      "fake_*",
+      "stub_*",
+      "fixture_*",
+      "setup_*",
+      "teardown_*",
+      "before_*",
+      "after_*"
+    ],
+    "class_patterns": [
+      "Test*",
+      "*Test",
+      "Mock*",
+      "*Mock",
+      "Fake*",
+      "*Fake",
+      "Stub*",
+      "*Stub"
+    ],
+    "import_patterns": [
+      "unittest",
+      "pytest",
+      "mock",
+      "fakeredis",
+      "testfixtures"
+    ],
+    "code_patterns": {
+      "comments": [
+        "# TODO:",
+        "# FIXME:",
+        "# NOTE:",
+        "# HACK:",
+        "// TODO:",
+        "// FIXME:",
+        "// NOTE:",
+        "// HACK:"
+      ],
+      "strings": [
+        "password",
+        "secret",
+        "token",
+        "key",
+        "credential"
+      ],
+      "variables": [
+        "password",
+        "secret",
+        "token",
+        "key",
+        "credential",
+        "temp",
+        "tmp",
+        "cache"
+      ]
+    },
+    "architecture_exceptions": {
+      "legitimate_duplications": [
+        "BaseService.__init__",
+        "Service.__init__",
+        "Model.__init__",
+        "get_logger",
+        "setup_logging",
+        "validate_config"
+      ],
+      "wrapper_functions": [
+        "get_supported_formats",
+        "is_format_supported",
+        "validate_file_path",
+        "check_permissions",
+        "sanitize_input"
+      ],
+      "decorator_functions": [
+        "auth_required",
+        "logging_decorator",
+        "performance_monitor",
+        "error_handler",
+        "retry_on_failure"
+      ],
+      "streaming_functions": [
+        "generate_optimized_stream",
+        "generate_converted_stream",
+        "stream_file_content",
+        "stream_video",
+        "stream_audio"
+      ]
+    },
+    "performance_exceptions": {
+      "caching_patterns": [
+        "cache_*",
+        "*_cache",
+        "get_cached_*",
+        "set_cached_*"
+      ],
+      "lazy_loading": [
+        "lazy_*",
+        "*_lazy",
+        "get_lazy_*",
+        "load_on_demand"
+      ]
+    },
+    "security_exceptions": {
+      "validation_patterns": [
+        "validate_*",
+        "*_validator",
+        "check_*",
+        "verify_*"
+      ],
+      "sanitization_patterns": [
+        "sanitize_*",
+        "*_sanitizer",
+        "clean_*",
+        "escape_*"
+      ]
+    }
+  },
+  "context_specific_exclusions": {
+    "backend": {
+      "legitimate_patterns": [
+        "app/",
+        "api/",
+        "services/",
+        "models/",
+        "schemas/",
+        "utils/"
+      ]
+    },
+    "frontend": {
+      "legitimate_patterns": [
+        "src/",
+        "components/",
+        "hooks/",
+        "services/",
+        "utils/",
+        "stores/"
+      ]
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "version": "1.0",
+  "audit_rules": {
+    "organization": {
+      "auto_cleanup": true,
+      "max_reports": 3,
+      "max_logs": 5,
+      "max_archives": 10,
+      "auto_archive": true
+    },
+    "file_naming": {
+      "reports": "YYYYMMDD_HHMMSS_rapport_type.md",
+      "logs": "YYYYMMDD_HHMMSS_audit.log",
+      "analyses": "YYYYMMDD_HHMMSS_analyse_composant.json",
+      "tests": "test_composant_YYYYMMDD.py"
+    },
+    "code_analysis": {
+      "check_duplications": true,
+      "check_security": true,
+      "check_performance": true,
+      "check_quality": true,
+      "respect_architecture": true,
+      "validate_before_reporting": true
+    },
+    "legitimate_patterns": {
+      "inheritance_patterns": [
+        "BaseService.__init__",
+        "Service.__init__",
+        "Model.__init__"
+      ],
+      "wrapper_patterns": [
+        "get_supported_formats",
+        "is_format_supported",
+        "validate_file_path"
+      ],
+      "decorator_patterns": [
+        "auth_required",
+        "logging_decorator",
+        "performance_monitor"
+      ],
+      "streaming_patterns": [
+        "generate_optimized_stream",
+        "generate_converted_stream",
+        "stream_file_content"
+      ]
+    },
+    "excluded_functions": [
+      "main",
+      "setup_logging",
+      "__init__",
+      "__call__",
+      "__enter__",
+      "__exit__",
+      "run",
+      "start"
+    ],
+    "quality_standards": {
+      "max_function_length": 50,
+      "max_parameters": 5,
+      "max_line_length": 120,
+      "max_cyclomatic_complexity": 10,
+      "min_code_coverage": 80
+    },
+    "security_rules": {
+      "validate_file_paths": true,
+      "check_permissions": true,
+      "sanitize_inputs": true,
+      "no_sensitive_logs": true,
+      "secure_paths": true
+    },
+    "architecture_rules": {
+      "respect_layers": true,
+      "no_circular_dependencies": true,
+      "single_responsibility": true,
+      "dependency_injection": true,
+      "configuration_centralized": true
+    }
+  },
+  "analysis_priorities": {
+    "critical": [
+      "security_vulnerabilities",
+      "data_loss_risks",
+      "performance_bottlenecks"
+    ],
+    "high": [
+      "code_duplications",
+      "architecture_violations",
+      "quality_issues"
+    ],
+    "medium": [
+      "style_violations",
+      "documentation_issues",
+      "test_coverage"
+    ],
+    "low": [
+      "naming_conventions",
+      "formatting_issues",
+      "minor_optimizations"
+    ]
+  },
+  "reporting": {
+    "include_summary": true,
+    "include_details": true,
+    "include_recommendations": true,
+    "include_priority_levels": true,
+    "format": "markdown",
+    "auto_generate": true
+  }
+}

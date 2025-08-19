@@ -1,0 +1,11 @@
+{
+  "project_name": "Test Project",
+  "files_analyzed": 10477,
+  "issues_found": 0,
+  "security_issues": 38,
+  "duplications_found": 71,
+  "dead_functions_count": 429,
+  "dead_classes_count": 19,
+  "incomplete_implementations": 103,
+  "quality_score": 100
+}

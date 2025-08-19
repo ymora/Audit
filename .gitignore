@@ -1,0 +1,75 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Fichiers Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environnements virtuels
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+*.tmp
+*.temp
+
+# Configuration locale
+gui_config.json
+local_config.json
+
+# Fichiers de sauvegarde
+*.backup
+*.bak
+*.old
+backup_organization/
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Fichiers temporaires
+temp/
+tmp/
+*.cache
+
+# Rapports temporaires
+reports/temp/
+*.tmp.html
+*.tmp.json
+
+# Dossiers d'audit des projets
+.audit/
