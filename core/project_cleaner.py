@@ -20,8 +20,8 @@ class ProjectCleaner:
         # Le système d'audit est dans le répertoire parent du projet audité
         self.audit_system_dir = Path(__file__).parent.parent
         self.project_name = project_path.name
-        self.reports_dir = self.audit_system_dir / "projects" / self.project_name
-        self.config_file = self.audit_system_dir / "project_audits" / self.project_name / "cleanup_config.json"
+        self.reports_dir = self.audit_system_dir / "audit_results" / "audit_reports" / self.project_name
+        self.config_file = self.audit_system_dir / "audit_results" / "audit_configs" / self.project_name / "cleanup_config.json"
         
     def load_cleanup_config(self) -> Dict:
         """Charge la configuration de nettoyage."""

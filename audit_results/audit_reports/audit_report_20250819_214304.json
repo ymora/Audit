@@ -2,9 +2,9 @@
   "audit_info": {
     "project_name": "",
     "project_type": "python",
-    "timestamp": "2025-08-19T21:17:01.915589",
+    "timestamp": "2025-08-19T21:43:04.400637",
     "audit_version": "2.0.0",
-    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\projects"
+    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_reports"
   },
   "project_tests": {
     "project_name": "",
@@ -25,7 +25,7 @@
           },
           "duplications": {
             "total_duplications": 0,
-            "files_analyzed": 10,
+            "files_analyzed": 5,
             "duplications_list": [],
             "duplications_summary": {
               "total_duplications": 0,
@@ -76,7 +76,7 @@
             "message": "Audit générique terminé avec succès",
             "details": {
               "analysis_type": "generic",
-              "timestamp": "2025-08-19T21:16:58.925992",
+              "timestamp": "2025-08-19T21:43:00.565558",
               "project_path": ".",
               "findings": [
                 {
@@ -89,8 +89,8 @@
                   "type": "code_quality",
                   "severity": "warning",
                   "file": "core\\audit_gui.py",
-                  "line": 686,
-                  "message": "Fonction 'create_visualization_panel' très longue (21 lignes)"
+                  "line": 0,
+                  "message": "Erreur de syntaxe Python"
                 },
                 {
                   "type": "code_quality",
@@ -116,7 +116,7 @@
                 {
                   "type": "code_quality",
                   "severity": "warning",
-                  "file": "core\\project_audits\\audit\\test_code_quality.py",
+                  "file": "audit_results\\audit_tests\\audit\\test_code_quality.py",
                   "line": 148,
                   "message": "Fonction '_calculate_quality_score' très longue (23 lignes)"
                 },
@@ -136,26 +136,26 @@
                 }
               ],
               "metrics": {
-                "total_files": 545,
+                "total_files": 482,
                 "file_types": {
-                  "": 368,
+                  "": 381,
                   ".py": 35,
                   ".md": 12,
-                  ".txt": 4,
+                  ".txt": 2,
                   ".pb": 1,
-                  ".json": 35,
-                  ".pyc": 25,
-                  ".log": 25,
-                  ".html": 26,
+                  ".json": 12,
+                  ".pyc": 20,
+                  ".log": 2,
+                  ".html": 3,
                   ".sample": 14
                 },
                 "code_files": 35,
                 "python": {
                   "total_files": 35,
-                  "total_lines": 7951,
-                  "total_functions": 252,
-                  "total_classes": 20,
-                  "avg_lines_per_file": 227.17142857142858
+                  "total_lines": 7945,
+                  "total_functions": 197,
+                  "total_classes": 17,
+                  "avg_lines_per_file": 227.0
                 }
               },
               "recommendations": [
@@ -167,10 +167,10 @@
             }
           },
           "structure": {
-            "total_files": 545,
+            "total_files": 482,
             "python_files": 35,
             "test_files": 13,
-            "doc_files": 16,
+            "doc_files": 14,
             "missing_essential": []
           },
           "quality_score": 10
@@ -180,9 +180,9 @@
     "tests_passed": 1,
     "tests_failed": 0,
     "total_tests": 1,
-    "start_time": "2025-08-19T21:16:58.717383",
-    "end_time": "2025-08-19T21:17:00.526505",
-    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\projects\\logs\\audit_20250819_211658.log"
+    "start_time": "2025-08-19T21:43:00.387976",
+    "end_time": "2025-08-19T21:43:02.714355",
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit_20250819_214300.log"
   },
   "generic_audit": {
     "generic_audit": {
@@ -190,7 +190,7 @@
       "message": "Audit générique terminé avec succès",
       "details": {
         "analysis_type": "generic",
-        "timestamp": "2025-08-19T21:17:00.527759",
+        "timestamp": "2025-08-19T21:43:02.717546",
         "project_path": ".",
         "findings": [
           {
@@ -203,8 +203,8 @@
             "type": "code_quality",
             "severity": "warning",
             "file": "core\\audit_gui.py",
-            "line": 686,
-            "message": "Fonction 'create_visualization_panel' très longue (21 lignes)"
+            "line": 0,
+            "message": "Erreur de syntaxe Python"
           },
           {
             "type": "code_quality",
@@ -230,7 +230,7 @@
           {
             "type": "code_quality",
             "severity": "warning",
-            "file": "core\\project_audits\\audit\\test_code_quality.py",
+            "file": "audit_results\\audit_tests\\audit\\test_code_quality.py",
             "line": 148,
             "message": "Fonction '_calculate_quality_score' très longue (23 lignes)"
           },
@@ -250,26 +250,26 @@
           }
         ],
         "metrics": {
-          "total_files": 545,
+          "total_files": 482,
           "file_types": {
-            "": 368,
+            "": 381,
             ".py": 35,
             ".md": 12,
-            ".txt": 4,
+            ".txt": 2,
             ".pb": 1,
-            ".json": 35,
-            ".pyc": 25,
-            ".log": 25,
-            ".html": 26,
+            ".json": 12,
+            ".pyc": 20,
+            ".log": 2,
+            ".html": 3,
             ".sample": 14
           },
           "code_files": 35,
           "python": {
             "total_files": 35,
-            "total_lines": 7951,
-            "total_functions": 252,
-            "total_classes": 20,
-            "avg_lines_per_file": 227.17142857142858
+            "total_lines": 7945,
+            "total_functions": 197,
+            "total_classes": 17,
+            "avg_lines_per_file": 227.0
           }
         },
         "recommendations": [

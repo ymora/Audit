@@ -777,7 +777,7 @@ Bienvenue dans le panneau de visualisation !
         # Vérifier si c'est un projet avec audit
         audit_system_dir = self.project_dir.parent
         project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
-        reports_dir = audit_system_dir / "projects" / project_name / "reports"
+                    reports_dir = audit_system_dir / "audit_results" / "audit_reports" / project_name
         
         if reports_dir.exists():
             report_count = len(list(reports_dir.glob("*.html")))
@@ -937,7 +937,7 @@ Bienvenue dans le panneau de visualisation !
         project_path = Path(project_path)
         project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
         audit_system_dir = self.project_dir.parent
-        report_path = audit_system_dir / "projects" / project_name / "reports" / "latest_report.html"
+                    report_path = audit_system_dir / "audit_results" / "audit_reports" / project_name / "latest_report.html"
         
         if report_path.exists():
             try:
@@ -986,7 +986,7 @@ Zone de visualisation effacée.
         project_path = Path(self.selected_project.get())
         project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
         audit_system_dir = self.project_dir.parent
-        audit_path = audit_system_dir / "projects" / project_name
+                    audit_path = audit_system_dir / "audit_results" / "audit_reports" / project_name
         
         if audit_path.exists():
             try:

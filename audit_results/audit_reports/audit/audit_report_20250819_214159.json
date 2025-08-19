@@ -2,35 +2,81 @@
   "audit_info": {
     "project_name": "",
     "project_type": "python",
-    "timestamp": "2025-08-19T15:55:27.298879",
+    "timestamp": "2025-08-19T21:41:59.385360",
     "audit_version": "2.0.0",
-    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\projects"
+    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_reports"
   },
   "project_tests": {
     "project_name": "",
     "project_type": "python",
     "tests_executed": [
       {
-        "name": "test_advanced_audit",
+        "name": "test_redirect_audit",
         "success": true,
-        "message": "Audit avancé terminé: 10/10 points",
+        "message": "✅ Redirection réussie - Audit exhaustif terminé: 10/10 points (code mort, duplications, sécurité, implémentations incomplètes)",
         "details": {
           "dead_code": {
             "dead_functions": 0,
             "dead_classes": 0,
             "total_functions": 0,
-            "total_classes": 0
+            "total_classes": 0,
+            "dead_functions_list": [],
+            "dead_classes_list": []
           },
           "duplications": {
             "total_duplications": 0,
-            "files_analyzed": 0
+            "files_analyzed": 5,
+            "duplications_list": [],
+            "duplications_summary": {
+              "total_duplications": 0,
+              "duplications_to_fix": 0,
+              "legitimate_duplications": 0,
+              "critical_duplications": 0,
+              "medium_duplications": 0
+            }
+          },
+          "security": {
+            "summary": {
+              "total_vulnerabilities": 0,
+              "critical": 0,
+              "high": 0,
+              "medium": 0,
+              "low": 0
+            },
+            "by_severity": {},
+            "by_type": {},
+            "vulnerabilities": [],
+            "recommendations": [
+              "Utiliser des variables d'environnement pour les secrets",
+              "Implémenter une validation stricte des entrées utilisateur",
+              "Utiliser des requêtes préparées pour les bases de données",
+              "Mettre en place une gestion des erreurs sécurisée",
+              "Implémenter des logs de sécurité",
+              "Effectuer des tests de sécurité réguliers",
+              "Utiliser HTTPS en production",
+              "Implémenter une authentification forte",
+              "Mettre en place des limites de taux (rate limiting)",
+              "Utiliser des algorithmes de chiffrement modernes"
+            ]
+          },
+          "incomplete_implementations": {
+            "total_files": 0,
+            "total_issues": 0,
+            "issues_by_type": {},
+            "issues_by_severity": {
+              "CRITICAL": [],
+              "HIGH": [],
+              "MEDIUM": [],
+              "LOW": []
+            },
+            "all_issues": []
           },
           "generic_audit": {
             "success": true,
             "message": "Audit générique terminé avec succès",
             "details": {
               "analysis_type": "generic",
-              "timestamp": "2025-08-19T15:55:24.497878",
+              "timestamp": "2025-08-19T21:41:56.498577",
               "project_path": ".",
               "findings": [
                 {
@@ -43,22 +89,8 @@
                   "type": "code_quality",
                   "severity": "warning",
                   "file": "core\\audit_gui.py",
-                  "line": 176,
-                  "message": "Fonction 'setup_styles' très longue (21 lignes)"
-                },
-                {
-                  "type": "code_quality",
-                  "severity": "warning",
-                  "file": "core\\audit_gui_broken.py",
                   "line": 0,
                   "message": "Erreur de syntaxe Python"
-                },
-                {
-                  "type": "code_quality",
-                  "severity": "warning",
-                  "file": "core\\audit_gui_clean.py",
-                  "line": 292,
-                  "message": "Fonction 'setup_styles' très longue (26 lignes)"
                 },
                 {
                   "type": "code_quality",
@@ -82,6 +114,13 @@
                   "message": "Fonction 'analyze_duplications_detailed' très longue (38 lignes)"
                 },
                 {
+                  "type": "code_quality",
+                  "severity": "warning",
+                  "file": "audit_results\\audit_tests\\audit\\test_code_quality.py",
+                  "line": 148,
+                  "message": "Fonction '_calculate_quality_score' très longue (23 lignes)"
+                },
+                {
                   "type": "security",
                   "severity": "high",
                   "file": "tests\\test_security_checker_unit.py",
@@ -97,25 +136,26 @@
                 }
               ],
               "metrics": {
-                "total_files": 401,
+                "total_files": 477,
                 "file_types": {
-                  "": 262,
-                  ".py": 39,
-                  ".md": 12,
-                  ".txt": 4,
-                  ".json": 25,
-                  ".pyc": 15,
-                  ".log": 14,
-                  ".html": 16,
+                  "": 381,
+                  ".py": 35,
+                  ".md": 11,
+                  ".txt": 2,
+                  ".pb": 1,
+                  ".json": 10,
+                  ".pyc": 20,
+                  ".log": 1,
+                  ".html": 2,
                   ".sample": 14
                 },
-                "code_files": 39,
+                "code_files": 35,
                 "python": {
-                  "total_files": 39,
-                  "total_lines": 11471,
-                  "total_functions": 300,
-                  "total_classes": 24,
-                  "avg_lines_per_file": 294.12820512820514
+                  "total_files": 35,
+                  "total_lines": 7945,
+                  "total_functions": 197,
+                  "total_classes": 17,
+                  "avg_lines_per_file": 227.0
                 }
               },
               "recommendations": [
@@ -127,34 +167,22 @@
             }
           },
           "structure": {
-            "total_files": 401,
-            "python_files": 39,
-            "test_files": 14,
-            "doc_files": 16,
+            "total_files": 477,
+            "python_files": 35,
+            "test_files": 13,
+            "doc_files": 13,
             "missing_essential": []
           },
           "quality_score": 10
         }
-      },
-      {
-        "name": "test_simple_audit",
-        "success": true,
-        "message": "Test terminé - 39 fichiers Python trouvés",
-        "details": {
-          "python_files_count": 39,
-          "test_files_count": 14,
-          "missing_essential_files": [],
-          "project_path": ".",
-          "project_type": "python"
-        }
       }
     ],
-    "tests_passed": 2,
+    "tests_passed": 1,
     "tests_failed": 0,
-    "total_tests": 2,
-    "start_time": "2025-08-19T15:55:24.478619",
-    "end_time": "2025-08-19T15:55:25.954322",
-    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\projects\\logs\\audit_20250819_155524.log"
+    "total_tests": 1,
+    "start_time": "2025-08-19T21:41:56.432370",
+    "end_time": "2025-08-19T21:41:58.021835",
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit_20250819_214156.log"
   },
   "generic_audit": {
     "generic_audit": {
@@ -162,7 +190,7 @@
       "message": "Audit générique terminé avec succès",
       "details": {
         "analysis_type": "generic",
-        "timestamp": "2025-08-19T15:55:25.955444",
+        "timestamp": "2025-08-19T21:41:58.023037",
         "project_path": ".",
         "findings": [
           {
@@ -175,22 +203,8 @@
             "type": "code_quality",
             "severity": "warning",
             "file": "core\\audit_gui.py",
-            "line": 176,
-            "message": "Fonction 'setup_styles' très longue (21 lignes)"
-          },
-          {
-            "type": "code_quality",
-            "severity": "warning",
-            "file": "core\\audit_gui_broken.py",
             "line": 0,
             "message": "Erreur de syntaxe Python"
-          },
-          {
-            "type": "code_quality",
-            "severity": "warning",
-            "file": "core\\audit_gui_clean.py",
-            "line": 292,
-            "message": "Fonction 'setup_styles' très longue (26 lignes)"
           },
           {
             "type": "code_quality",
@@ -214,6 +228,13 @@
             "message": "Fonction 'analyze_duplications_detailed' très longue (38 lignes)"
           },
           {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "audit_results\\audit_tests\\audit\\test_code_quality.py",
+            "line": 148,
+            "message": "Fonction '_calculate_quality_score' très longue (23 lignes)"
+          },
+          {
             "type": "security",
             "severity": "high",
             "file": "tests\\test_security_checker_unit.py",
@@ -229,25 +250,26 @@
           }
         ],
         "metrics": {
-          "total_files": 401,
+          "total_files": 477,
           "file_types": {
-            "": 262,
-            ".py": 39,
-            ".md": 12,
-            ".txt": 4,
-            ".json": 25,
-            ".pyc": 15,
-            ".log": 14,
-            ".html": 16,
+            "": 381,
+            ".py": 35,
+            ".md": 11,
+            ".txt": 2,
+            ".pb": 1,
+            ".json": 10,
+            ".pyc": 20,
+            ".log": 1,
+            ".html": 2,
             ".sample": 14
           },
-          "code_files": 39,
+          "code_files": 35,
           "python": {
-            "total_files": 39,
-            "total_lines": 11471,
-            "total_functions": 300,
-            "total_classes": 24,
-            "avg_lines_per_file": 294.12820512820514
+            "total_files": 35,
+            "total_lines": 7945,
+            "total_functions": 197,
+            "total_classes": 17,
+            "avg_lines_per_file": 227.0
           }
         },
         "recommendations": [
@@ -260,8 +282,8 @@
     }
   },
   "summary": {
-    "total_tests": 2,
-    "tests_passed": 2,
+    "total_tests": 1,
+    "tests_passed": 1,
     "tests_failed": 0,
     "success_rate": 100.0
   }
