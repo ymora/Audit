@@ -24,16 +24,11 @@ class ButtonAnimator:
     def add_hover_effects(button, tooltip_text=None):
         """Ajoute des effets de hover et tooltip contextuel."""
         def on_enter(event):
-            # Vérifier si c'est un bouton ttk ou tk
-            if hasattr(button, 'configure') and 'relief' in button.configure():
-                button.configure(relief='raised')
+            # Effet de hover pour les boutons tk
             if tooltip_text:
                 ButtonAnimator.show_tooltip(button, tooltip_text, event)
         
         def on_leave(event):
-            # Vérifier si c'est un bouton ttk ou tk
-            if hasattr(button, 'configure') and 'relief' in button.configure():
-                button.configure(relief='solid')
             ButtonAnimator.hide_tooltip()
         
         button.bind('<Enter>', on_enter)
@@ -469,7 +464,10 @@ class AuditGUI:
         self.project_entry = ttk.Entry(project_frame, textvariable=self.selected_project, style='Dark.TEntry')
         self.project_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=(0, 12))
         
-        browse_btn = ttk.Button(project_frame, text="📂", command=self.browse_project, style='Primary.TButton')
+        browse_btn = tk.Button(project_frame, text="📂", command=self.browse_project, 
+                              bg='#ffffff', fg='#3b82f6', font=('Inter', 14, 'bold'),
+                              relief='solid', borderwidth=1, cursor='hand2',
+                              activebackground='#f0f9ff', activeforeground='#1d4ed8')
         browse_btn.grid(row=0, column=2)
         ButtonAnimator.add_hover_effects(browse_btn, "Sélectionner un dossier de projet")
         
@@ -486,23 +484,35 @@ class AuditGUI:
         button_frame = ttk.Frame(actions_frame, style='Dark.TFrame')
         button_frame.grid(row=0, column=0, pady=(0, 12))
         
-        self.audit_btn = ttk.Button(button_frame, text="🔍 Lancer l'Audit", 
-                                   command=self.run_audit, style='Success.TButton')
+        self.audit_btn = tk.Button(button_frame, text="🔍 Lancer l'Audit", 
+                                   command=self.run_audit,
+                                   bg='#ffffff', fg='#10b981', font=('Inter', 14, 'bold'),
+                                   relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                   activebackground='#f0fdf4', activeforeground='#059669')
         self.audit_btn.pack(side='left', padx=(0, 8))
         ButtonAnimator.add_hover_effects(self.audit_btn, "Démarrer l'analyse complète du projet")
         
-        self.stop_btn = ttk.Button(button_frame, text="⏹️ Arrêter", 
-                                  command=self.stop_audit, style='Danger.TButton')
+        self.stop_btn = tk.Button(button_frame, text="⏹️ Arrêter", 
+                                  command=self.stop_audit,
+                                  bg='#ffffff', fg='#ef4444', font=('Inter', 14, 'bold'),
+                                  relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                  activebackground='#fef2f2', activeforeground='#dc2626')
         self.stop_btn.pack(side='left', padx=(0, 8))
         ButtonAnimator.add_hover_effects(self.stop_btn, "Interrompre l'audit en cours")
         
-        self.view_btn = ttk.Button(button_frame, text="📄 Voir Rapport", 
-                                  command=self.view_report, style='Primary.TButton')
+        self.view_btn = tk.Button(button_frame, text="📄 Voir Rapport", 
+                                  command=self.view_report,
+                                  bg='#ffffff', fg='#3b82f6', font=('Inter', 14, 'bold'),
+                                  relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                  activebackground='#f0f9ff', activeforeground='#1d4ed8')
         self.view_btn.pack(side='left', padx=(0, 8))
         ButtonAnimator.add_hover_effects(self.view_btn, "Afficher le dernier rapport d'audit")
         
-        self.folder_btn = ttk.Button(button_frame, text="📂 Dossier", 
-                                    command=self.open_folder, style='Primary.TButton')
+        self.folder_btn = tk.Button(button_frame, text="📂 Dossier", 
+                                    command=self.open_folder,
+                                    bg='#ffffff', fg='#3b82f6', font=('Inter', 14, 'bold'),
+                                    relief='solid', borderwidth=1, cursor='hand2', padx=16, pady=8,
+                                    activebackground='#f0f9ff', activeforeground='#1d4ed8')
         self.folder_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(self.folder_btn, "Ouvrir le dossier d'audit du projet")
         
@@ -539,13 +549,19 @@ class AuditGUI:
         logs_buttons_frame = ttk.Frame(logs_frame, style='Dark.TFrame')
         logs_buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(8, 0))
         
-        clear_btn = ttk.Button(logs_buttons_frame, text="Effacer", 
-                              command=self.clear_logs, style='Danger.TButton')
+        clear_btn = tk.Button(logs_buttons_frame, text="Effacer", 
+                              command=self.clear_logs,
+                              bg='#ffffff', fg='#ef4444', font=('Inter', 12, 'bold'),
+                              relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=4,
+                              activebackground='#fef2f2', activeforeground='#dc2626')
         clear_btn.pack(side='left', padx=(0, 8))
         ButtonAnimator.add_hover_effects(clear_btn, "Vider tous les logs")
         
-        copy_btn = ttk.Button(logs_buttons_frame, text="Copier", 
-                             command=self.copy_logs, style='Primary.TButton')
+        copy_btn = tk.Button(logs_buttons_frame, text="Copier", 
+                             command=self.copy_logs,
+                             bg='#ffffff', fg='#3b82f6', font=('Inter', 12, 'bold'),
+                             relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=4,
+                             activebackground='#f0f9ff', activeforeground='#1d4ed8')
         copy_btn.pack(side='left')
         ButtonAnimator.add_hover_effects(copy_btn, "Copier les logs dans le presse-papiers")
     
