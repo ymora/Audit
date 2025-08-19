@@ -1,9 +1,19 @@
 {
-  "timestamp": "2025-08-19T11:29:58.612121",
-  "total_tests": 2,
-  "passed": 2,
+  "timestamp": "2025-08-19T11:33:02.248749",
+  "total_tests": 8,
+  "passed": 8,
   "failed": 0,
   "results": [
+    {
+      "test": "test_audit_configuration_integrity.py",
+      "success": true,
+      "message": "Test test_audit_configuration_integrity.py exécuté avec succès"
+    },
+    {
+      "test": "test_security_checker_unit.py",
+      "success": true,
+      "message": "Test test_security_checker_unit.py exécuté avec succès"
+    },
     {
       "project": "audit-universel",
       "test": "test_audit_system.py",
@@ -15,6 +25,30 @@
       "test": "test_gui_interface.py",
       "success": true,
       "message": "Test test_gui_interface.py exécuté"
+    },
+    {
+      "project": "docusense_ai",
+      "test": "test_ai_providers.py",
+      "success": true,
+      "message": "Test test_ai_providers.py exécuté"
+    },
+    {
+      "project": "docusense_ai",
+      "test": "test_ai_providers_modern.py",
+      "success": true,
+      "message": "Test test_ai_providers_modern.py exécuté"
+    },
+    {
+      "project": "docusense_ai",
+      "test": "test_backend_api.py",
+      "success": true,
+      "message": "Test test_backend_api.py exécuté"
+    },
+    {
+      "project": "docusense_ai",
+      "test": "test_frontend_components.py",
+      "success": true,
+      "message": "Test test_frontend_components.py exécuté"
     }
   ]
 }
