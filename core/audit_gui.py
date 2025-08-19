@@ -130,7 +130,7 @@ class ModernDialog:
         main_frame = tk.Frame(self.dialog, bg='#ffffff', relief='flat', bd=0)
         main_frame.pack(fill='both', expand=True, padx=20, pady=20)
         
-                # Icône et titre
+        # Icône et titre
         icon_label = tk.Label(main_frame, text=self.icon, font=('Inter', 24, 'bold'), 
                              bg='#ffffff', fg=self.accent_color)
         icon_label.pack(pady=(0, 10))
@@ -267,7 +267,7 @@ class AuditGUI:
         """Configure les styles pour les frames."""
         style.configure('Dark.TFrame', background=self.colors['bg_dark'])
         style.configure('Medium.TFrame', background=self.colors['bg_medium'])
-    
+        
     def _setup_label_styles(self, style):
         """Configure les styles pour les labels."""
         style.configure('Title.TLabel', 
@@ -980,8 +980,8 @@ Bienvenue dans le panneau de visualisation !
             
             # Lancer l'audit
             process = subprocess.Popen([
-                sys.executable, str(self.project_dir / "audit.py"),
-                project_path
+                sys.executable, str(self.project_dir.parent / "audit.py"),
+                "--cli", project_path
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
                text=True, encoding='utf-8', errors='replace', bufsize=1, universal_newlines=True)
             
@@ -1259,7 +1259,7 @@ Zone de visualisation effacée.
             
             with open(config_file, 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2, ensure_ascii=False)
-            
+                
             # Recharger le tableau
             self.load_projects_table()
             
