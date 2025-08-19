@@ -40,25 +40,172 @@ class AuditGUI:
         self.load_recent_projects()
     
     def setup_styles(self):
-        """Configure les styles de l'interface."""
+        """Configure les styles de l'interface avec un thème Tailwind CSS sombre."""
         style = ttk.Style()
         style.theme_use('clam')
         
-        # Couleurs
+        # Palette de couleurs Tailwind CSS sombre
         self.colors = {
-            'primary': '#2c3e50',
-            'secondary': '#3498db',
-            'success': '#27ae60',
-            'warning': '#f39c12',
-            'danger': '#e74c3c',
-            'light': '#ecf0f1',
-            'dark': '#2c3e50'
+            # Couleurs de fond
+            'bg_900': '#111827',      # Fond principal très sombre
+            'bg_800': '#1f2937',      # Fond secondaire
+            'bg_700': '#374151',      # Fond tertiaire
+            'bg_600': '#4b5563',      # Fond quaternaire
+            
+            # Couleurs d'accent
+            'blue_500': '#3b82f6',    # Bleu principal
+            'blue_600': '#2563eb',    # Bleu foncé
+            'emerald_500': '#10b981', # Vert succès
+            'emerald_600': '#059669', # Vert foncé
+            'amber_500': '#f59e0b',   # Orange avertissement
+            'amber_600': '#d97706',   # Orange foncé
+            'red_500': '#ef4444',     # Rouge erreur
+            'red_600': '#dc2626',     # Rouge foncé
+            'purple_500': '#8b5cf6',  # Violet accent
+            'purple_600': '#7c3aed',  # Violet foncé
+            
+            # Couleurs de texte
+            'text_50': '#f9fafb',     # Texte très clair
+            'text_100': '#f3f4f6',    # Texte clair
+            'text_200': '#e5e7eb',    # Texte moyen-clair
+            'text_300': '#d1d5db',    # Texte moyen
+            'text_400': '#9ca3af',    # Texte moyen-foncé
+            'text_500': '#6b7280',    # Texte foncé
+            
+            # Bordures
+            'border_600': '#4b5563',  # Bordure principale
+            'border_500': '#6b7280',  # Bordure secondaire
+            'border_400': '#9ca3af',  # Bordure claire
+            
+            # Ombres et effets
+            'shadow': '#00000040',    # Ombre subtile
+            'glow': '#3b82f620'       # Lueur bleue
         }
+        
+        # Configuration du thème sombre moderne
+        self.root.configure(bg=self.colors['bg_900'])
+        
+        # Style pour les frames
+        style.configure('Dark.TFrame', background=self.colors['bg_900'])
+        style.configure('Medium.TFrame', background=self.colors['bg_800'])
+        style.configure('Light.TFrame', background=self.colors['bg_700'])
+        
+        # Style pour les labels
+        style.configure('Title.TLabel', 
+                       background=self.colors['bg_900'], 
+                       foreground=self.colors['text_50'],
+                       font=('Inter', 20, 'bold'))
+        
+        style.configure('Subtitle.TLabel', 
+                       background=self.colors['bg_800'], 
+                       foreground=self.colors['text_300'],
+                       font=('Inter', 11))
+        
+        style.configure('Info.TLabel',
+                       background=self.colors['bg_800'],
+                       foreground=self.colors['text_200'],
+                       font=('Inter', 10))
+        
+        # Style pour les boutons avec design moderne
+        style.configure('Primary.TButton',
+                       background=self.colors['blue_500'],
+                       foreground=self.colors['text_50'],
+                       borderwidth=0,
+                       focuscolor='none',
+                       font=('Inter', 10, 'bold'),
+                       padding=(16, 8))
+        
+        style.map('Primary.TButton',
+                 background=[('active', self.colors['blue_600']),
+                            ('pressed', self.colors['blue_600'])])
+        
+        style.configure('Success.TButton',
+                       background=self.colors['emerald_500'],
+                       foreground=self.colors['text_50'],
+                       borderwidth=0,
+                       focuscolor='none',
+                       font=('Inter', 10, 'bold'),
+                       padding=(16, 8))
+        
+        style.map('Success.TButton',
+                 background=[('active', self.colors['emerald_600']),
+                            ('pressed', self.colors['emerald_600'])])
+        
+        style.configure('Warning.TButton',
+                       background=self.colors['amber_500'],
+                       foreground=self.colors['text_50'],
+                       borderwidth=0,
+                       focuscolor='none',
+                       font=('Inter', 10, 'bold'),
+                       padding=(16, 8))
+        
+        style.map('Warning.TButton',
+                 background=[('active', self.colors['amber_600']),
+                            ('pressed', self.colors['amber_600'])])
+        
+        style.configure('Danger.TButton',
+                       background=self.colors['red_500'],
+                       foreground=self.colors['text_50'],
+                       borderwidth=0,
+                       focuscolor='none',
+                       font=('Inter', 10, 'bold'),
+                       padding=(16, 8))
+        
+        style.map('Danger.TButton',
+                 background=[('active', self.colors['red_600']),
+                            ('pressed', self.colors['red_600'])])
+        
+        # Style pour les labelframes avec design moderne
+        style.configure('Dark.TLabelframe',
+                       background=self.colors['bg_800'],
+                       foreground=self.colors['text_50'],
+                       borderwidth=1,
+                       relief='solid',
+                       bordercolor=self.colors['border_600'])
+        
+        style.configure('Dark.TLabelframe.Label',
+                       background=self.colors['bg_800'],
+                       foreground=self.colors['blue_500'],
+                       font=('Inter', 11, 'bold'))
+        
+        # Style pour les entry avec design moderne
+        style.configure('Dark.TEntry',
+                       fieldbackground=self.colors['bg_700'],
+                       foreground=self.colors['text_100'],
+                       borderwidth=1,
+                       relief='solid',
+                       bordercolor=self.colors['border_600'],
+                       padding=(8, 6))
+        
+        # Style pour les listbox
+        style.configure('Dark.TListbox',
+                       background=self.colors['bg_700'],
+                       foreground=self.colors['text_100'],
+                       selectbackground=self.colors['blue_500'],
+                       selectforeground=self.colors['text_50'],
+                       borderwidth=1,
+                       relief='solid',
+                       bordercolor=self.colors['border_600'])
+        
+        # Style pour la progressbar avec design moderne
+        style.configure('Dark.Horizontal.TProgressbar',
+                       background=self.colors['blue_500'],
+                       troughcolor=self.colors['bg_700'],
+                       borderwidth=0,
+                       lightcolor=self.colors['blue_500'],
+                       darkcolor=self.colors['blue_500'])
+        
+        # Style pour la barre de statut
+        style.configure('Status.TLabel',
+                       background=self.colors['bg_700'],
+                       foreground=self.colors['text_300'],
+                       font=('Inter', 9),
+                       padding=(8, 4))
     
     def create_widgets(self):
-        """Crée tous les widgets de l'interface."""
-        # Frame principal
-        main_frame = ttk.Frame(self.root, padding="10")
+        """Crée tous les widgets de l'interface avec un design moderne."""
+        # Frame principal avec padding moderne
+        main_frame = ttk.Frame(self.root, style='Dark.TFrame', padding="24")
         main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         # Configuration du grid
@@ -67,10 +214,18 @@ class AuditGUI:
         main_frame.columnconfigure(1, weight=1)
         main_frame.rowconfigure(3, weight=1)  # Donner plus d'espace aux logs
         
-        # Titre
-        title_label = ttk.Label(main_frame, text="🔍 Système d'Audit Universel", 
-                               font=('Arial', 16, 'bold'))
-        title_label.grid(row=0, column=0, columnspan=3, pady=(0, 20))
+        # Titre moderne avec icône
+        title_frame = ttk.Frame(main_frame, style='Dark.TFrame')
+        title_frame.grid(row=0, column=0, columnspan=3, pady=(0, 32))
+        
+        title_label = ttk.Label(title_frame, text="🔍 Système d'Audit Universel", 
+                               style='Title.TLabel')
+        title_label.pack()
+        
+        # Sous-titre descriptif
+        subtitle_label = ttk.Label(title_frame, text="Analyse complète et moderne de vos projets", 
+                                  style='Info.TLabel')
+        subtitle_label.pack(pady=(4, 0))
         
         # Section sélection de projet
         self.create_project_section(main_frame)
@@ -88,105 +243,144 @@ class AuditGUI:
         self.create_status_bar(main_frame)
     
     def create_project_section(self, parent):
-        """Crée la section de sélection de projet."""
+        """Crée la section de sélection de projet avec design moderne."""
         # Frame pour la sélection de projet
-        project_frame = ttk.LabelFrame(parent, text="📁 Sélection du Projet", padding="10")
-        project_frame.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 10))
+        project_frame = ttk.LabelFrame(parent, text="📁 Sélection du Projet", 
+                                      style='Dark.TLabelframe', padding="20")
+        project_frame.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 20))
         project_frame.columnconfigure(1, weight=1)
         
-        # Label et entry pour le chemin
-        ttk.Label(project_frame, text="Chemin du projet:").grid(row=0, column=0, sticky=tk.W, padx=(0, 10))
+        # Label et entry pour le chemin avec design moderne
+        ttk.Label(project_frame, text="Chemin du projet:", 
+                 style='Subtitle.TLabel').grid(row=0, column=0, sticky=tk.W, padx=(0, 16))
         
-        self.project_entry = ttk.Entry(project_frame, textvariable=self.selected_project, width=50)
-        self.project_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=(0, 10))
+        self.project_entry = ttk.Entry(project_frame, textvariable=self.selected_project, 
+                                      style='Dark.TEntry', width=50)
+        self.project_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=(0, 16))
         
-        # Bouton parcourir
-        browse_btn = ttk.Button(project_frame, text="📂 Parcourir", command=self.browse_project)
+        # Bouton parcourir avec icône moderne
+        browse_btn = ttk.Button(project_frame, text="📂 Parcourir", 
+                               command=self.browse_project, style='Primary.TButton')
         browse_btn.grid(row=0, column=2)
         
-        # Informations du projet
+        # Informations du projet avec design moderne
         self.project_info_label = ttk.Label(project_frame, text="Aucun projet sélectionné", 
-                                           foreground='gray')
-        self.project_info_label.grid(row=1, column=0, columnspan=3, sticky=tk.W, pady=(5, 0))
+                                           style='Info.TLabel')
+        self.project_info_label.grid(row=1, column=0, columnspan=3, sticky=tk.W, pady=(12, 0))
     
     def create_actions_section(self, parent):
-        """Crée la section des actions."""
-        actions_frame = ttk.LabelFrame(parent, text="⚡ Actions", padding="10")
-        actions_frame.grid(row=2, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 10))
+        """Crée la section des actions avec design moderne."""
+        actions_frame = ttk.LabelFrame(parent, text="⚡ Actions", 
+                                      style='Dark.TLabelframe', padding="20")
+        actions_frame.grid(row=2, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 20))
         
-        # Boutons d'action
+        # Boutons d'action avec design moderne et espacement
         self.project_btn = ttk.Button(actions_frame, text="🔍 Lancer l'Audit", 
-                                   command=self.run_audit, style='Accent.TButton')
-        self.project_btn.grid(row=0, column=0, padx=(0, 10))
+                                    command=self.run_audit, style='Success.TButton')
+        self.project_btn.grid(row=0, column=0, padx=(0, 16))
         
         self.open_report_btn = ttk.Button(actions_frame, text="📄 Ouvrir Rapport", 
-                                         command=self.open_latest_report, state='disabled')
-        self.open_report_btn.grid(row=0, column=1, padx=(0, 10))
+                                          command=self.open_latest_report, 
+                                          style='Primary.TButton', state='disabled')
+        self.open_report_btn.grid(row=0, column=1, padx=(0, 16))
         
         self.open_folder_btn = ttk.Button(actions_frame, text="📂 Ouvrir Dossier", 
-                                         command=self.open_audit_folder, state='disabled')
-        self.open_folder_btn.grid(row=0, column=2, padx=(0, 10))
+                                          command=self.open_audit_folder, 
+                                          style='Primary.TButton', state='disabled')
+        self.open_folder_btn.grid(row=0, column=2, padx=(0, 16))
         
-        # Barre de progression
-        self.progress = ttk.Progressbar(actions_frame, mode='indeterminate')
-        self.progress.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(10, 0))
+        # Barre de progression avec design moderne
+        self.progress = ttk.Progressbar(actions_frame, mode='indeterminate', 
+                                       style='Dark.Horizontal.TProgressbar')
+        self.progress.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(16, 0))
     
     def create_logs_section(self, parent):
-        """Crée la section des logs."""
-        logs_frame = ttk.LabelFrame(parent, text="📝 Logs d'Audit", padding="10")
-        logs_frame.grid(row=3, column=0, columnspan=3, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
+        """Crée la section des logs avec design moderne."""
+        logs_frame = ttk.LabelFrame(parent, text="📝 Logs d'Audit", 
+                                   style='Dark.TLabelframe', padding="20")
+        logs_frame.grid(row=3, column=0, columnspan=3, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 20))
         logs_frame.columnconfigure(0, weight=1)
         logs_frame.rowconfigure(0, weight=1)
         parent.rowconfigure(3, weight=1)
         
-        # Zone de texte pour les logs (plus grande)
-        self.logs_text = scrolledtext.ScrolledText(logs_frame, height=15, wrap=tk.WORD, font=('Consolas', 9))
+        # Zone de texte pour les logs avec design moderne
+        self.logs_text = scrolledtext.ScrolledText(
+            logs_frame, 
+            height=15, 
+            wrap=tk.WORD, 
+            font=('JetBrains Mono', 10),
+            bg=self.colors['bg_700'],
+            fg=self.colors['text_100'],
+            insertbackground=self.colors['text_100'],
+            selectbackground=self.colors['blue_500'],
+            selectforeground=self.colors['text_50'],
+            relief='flat',
+            borderwidth=1,
+            highlightthickness=1,
+            highlightbackground=self.colors['border_600'],
+            highlightcolor=self.colors['blue_500']
+        )
         self.logs_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
-        # Boutons pour les logs
-        logs_buttons_frame = ttk.Frame(logs_frame)
-        logs_buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(5, 0))
+        # Boutons pour les logs avec design moderne
+        logs_buttons_frame = ttk.Frame(logs_frame, style='Dark.TFrame')
+        logs_buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(12, 0))
         
         ttk.Button(logs_buttons_frame, text="🗑️ Effacer", 
-                   command=self.clear_logs).pack(side=tk.LEFT, padx=(0, 10))
+                   command=self.clear_logs, style='Danger.TButton').pack(side=tk.LEFT, padx=(0, 12))
         
         ttk.Button(logs_buttons_frame, text="📋 Copier", 
-                   command=self.copy_logs).pack(side=tk.LEFT, padx=(0, 10))
+                   command=self.copy_logs, style='Primary.TButton').pack(side=tk.LEFT, padx=(0, 12))
         
         ttk.Button(logs_buttons_frame, text="💾 Sauvegarder", 
-                   command=self.save_logs).pack(side=tk.LEFT)
+                   command=self.save_logs, style='Primary.TButton').pack(side=tk.LEFT)
     
     def create_recent_projects_section(self, parent):
-        """Crée la section des projets récents."""
-        recent_frame = ttk.LabelFrame(parent, text="🕒 Projets Récents", padding="10")
-        recent_frame.grid(row=4, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 10))
+        """Crée la section des projets récents avec design moderne."""
+        recent_frame = ttk.LabelFrame(parent, text="🕒 Projets Récents", 
+                                     style='Dark.TLabelframe', padding="20")
+        recent_frame.grid(row=4, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 20))
         recent_frame.columnconfigure(0, weight=1)
         
-        # Liste des projets récents (plus petite)
-        self.recent_listbox = tk.Listbox(recent_frame, height=3)
-        self.recent_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=(0, 10))
+        # Liste des projets récents avec design moderne
+        self.recent_listbox = tk.Listbox(
+            recent_frame, 
+            height=3,
+            bg=self.colors['bg_700'],
+            fg=self.colors['text_100'],
+            selectbackground=self.colors['blue_500'],
+            selectforeground=self.colors['text_50'],
+            relief='flat',
+            borderwidth=1,
+            highlightthickness=1,
+            highlightbackground=self.colors['border_600'],
+            highlightcolor=self.colors['blue_500'],
+            font=('Inter', 10)
+        )
+        self.recent_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=(0, 16))
         self.recent_listbox.bind('<Double-Button-1>', self.select_recent_project)
         
-        # Boutons pour les projets récents
-        recent_buttons_frame = ttk.Frame(recent_frame)
+        # Boutons pour les projets récents avec design moderne
+        recent_buttons_frame = ttk.Frame(recent_frame, style='Dark.TFrame')
         recent_buttons_frame.grid(row=0, column=1, sticky=(tk.N, tk.S))
         
         ttk.Button(recent_buttons_frame, text="📁 Sélectionner", 
-                  command=self.select_recent_project).pack(pady=(0, 5))
+                   command=self.select_recent_project, style='Primary.TButton').pack(pady=(0, 8))
         
         ttk.Button(recent_buttons_frame, text="🗑️ Supprimer", 
-                  command=self.remove_recent_project).pack(pady=(0, 5))
+                   command=self.remove_recent_project, style='Danger.TButton').pack(pady=(0, 8))
         
         ttk.Button(recent_buttons_frame, text="🗑️ Tout Effacer", 
-                  command=self.clear_recent_projects).pack()
+                   command=self.clear_recent_projects, style='Danger.TButton').pack()
     
     def create_status_bar(self, parent):
-        """Crée la barre de statut."""
+        """Crée la barre de statut avec design moderne."""
         self.status_var = tk.StringVar()
         self.status_var.set("Prêt")
         
-        status_bar = ttk.Label(parent, textvariable=self.status_var, relief=tk.SUNKEN, anchor=tk.W)
-        status_bar.grid(row=5, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(10, 0))
+        status_bar = ttk.Label(parent, textvariable=self.status_var, 
+                              style='Status.TLabel', anchor=tk.W)
+        status_bar.grid(row=5, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(12, 0))
     
     def browse_project(self):
         """Ouvre le dialogue de sélection de dossier."""
@@ -201,17 +395,19 @@ class AuditGUI:
             self.add_recent_project(project_path)
     
     def update_project_info(self):
-        """Met à jour les informations du projet sélectionné."""
+        """Met à jour les informations du projet sélectionné avec design moderne."""
         project_path = self.selected_project.get()
         
         if not project_path:
-            self.project_info_label.config(text="Aucun projet sélectionné", foreground='gray')
+            self.project_info_label.config(text="Aucun projet sélectionné", 
+                                          foreground=self.colors['text_400'])
             return
         
         project_path = Path(project_path)
         
         if not project_path.exists():
-            self.project_info_label.config(text="❌ Dossier introuvable", foreground='red')
+            self.project_info_label.config(text="❌ Dossier introuvable", 
+                                          foreground=self.colors['red_500'])
             return
         
         # Vérifier si c'est un projet avec audit dans le système d'audit
@@ -225,7 +421,7 @@ class AuditGUI:
             
             self.project_info_label.config(
                 text=f"✅ Projet avec audit ({report_count} rapport(s)) - {project_path.name}",
-                foreground='green'
+                foreground=self.colors['emerald_500']
             )
             
             # Activer les boutons
@@ -234,7 +430,7 @@ class AuditGUI:
         else:
             self.project_info_label.config(
                 text=f"ℹ️ Nouveau projet - {project_path.name}",
-                foreground='blue'
+                foreground=self.colors['blue_500']
             )
             
             # Désactiver les boutons

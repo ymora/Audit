@@ -332,7 +332,7 @@ class UniversalAuditor:
     async def run_full_audit(self) -> Dict[str, Any]:
         """Exécute l'audit complet du projet."""
         print(f"🚀 Démarrage de l'audit complet pour {self.project_name}")
-        print(f"📁 Projet: {self.project_path}")
+        print(f"[PROJECT] Projet: {self.project_path}")
         print(f"🏷️ Type: {self.project_type}")
         print(f"⚙️ Configuration: {self.config.get('name', 'Par défaut')}")
         print(f"📂 Tests spécifiques: {self.project_audit_dir}")
@@ -508,7 +508,7 @@ class UniversalAuditor:
             
             # Vérifier si le nettoyage doit être exécuté
             if cleaner.should_run_cleanup():
-                print(f"   📁 Nettoyage du projet: {self.project_name}")
+                print(f"   [CLEANUP] Nettoyage du projet: {self.project_name}")
                 
                 # Exécuter le nettoyage
                 cleanup_results = cleaner.cleanup_project_directory()
@@ -541,13 +541,13 @@ async def main():
         if len(sys.argv) > 1:
             project_path = Path(sys.argv[1])
             print(f"[TARGET] Audit Universel - Projet specifie")
-            print(f"📁 Projet: {project_path}")
+            print(f"[PROJECT] Projet: {project_path}")
         else:
             # Détecter le chemin du projet (répertoire parent du dossier audit)
             audit_dir = Path(__file__).parent
             project_path = audit_dir.parent
             print(f"[TARGET] Audit Universel - Detection automatique du projet")
-            print(f"📁 Projet détecté: {project_path}")
+            print(f"[PROJECT] Projet detecte: {project_path}")
         
         print()
         
