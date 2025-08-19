@@ -223,9 +223,12 @@ class UniversalAuditor:
         
         return logger, log_file
     
-    async def run_project_tests(self) -> Dict[str, Any]:
+    async def run_project_tests(self, debug: bool = False) -> Dict[str, Any]:
         """Exécute tous les tests spécifiques au projet."""
         print(f"🧪 Exécution des tests spécifiques à {self.project_name}...")
+        
+        if debug:
+            print(f"🐛 [DEBUG] Recherche des tests dans: {self.project_audit_dir}")
         
         # Configurer la journalisation
         logger, log_file = self._setup_logging()
@@ -297,23 +300,44 @@ class UniversalAuditor:
         results["end_time"] = datetime.now().isoformat()
         return results
     
-    async def run_generic_audit(self) -> Dict[str, Any]:
+    async def run_generic_audit(self, debug: bool = False) -> Dict[str, Any]:
         """Exécute l'audit générique basé sur le type de projet."""
         print(f"[GENERIC] Exécution de l'audit générique pour {self.project_type}...")
+        
+        if debug:
+            print(f"🐛 [DEBUG] Recherche de l'auditeur générique dans: {self.project_dir.parent / 'tools'}")
         
         # Charger les outils d'audit génériques
         generic_audit_path = self.project_dir.parent / "tools" / "generic_auditor.py"
         
         if generic_audit_path.exists():
+            if debug:
+                print(f"🐛 [DEBUG] Fichier d'auditeur générique trouvé: {generic_audit_path}")
+            
             try:
                 spec = importlib.util.spec_from_file_location("generic_auditor", generic_audit_path)
                 generic_auditor = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(generic_auditor)
                 
+                if debug:
+                    print(f"🐛 [DEBUG] Module d'auditeur générique chargé avec succès")
+                
                 if hasattr(generic_auditor, 'run_generic_audit'):
+                    if debug:
+                        print(f"🐛 [DEBUG] Exécution de l'audit générique...")
                     return await generic_auditor.run_generic_audit(self.project_path, self.config)
+                else:
+                    if debug:
+                        print(f"🐛 [DEBUG] Fonction run_generic_audit non trouvée dans le module")
             except Exception as e:
                 print(f"[ERROR] Erreur lors de l'audit générique: {e}")
+                if debug:
+                    print(f"🐛 [DEBUG] Erreur détaillée: {e}")
+                    import traceback
+                    traceback.print_exc()
+        else:
+            if debug:
+                print(f"🐛 [DEBUG] Fichier d'auditeur générique non trouvé: {generic_audit_path}")
         
         return {
             "generic_audit": {
@@ -323,7 +347,7 @@ class UniversalAuditor:
             }
         }
     
-    async def run_full_audit(self) -> Dict[str, Any]:
+    async def run_full_audit(self, debug: bool = False) -> Dict[str, Any]:
         """Exécute l'audit complet du projet."""
         print(f"[START] Démarrage de l'audit complet pour {self.project_name}")
         print(f"[PROJECT] Projet: {self.project_path}")
@@ -331,13 +355,20 @@ class UniversalAuditor:
         print(f"[CONFIG] Configuration: {self.config.get('name', 'Par défaut')}")
         print(f"[TESTS] Tests spécifiques: {self.project_audit_dir}")
         print(f"[REPORTS] Rapports: {self.project_dir.parent / 'audit_results' / 'audit_reports' / self.project_name}")
+        
+        if debug:
+            print(f"🐛 [DEBUG] Mode debug activé")
+            print(f"🐛 [DEBUG] Chemin du projet: {self.project_path.absolute()}")
+            print(f"🐛 [DEBUG] Type détecté: {self.project_type}")
+            print(f"🐛 [DEBUG] Configuration chargée: {self.config}")
+        
         print()
         
         # Exécuter les tests spécifiques au projet
-        project_results = await self.run_project_tests()
+        project_results = await self.run_project_tests(debug=debug)
         
         # Exécuter l'audit générique
-        generic_results = await self.run_generic_audit()
+        generic_results = await self.run_generic_audit(debug=debug)
         
         # Combiner les résultats
         full_results = {
@@ -534,10 +565,18 @@ async def main():
     """Fonction principale."""
     try:
         import sys
+        import argparse
+        
+        # Parser les arguments
+        parser = argparse.ArgumentParser(description="Audit Universel")
+        parser.add_argument('project_path', nargs='?', help='Chemin vers le projet à auditer')
+        parser.add_argument('--debug', action='store_true', help='Active le mode debug détaillé')
+        
+        args = parser.parse_args()
         
         # Vérifier si un chemin de projet est fourni en argument
-        if len(sys.argv) > 1:
-            project_path = Path(sys.argv[1])
+        if args.project_path:
+            project_path = Path(args.project_path)
             print(f"[TARGET] Audit Universel - Projet specifie")
             print(f"[PROJECT] Projet: {project_path}")
         else:
@@ -547,13 +586,16 @@ async def main():
             print(f"[TARGET] Audit Universel - Detection automatique du projet")
             print(f"[PROJECT] Projet detecte: {project_path}")
         
+        if args.debug:
+            print("🐛 [DEBUG] Mode debug activé - Informations détaillées")
+        
         print()
         
         # Créer l'auditeur
         auditor = UniversalAuditor(project_path)
         
         # Exécuter l'audit complet
-        await auditor.run_full_audit()
+        await auditor.run_full_audit(debug=args.debug)
         
     except KeyboardInterrupt:
         print("\n[WARN] Audit interrompu par l'utilisateur")

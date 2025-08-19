@@ -53,9 +53,11 @@ def launch_gui():
         print("Lancement interrompu par l'utilisateur.")
         return 0
 
-def launch_cli(project_path):
+def launch_cli(project_path, debug=False):
     """Lance l'audit en ligne de commande."""
     print(f"Audit en ligne de commande pour: {project_path}")
+    if debug:
+        print("🐛 MODE DEBUG ACTIVÉ")
     print("=" * 50)
     
     audit_dir = Path(__file__).parent
@@ -66,7 +68,10 @@ def launch_cli(project_path):
         return 1
     
     try:
-        subprocess.run([sys.executable, str(audit_script), str(project_path)], check=True)
+        cmd = [sys.executable, str(audit_script), str(project_path)]
+        if debug:
+            cmd.append("--debug")
+        subprocess.run(cmd, check=True)
         return 0
     except subprocess.CalledProcessError as e:
         print(f"Erreur lors de l'audit: {e}")
@@ -98,29 +103,32 @@ SYSTEME D'AUDIT UNIVERSEL v2.0.0
 ====================================
 
 USAGE:
-    python audit.py                    # Lance l'interface graphique
-    python audit.py --gui              # Lance l'interface graphique
-    python audit.py --cli <projet>     # Audit en ligne de commande
-    python audit.py --cleanup          # Nettoyage global des projets
-    python audit.py --help             # Affiche cette aide
+    python audit.py                           # Lance l'interface graphique
+    python audit.py --gui                     # Lance l'interface graphique
+    python audit.py --cli <projet>            # Audit en ligne de commande
+    python audit.py --cli <projet> --debug    # Audit avec mode debug
+    python audit.py --cleanup                 # Nettoyage global des projets
+    python audit.py --help                    # Affiche cette aide
 
 EXEMPLES:
-    python audit.py                    # Interface graphique moderne
-    python audit.py --cli ./mon_projet # Audit du projet ./mon_projet
-    python audit.py --cleanup          # Nettoyage automatique des projets
+    python audit.py                           # Interface graphique moderne
+    python audit.py --cli ./mon_projet        # Audit du projet ./mon_projet
+    python audit.py --cli ./mon_projet --debug # Audit avec debug détaillé
+    python audit.py --cleanup                 # Nettoyage automatique des projets
 
 FONCTIONNALITES:
-    Interface graphique moderne avec theme sombre
-    Detection automatique des doublons de code
+    Interface graphique moderne avec thème clair
+    Détection automatique des doublons de code
     Identification du code mort
-    Verification de securite
-    Rapports detailles en HTML, Markdown et JSON
+    Vérification de sécurité
+    Rapports détaillés en HTML et JSON
     Support pour tous types de projets
-    Nettoyage automatique des dossiers .project
+    Nettoyage automatique des projets
+    Mode debug pour diagnostic détaillé
 
 DOCUMENTATION:
-    docs/README_PROJET.md          # Documentation detaillee
-    docs/RESUME_FINAL.md           # Resume du projet
+    docs/README_PROJET.md          # Documentation détaillée
+    docs/RESUME_FINAL.md           # Résumé du projet
     CHANGELOG.md                   # Historique des versions
 
 LICENCE: MIT
@@ -135,6 +143,7 @@ def main():
     )
     parser.add_argument('--gui', action='store_true', help='Lance l interface graphique')
     parser.add_argument('--cli', metavar='PROJET', help='Audit en ligne de commande du projet specifie')
+    parser.add_argument('--debug', action='store_true', help='Active le mode debug detaille')
     parser.add_argument('--cleanup', action='store_true', help='Nettoyage global des projets')
     parser.add_argument('--help', action='store_true', help='Affiche l aide')
     
@@ -153,7 +162,7 @@ def main():
         if not project_path.exists():
             print(f"Erreur: Le projet {project_path} n'existe pas")
             return 1
-        return launch_cli(project_path)
+        return launch_cli(project_path, debug=args.debug)
     elif args.cleanup:
         return launch_cleanup()
     else:
