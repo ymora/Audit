@@ -24,12 +24,16 @@ class ButtonAnimator:
     def add_hover_effects(button, tooltip_text=None):
         """Ajoute des effets de hover et tooltip contextuel."""
         def on_enter(event):
-            button.configure(relief='raised')
+            # Vérifier si c'est un bouton ttk ou tk
+            if hasattr(button, 'configure') and 'relief' in button.configure():
+                button.configure(relief='raised')
             if tooltip_text:
                 ButtonAnimator.show_tooltip(button, tooltip_text, event)
         
         def on_leave(event):
-            button.configure(relief='solid')
+            # Vérifier si c'est un bouton ttk ou tk
+            if hasattr(button, 'configure') and 'relief' in button.configure():
+                button.configure(relief='solid')
             ButtonAnimator.hide_tooltip()
         
         button.bind('<Enter>', on_enter)
@@ -202,9 +206,7 @@ class AuditGUI:
         self.audit_stopped = False
         self.project_dir = Path(__file__).parent
         
-        # Variables pour l'indicateur IA
-        self.ai_count = 0
-        self.ai_status = "idle"  # idle, active, busy
+
         
         # Configuration du style
         self.setup_styles()
@@ -302,67 +304,67 @@ class AuditGUI:
         
         # Bouton Primary (Bleu)
         style.configure('Primary.TButton',
-                       background='#ffffff',
+                       background='transparent',
                        foreground='#3b82f6',
                        bordercolor='#3b82f6',
                        **base_config)
         style.map('Primary.TButton',
-                 background=[('active', '#f0f9ff'), ('pressed', '#e0f2fe')],
+                 background=[('active', 'transparent'), ('pressed', 'transparent')],
                  foreground=[('active', '#1d4ed8'), ('pressed', '#1d4ed8')],
                  bordercolor=[('active', '#1d4ed8'), ('pressed', '#1d4ed8')])
         
         # Bouton Secondary (Gris)
         style.configure('Secondary.TButton',
-                       background='#ffffff',
+                       background='transparent',
                        foreground='#6b7280',
                        bordercolor='#6b7280',
                        **base_config)
         style.map('Secondary.TButton',
-                 background=[('active', '#f9fafb'), ('pressed', '#f3f4f6')],
+                 background=[('active', 'transparent'), ('pressed', 'transparent')],
                  foreground=[('active', '#4b5563'), ('pressed', '#4b5563')],
                  bordercolor=[('active', '#4b5563'), ('pressed', '#4b5563')])
         
         # Bouton Success (Vert)
         style.configure('Success.TButton',
-                       background='#ffffff',
+                       background='transparent',
                        foreground='#10b981',
                        bordercolor='#10b981',
                        **base_config)
         style.map('Success.TButton',
-                 background=[('active', '#f0fdf4'), ('pressed', '#dcfce7')],
+                 background=[('active', 'transparent'), ('pressed', 'transparent')],
                  foreground=[('active', '#059669'), ('pressed', '#059669')],
                  bordercolor=[('active', '#059669'), ('pressed', '#059669')])
         
         # Bouton Warning (Jaune)
         style.configure('Warning.TButton',
-                       background='#ffffff',
+                       background='transparent',
                        foreground='#f59e0b',
                        bordercolor='#f59e0b',
                        **base_config)
         style.map('Warning.TButton',
-                 background=[('active', '#fffbeb'), ('pressed', '#fef3c7')],
+                 background=[('active', 'transparent'), ('pressed', 'transparent')],
                  foreground=[('active', '#d97706'), ('pressed', '#d97706')],
                  bordercolor=[('active', '#d97706'), ('pressed', '#d97706')])
         
         # Bouton Danger (Rouge)
         style.configure('Danger.TButton',
-                       background='#ffffff',
+                       background='transparent',
                        foreground='#ef4444',
                        bordercolor='#ef4444',
                        **base_config)
         style.map('Danger.TButton',
-                 background=[('active', '#fef2f2'), ('pressed', '#fee2e2')],
+                 background=[('active', 'transparent'), ('pressed', 'transparent')],
                  foreground=[('active', '#dc2626'), ('pressed', '#dc2626')],
                  bordercolor=[('active', '#dc2626'), ('pressed', '#dc2626')])
         
         # Bouton Info (Violet)
         style.configure('Info.TButton',
-                       background='#ffffff',
+                       background='transparent',
                        foreground='#8b5cf6',
                        bordercolor='#8b5cf6',
                        **base_config)
         style.map('Info.TButton',
-                 background=[('active', '#faf5ff'), ('pressed', '#f3e8ff')],
+                 background=[('active', 'transparent'), ('pressed', 'transparent')],
                  foreground=[('active', '#7c3aed'), ('pressed', '#7c3aed')],
                  bordercolor=[('active', '#7c3aed'), ('pressed', '#7c3aed')])
     
@@ -432,16 +434,13 @@ class AuditGUI:
         control_frame.columnconfigure(0, weight=1)
         control_frame.rowconfigure(3, weight=1)  # Logs prennent l'espace restant
         
-        # Titre avec indicateur IA
+        # Titre
         title_frame = ttk.Frame(control_frame, style='Dark.TFrame')
         title_frame.grid(row=0, column=0, pady=(0, 20))
-        title_frame.columnconfigure(1, weight=1)
+        title_frame.columnconfigure(0, weight=1)
         
         title_label = ttk.Label(title_frame, text="Audit Universel", style='Title.TLabel')
         title_label.grid(row=0, column=0, sticky=tk.W)
-        
-        # Indicateur IA
-        self.create_ai_indicator(title_frame)
         
         # Section projet
         self.create_project_section(control_frame)
@@ -597,91 +596,7 @@ class AuditGUI:
                               style='Info.TLabel', anchor=tk.W)
         status_bar.grid(row=5, column=0, sticky=(tk.W, tk.E))
     
-    def create_ai_indicator(self, parent):
-        """Crée l'indicateur d'IA dans le panneau supérieur."""
-        # Frame pour l'indicateur IA
-        ai_frame = ttk.Frame(parent, style='Dark.TFrame')
-        ai_frame.grid(row=0, column=2, sticky=tk.E, padx=(20, 0))
-        
-        # Label "IA"
-        ai_label = ttk.Label(ai_frame, text="IA", style='Info.TLabel')
-        ai_label.pack(side='left', padx=(0, 8))
-        
-        # Indicateur circulaire
-        self.ai_indicator = tk.Canvas(ai_frame, width=20, height=20, 
-                                     bg=self.colors['bg_medium'], 
-                                     highlightthickness=0, relief='flat')
-        self.ai_indicator.pack(side='left', padx=(0, 8))
-        
-        # Compteur
-        self.ai_count_var = tk.StringVar()
-        self.ai_count_var.set("0")
-        ai_count_label = ttk.Label(ai_frame, textvariable=self.ai_count_var, 
-                                   style='Info.TLabel', font=('Inter', 14, 'bold'))
-        ai_count_label.pack(side='left')
-        
-        # Dessiner l'indicateur initial
-        self.update_ai_indicator()
-        
-        # Tooltip au survol
-        self.create_ai_tooltip()
-    
-    def update_ai_indicator(self):
-        """Met à jour l'indicateur IA."""
-        self.ai_indicator.delete("all")
-        
-        # Couleur selon le statut
-        if self.ai_status == "idle":
-            color = self.colors['text_muted']  # Gris
-        elif self.ai_status == "active":
-            color = self.colors['accent_green']  # Vert
-        elif self.ai_status == "busy":
-            color = self.colors['accent_yellow']  # Jaune
-        else:
-            color = self.colors['accent_red']  # Rouge
-        
-        # Dessiner le cercle
-        self.ai_indicator.create_oval(2, 2, 18, 18, 
-                                     fill=color, outline=color)
-        
-        # Mettre à jour le compteur
-        self.ai_count_var.set(str(self.ai_count))
-    
-    def create_ai_tooltip(self):
-        """Crée un tooltip pour l'indicateur IA."""
-        def show_tooltip(event):
-            status_text = {
-                "idle": "Aucune IA active",
-                "active": f"{self.ai_count} IA(s) active(s)",
-                "busy": f"{self.ai_count} IA(s) occupée(s)"
-            }
-            tooltip_text = status_text.get(self.ai_status, "Statut inconnu")
-            
-            # Créer le tooltip
-            tooltip = tk.Toplevel(self.root)
-            tooltip.wm_overrideredirect(True)
-            tooltip.wm_geometry(f"+{event.x_root+10}+{event.y_root+10}")
-            
-            label = tk.Label(tooltip, text=tooltip_text, 
-                           bg='#ffffff', 
-                           fg=self.colors['text_primary'],
-                           font=('Inter', 12),
-                           relief='solid', borderwidth=1)
-            label.pack()
-            
-            def hide_tooltip(event):
-                tooltip.destroy()
-            
-            self.ai_indicator.bind('<Leave>', hide_tooltip)
-            tooltip.bind('<Leave>', hide_tooltip)
-        
-        self.ai_indicator.bind('<Enter>', show_tooltip)
-    
-    def set_ai_status(self, status, count=0):
-        """Définit le statut de l'IA."""
-        self.ai_status = status
-        self.ai_count = count
-        self.update_ai_indicator()
+
     
     def create_visualization_panel(self, parent):
         """Crée le panneau de visualisation."""
@@ -808,8 +723,7 @@ Bienvenue dans le panneau de visualisation !
         self.progress.start()
         self.status_var.set("Audit en cours...")
         
-        # Mettre à jour l'indicateur IA
-        self.set_ai_status("active", 1)
+
         
         thread = threading.Thread(target=self._run_audit_thread, args=(project_path,))
         thread.daemon = True
@@ -877,23 +791,14 @@ Bienvenue dans le panneau de visualisation !
                 # Charger automatiquement le rapport dans la visualisation
                 if not self.audit_stopped:
                     self.root.after(0, self.load_report)
-                    
-                # Mettre à jour l'indicateur IA
-                self.root.after(0, lambda: self.set_ai_status("idle", 0))
             elif not self.audit_stopped:
                 self.log_message(f"❌ Audit échoué (code: {return_code})")
                 self.status_var.set("Audit échoué")
-                
-                # Mettre à jour l'indicateur IA
-                self.root.after(0, lambda: self.set_ai_status("idle", 0))
                 
         except Exception as e:
             if not self.audit_stopped:
                 self.log_message(f"❌ Erreur lors de l'audit: {e}")
                 self.status_var.set("Erreur lors de l'audit")
-                
-                # Mettre à jour l'indicateur IA
-                self.root.after(0, lambda: self.set_ai_status("idle", 0))
         
         finally:
             # Réactiver l'interface
@@ -907,9 +812,6 @@ Bienvenue dans le panneau de visualisation !
         self.audit_stopped = True
         self.log_message("⏹️ Arrêt de l'audit demandé...")
         self.status_var.set("Arrêt en cours...")
-        
-        # Mettre à jour l'indicateur IA
-        self.set_ai_status("busy", 0)
     
     def _audit_finished(self):
         """Appelé quand l'audit est terminé."""
@@ -918,9 +820,6 @@ Bienvenue dans le panneau de visualisation !
         
         self.audit_btn.config(state='normal')
         self.progress.stop()
-        
-        # Mettre à jour l'indicateur IA
-        self.set_ai_status("idle", 0)
     
     def view_report(self):
         """Affiche le rapport dans la visualisation."""
@@ -937,7 +836,7 @@ Bienvenue dans le panneau de visualisation !
         project_path = Path(project_path)
         project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
         audit_system_dir = self.project_dir.parent
-                    report_path = audit_system_dir / "audit_results" / "audit_reports" / project_name / "latest_report.html"
+        report_path = audit_system_dir / "audit_results" / "audit_reports" / project_name / "latest_report.html"
         
         if report_path.exists():
             try:
@@ -945,13 +844,50 @@ Bienvenue dans le panneau de visualisation !
                 with open(report_path, 'r', encoding='utf-8') as f:
                     html_content = f.read()
                 
-                # Afficher le HTML directement dans la visualisation
-                self.viz_text.config(state=tk.NORMAL)
-                self.viz_text.delete(1.0, tk.END)
-                self.viz_text.insert(tk.END, f"📄 RAPPORT D'AUDIT - {project_path.name}\n")
-                self.viz_text.insert(tk.END, "=" * 60 + "\n\n")
-                self.viz_text.insert(tk.END, html_content)
-                self.viz_text.config(state=tk.DISABLED)
+                # Créer un widget HTML pour afficher le rapport
+                if hasattr(self, 'html_frame'):
+                    self.html_frame.destroy()
+                
+                self.html_frame = tk.Frame(self.viz_frame, bg=self.colors['bg_light'])
+                self.html_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+                
+                # Créer un fichier temporaire pour le HTML
+                import tempfile
+                import webbrowser
+                
+                temp_html = tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False, encoding='utf-8')
+                temp_html.write(html_content)
+                temp_html.close()
+                
+                # Créer un widget WebView ou utiliser un navigateur intégré
+                try:
+                    # Essayer d'utiliser tkinterweb si disponible
+                    import tkinterweb
+                    webview = tkinterweb.HtmlFrame(self.html_frame)
+                    webview.load_html(html_content)
+                    webview.pack(fill=tk.BOTH, expand=True)
+                except ImportError:
+                    # Fallback: afficher le HTML dans un widget Text avec balises
+                    html_text = tk.Text(self.html_frame, 
+                                       bg=self.colors['bg_light'],
+                                       fg=self.colors['text_primary'],
+                                       font=('Consolas', 10),
+                                       wrap=tk.WORD,
+                                       padx=10, pady=10)
+                    html_text.pack(fill=tk.BOTH, expand=True)
+                    
+                    # Insérer le HTML avec formatage basique
+                    html_text.insert(tk.END, f"📄 RAPPORT D'AUDIT - {project_path.name}\n")
+                    html_text.insert(tk.END, "=" * 60 + "\n\n")
+                    html_text.insert(tk.END, html_content)
+                    
+                    # Ajouter une scrollbar
+                    scrollbar = ttk.Scrollbar(self.html_frame, orient=tk.VERTICAL, command=html_text.yview)
+                    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+                    html_text.configure(yscrollcommand=scrollbar.set)
+                    
+                    # Désactiver l'édition
+                    html_text.config(state=tk.DISABLED)
                 
                 self.log_message(f"📄 Rapport HTML chargé dans la visualisation: {report_path}")
                 
@@ -969,8 +905,18 @@ Bienvenue dans le panneau de visualisation !
     
     def clear_viz(self):
         """Efface la zone de visualisation."""
-        self.viz_text.config(state=tk.NORMAL)
-        self.viz_text.delete(1.0, tk.END)
+        # Détruire le frame HTML s'il existe
+        if hasattr(self, 'html_frame'):
+            self.html_frame.destroy()
+        
+        # Recréer le widget de visualisation par défaut
+        self.viz_text = tk.Text(self.viz_frame, 
+                               bg=self.colors['bg_light'],
+                               fg=self.colors['text_primary'],
+                               font=('Inter', 12),
+                               wrap=tk.WORD,
+                               padx=10, pady=10)
+        self.viz_text.pack(fill=tk.BOTH, expand=True)
         
         welcome_text = """🔍 SYSTÈME D'AUDIT UNIVERSEL
 
@@ -986,7 +932,7 @@ Zone de visualisation effacée.
         project_path = Path(self.selected_project.get())
         project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
         audit_system_dir = self.project_dir.parent
-                    audit_path = audit_system_dir / "audit_results" / "audit_reports" / project_name
+        audit_path = audit_system_dir / "audit_results" / "audit_reports" / project_name
         
         if audit_path.exists():
             try:

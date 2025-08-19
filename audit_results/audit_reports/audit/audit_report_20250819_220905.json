@@ -2,7 +2,7 @@
   "audit_info": {
     "project_name": "audit",
     "project_type": "python",
-    "timestamp": "2025-08-19T22:09:15.384555",
+    "timestamp": "2025-08-19T22:09:05.212922",
     "audit_version": "2.0.0",
     "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_reports\\audit"
   },
@@ -76,7 +76,7 @@
             "message": "Audit générique terminé avec succès",
             "details": {
               "analysis_type": "generic",
-              "timestamp": "2025-08-19T22:09:12.493777",
+              "timestamp": "2025-08-19T22:09:02.303685",
               "project_path": "C:\\Users\\ymora\\Desktop\\audit",
               "findings": [
                 {
@@ -136,17 +136,17 @@
                 }
               ],
               "metrics": {
-                "total_files": 539,
+                "total_files": 536,
                 "file_types": {
                   "": 419,
                   ".py": 35,
                   ".md": 11,
                   ".txt": 4,
                   ".pb": 1,
-                  ".json": 18,
+                  ".json": 17,
                   ".pyc": 21,
-                  ".log": 7,
-                  ".html": 9,
+                  ".log": 6,
+                  ".html": 8,
                   ".sample": 14
                 },
                 "code_files": 35,
@@ -167,7 +167,7 @@
             }
           },
           "structure": {
-            "total_files": 539,
+            "total_files": 536,
             "python_files": 35,
             "test_files": 13,
             "doc_files": 15,
@@ -188,9 +188,9 @@
     "tests_passed": 1,
     "tests_failed": 1,
     "total_tests": 2,
-    "start_time": "2025-08-19T22:09:12.475099",
-    "end_time": "2025-08-19T22:09:13.992144",
-    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit\\audit_20250819_220912.log"
+    "start_time": "2025-08-19T22:09:02.281605",
+    "end_time": "2025-08-19T22:09:03.825881",
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit\\audit_20250819_220902.log"
   },
   "generic_audit": {
     "generic_audit": {
@@ -198,7 +198,7 @@
       "message": "Audit générique terminé avec succès",
       "details": {
         "analysis_type": "generic",
-        "timestamp": "2025-08-19T22:09:13.993520",
+        "timestamp": "2025-08-19T22:09:03.827221",
         "project_path": "C:\\Users\\ymora\\Desktop\\audit",
         "findings": [
           {
@@ -258,17 +258,17 @@
           }
         ],
         "metrics": {
-          "total_files": 539,
+          "total_files": 536,
           "file_types": {
             "": 419,
             ".py": 35,
             ".md": 11,
             ".txt": 4,
             ".pb": 1,
-            ".json": 18,
+            ".json": 17,
             ".pyc": 21,
-            ".log": 7,
-            ".html": 9,
+            ".log": 6,
+            ".html": 8,
             ".sample": 14
           },
           "code_files": 35,
