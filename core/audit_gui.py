@@ -22,8 +22,8 @@ class AuditGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("🔍 Système d'Audit Universel")
-        self.root.geometry("800x600")
-        self.root.minsize(600, 400)
+        self.root.geometry("1000x700")
+        self.root.minsize(800, 500)
         
         # Variables
         self.selected_project = tk.StringVar()
@@ -65,6 +65,7 @@ class AuditGUI:
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
         main_frame.columnconfigure(1, weight=1)
+        main_frame.rowconfigure(3, weight=1)  # Donner plus d'espace aux logs
         
         # Titre
         title_label = ttk.Label(main_frame, text="🔍 Système d'Audit Universel", 
@@ -77,10 +78,10 @@ class AuditGUI:
         # Section actions
         self.create_actions_section(main_frame)
         
-        # Section logs
+        # Section logs (plus grande)
         self.create_logs_section(main_frame)
         
-        # Section projets récents
+        # Section projets récents (plus petite)
         self.create_recent_projects_section(main_frame)
         
         # Barre de statut
@@ -138,8 +139,8 @@ class AuditGUI:
         logs_frame.rowconfigure(0, weight=1)
         parent.rowconfigure(3, weight=1)
         
-        # Zone de texte pour les logs
-        self.logs_text = scrolledtext.ScrolledText(logs_frame, height=10, wrap=tk.WORD)
+        # Zone de texte pour les logs (plus grande)
+        self.logs_text = scrolledtext.ScrolledText(logs_frame, height=15, wrap=tk.WORD, font=('Consolas', 9))
         self.logs_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         # Boutons pour les logs
@@ -147,10 +148,13 @@ class AuditGUI:
         logs_buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(5, 0))
         
         ttk.Button(logs_buttons_frame, text="🗑️ Effacer", 
-                  command=self.clear_logs).pack(side=tk.LEFT, padx=(0, 10))
+                   command=self.clear_logs).pack(side=tk.LEFT, padx=(0, 10))
+        
+        ttk.Button(logs_buttons_frame, text="📋 Copier", 
+                   command=self.copy_logs).pack(side=tk.LEFT, padx=(0, 10))
         
         ttk.Button(logs_buttons_frame, text="💾 Sauvegarder", 
-                  command=self.save_logs).pack(side=tk.LEFT)
+                   command=self.save_logs).pack(side=tk.LEFT)
     
     def create_recent_projects_section(self, parent):
         """Crée la section des projets récents."""
@@ -158,8 +162,8 @@ class AuditGUI:
         recent_frame.grid(row=4, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=(0, 10))
         recent_frame.columnconfigure(0, weight=1)
         
-        # Liste des projets récents
-        self.recent_listbox = tk.Listbox(recent_frame, height=4)
+        # Liste des projets récents (plus petite)
+        self.recent_listbox = tk.Listbox(recent_frame, height=3)
         self.recent_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=(0, 10))
         self.recent_listbox.bind('<Double-Button-1>', self.select_recent_project)
         
@@ -210,12 +214,14 @@ class AuditGUI:
             self.project_info_label.config(text="❌ Dossier introuvable", foreground='red')
             return
         
-        # Vérifier si c'est un projet avec audit
-        audit_dir = project_path / ".project"
-        if audit_dir.exists():
+        # Vérifier si c'est un projet avec audit dans le système d'audit
+        audit_system_dir = self.project_dir.parent
+        project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
+        reports_dir = audit_system_dir / "projects" / project_name / "reports"
+        
+        if reports_dir.exists():
             # Compter les rapports
-            reports_dir = audit_dir / "reports"
-            report_count = len(list(reports_dir.glob("*.html"))) if reports_dir.exists() else 0
+            report_count = len(list(reports_dir.glob("*.html")))
             
             self.project_info_label.config(
                 text=f"✅ Projet avec audit ({report_count} rapport(s)) - {project_path.name}",
@@ -273,7 +279,7 @@ class AuditGUI:
             
             # Lancer l'audit
             result = subprocess.run([
-                sys.executable, str(self.project_dir / "universal_auditor.py"),
+                sys.executable, str(self.project_dir / "audit.py"),
                 project_path
             ], capture_output=True, text=True, encoding='utf-8')
             
@@ -321,7 +327,9 @@ class AuditGUI:
     def open_latest_report(self):
         """Ouvre le dernier rapport HTML."""
         project_path = Path(self.selected_project.get())
-        report_path = project_path / ".project" / "reports" / "latest_report.html"
+        project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
+        audit_system_dir = self.project_dir.parent
+        report_path = audit_system_dir / "projects" / project_name / "reports" / "latest_report.html"
         
         if report_path.exists():
             try:
@@ -335,7 +343,9 @@ class AuditGUI:
     def open_audit_folder(self):
         """Ouvre le dossier d'audit du projet."""
         project_path = Path(self.selected_project.get())
-        audit_path = project_path / ".project"
+        project_name = project_path.name.lower().replace(' ', '_').replace('-', '_')
+        audit_system_dir = self.project_dir.parent
+        audit_path = audit_system_dir / "projects" / project_name
         
         if audit_path.exists():
             try:
@@ -361,6 +371,19 @@ class AuditGUI:
     def clear_logs(self):
         """Efface les logs."""
         self.logs_text.delete(1.0, tk.END)
+    
+    def copy_logs(self):
+        """Copie les logs dans le presse-papiers."""
+        try:
+            logs_content = self.logs_text.get(1.0, tk.END)
+            if logs_content.strip():
+                self.root.clipboard_clear()
+                self.root.clipboard_append(logs_content)
+                messagebox.showinfo("Succès", "Logs copiés dans le presse-papiers!")
+            else:
+                messagebox.showwarning("Attention", "Aucun log à copier.")
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors de la copie: {e}")
     
     def save_logs(self):
         """Sauvegarde les logs dans un fichier."""
