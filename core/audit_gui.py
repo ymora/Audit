@@ -81,8 +81,9 @@ class ModernDialog:
         # Créer la fenêtre
         self.dialog = tk.Toplevel(parent)
         self.dialog.title(title)
-        self.dialog.geometry("400x200")
-        self.dialog.resizable(False, False)
+        self.dialog.geometry("600x400")
+        self.dialog.resizable(True, True)
+        self.dialog.minsize(400, 250)
         self.dialog.transient(parent)
         self.dialog.grab_set()
         
@@ -130,19 +131,15 @@ class ModernDialog:
         main_frame = tk.Frame(self.dialog, bg='#ffffff', relief='flat', bd=0)
         main_frame.pack(fill='both', expand=True, padx=20, pady=20)
         
-        # Icône et titre
-        icon_label = tk.Label(main_frame, text=self.icon, font=('Inter', 24, 'bold'), 
-                             bg='#ffffff', fg=self.accent_color)
-        icon_label.pack(pady=(0, 10))
-        
-        title_label = tk.Label(main_frame, text=self.title, font=('Inter', 18, 'semibold'),
-                               bg='#ffffff', fg='#18181b')
-        title_label.pack(pady=(0, 15))
+        # Titre
+        title_label = tk.Label(main_frame, text=self.title, font=('Inter', 18, 'bold'),
+                               bg='#ffffff', fg='#18181b', anchor='w')
+        title_label.pack(fill='x', pady=(0, 15))
         
         # Message
-        message_label = tk.Label(main_frame, text=self.message, font=('Inter', 14, 'normal'),
-                                bg='#ffffff', fg='#71717a', wraplength=350, justify='center')
-        message_label.pack(pady=(0, 25))
+        message_label = tk.Label(main_frame, text=self.message, font=('Inter', 12, 'normal'),
+                                bg='#ffffff', fg='#71717a', wraplength=450, justify='left', anchor='nw')
+        message_label.pack(fill='both', expand=True, pady=(0, 25))
         
         # Boutons
         button_frame = tk.Frame(main_frame, bg='#ffffff')
@@ -201,7 +198,8 @@ class AuditGUI:
         self.audit_stopped = False
         self.project_dir = Path(__file__).parent
         
-
+        # Créer la barre de menu
+        self.create_menu_bar()
         
         # Configuration du style
         self.setup_styles()
@@ -227,6 +225,40 @@ class AuditGUI:
         self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
         self.root.minsize(900, 600)
         self.root.resizable(True, True)
+    
+    def create_menu_bar(self):
+        """Crée la barre de menu principale."""
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        
+        # Menu Projet
+        projet_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Projet", menu=projet_menu)
+        projet_menu.add_command(label="➕ Ajouter un projet...", command=self.show_add_project_menu)
+        projet_menu.add_separator()
+        projet_menu.add_command(label="🔄 Actualiser la liste", command=self.load_projects_table)
+        projet_menu.add_separator()
+        projet_menu.add_command(label="🚪 Quitter", command=self.root.quit)
+        
+        # Menu Audit
+        audit_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Audit", menu=audit_menu)
+        audit_menu.add_command(label="🔍 Lancer audit du projet sélectionné", command=self.run_audit)
+        audit_menu.add_command(label="⏹️ Arrêter l'audit en cours", command=self.stop_audit)
+        audit_menu.add_separator()
+        audit_menu.add_command(label="📄 Voir le dernier rapport", command=self.load_report)
+        audit_menu.add_command(label="🗂️ Ouvrir dossier des rapports", command=self.open_reports_folder)
+        
+        # Menu Affichage
+        affichage_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Affichage", menu=affichage_menu)
+        affichage_menu.add_command(label="🧹 Effacer les logs", command=self.clear_logs)
+        affichage_menu.add_command(label="🗑️ Effacer la visualisation", command=self.clear_viz)
+        
+        # Menu Aide
+        aide_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Aide", menu=aide_menu)
+        aide_menu.add_command(label="📖 À propos", command=self.show_about)
     
     def setup_styles(self):
         """Configure les styles de l'interface."""
@@ -374,9 +406,9 @@ class AuditGUI:
                        bordercolor=self.colors['border'])
         
         style.configure('Dark.TLabelframe.Label',
-                       background=self.colors['bg_medium'],
-                       foreground=self.colors['accent_blue'],
-                       font=('Inter', 14, 'semibold'))
+                        background=self.colors['bg_medium'],
+                        foreground=self.colors['accent_blue'],
+                        font=('Inter', 14, 'bold'))
         
         # Entry
         style.configure('Dark.TEntry',
@@ -498,8 +530,8 @@ class AuditGUI:
         control_frame = ttk.Frame(parent, style='Dark.TFrame')
         control_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(0, 16))
         control_frame.columnconfigure(0, weight=1)
-        control_frame.rowconfigure(2, weight=2)  # Tableau des projets prend plus d'espace
-        control_frame.rowconfigure(3, weight=1)  # Logs prennent moins d'espace
+        control_frame.rowconfigure(1, weight=2)  # Tableau des projets prend plus d'espace
+        control_frame.rowconfigure(2, weight=1)  # Logs prennent moins d'espace
         
         # Titre
         title_frame = ttk.Frame(control_frame, style='Dark.TFrame')
@@ -508,9 +540,6 @@ class AuditGUI:
         
         title_label = ttk.Label(title_frame, text="Audit Universel", style='Title.TLabel')
         title_label.grid(row=0, column=0, sticky=tk.W)
-        
-        # Section projet et actions principales
-        self.create_main_actions_section(control_frame)
         
         # Tableau des projets avec rapports
         self.create_projects_table_section(control_frame)
@@ -521,41 +550,12 @@ class AuditGUI:
         # Barre de statut
         self.create_status_bar(control_frame)
     
-    def create_main_actions_section(self, parent):
-        """Crée la section d'actions principales simplifiée."""
-        main_frame = ttk.LabelFrame(parent, text="Actions Principales", style='Dark.TLabelframe', padding="8")
-        main_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(0, 12))
-        main_frame.columnconfigure(0, weight=1)
-        
-        # Menu pour ajouter un projet
-        menu_frame = ttk.Frame(main_frame, style='Dark.TFrame')
-        menu_frame.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=(0, 8))
-        
-        add_project_btn = tk.Button(menu_frame, text="➕ Ajouter un projet", 
-                                   command=self.show_add_project_menu,
-                                   bg='#ffffff', fg='#3b82f6', font=('Inter', 10, 'bold'),
-                                   relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=6,
-                                   activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        add_project_btn.pack(side='left')
-        ButtonAnimator.add_hover_effects(add_project_btn, "Ajouter un nouveau projet à auditer")
-        
-        # Bouton Stop uniquement
-        self.stop_btn = tk.Button(menu_frame, text="⏹️ Arrêter", 
-                                  command=self.stop_audit,
-                                  bg='#ffffff', fg='#ef4444', font=('Inter', 10, 'bold'),
-                                  relief='solid', borderwidth=1, cursor='hand2', padx=12, pady=6,
-                                  activebackground='#fef2f2', activeforeground='#dc2626')
-        self.stop_btn.pack(side='right')
-        ButtonAnimator.add_hover_effects(self.stop_btn, "Interrompre l'audit en cours")
-        
-        # Informations du projet
-        self.project_info_label = ttk.Label(main_frame, text="Sélectionnez un projet dans le tableau pour voir les détails", style='Info.TLabel')
-        self.project_info_label.grid(row=1, column=0, sticky=tk.W, pady=(8, 0))
+
     
     def create_projects_table_section(self, parent):
         """Crée le tableau des projets avec rapports."""
         table_frame = ttk.LabelFrame(parent, text="Projets & Rapports", style='Dark.TLabelframe', padding="8")
-        table_frame.grid(row=2, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 12))
+        table_frame.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 12))
         table_frame.columnconfigure(0, weight=1)
         table_frame.rowconfigure(1, weight=1)
         
@@ -597,7 +597,7 @@ class AuditGUI:
         scrollbar.grid(row=0, column=1, sticky=(tk.N, tk.S))
         
         # Bindings
-        self.projects_tree.bind('<Double-1>', self.on_project_select)
+        self.projects_tree.bind('<<TreeviewSelect>>', self.on_project_select)
         self.projects_tree.bind('<Button-1>', self.on_project_click)
         
         # Charger les projets existants
@@ -641,7 +641,7 @@ class AuditGUI:
     def create_logs_section(self, parent):
         """Crée la section des logs."""
         logs_frame = ttk.LabelFrame(parent, text="Logs", style='Dark.TLabelframe', padding="8")
-        logs_frame.grid(row=3, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 12))
+        logs_frame.grid(row=2, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 12))
         logs_frame.columnconfigure(0, weight=1)
         logs_frame.rowconfigure(0, weight=1)
         
@@ -730,12 +730,20 @@ class AuditGUI:
         try:
             project_name = Path(project_path).name.lower().replace(' ', '_').replace('-', '_')
             audit_system_dir = self.project_dir.parent
+            
+            # Chercher d'abord dans le dossier spécifique au projet
             report_path = audit_system_dir / "audit_results" / "audit_reports" / project_name / "latest_report.json"
+            
+            # Si pas trouvé, chercher dans les rapports généraux
+            if not report_path.exists():
+                report_path = audit_system_dir / "audit_results" / "audit_reports" / "latest_report.json"
             
             if report_path.exists():
                 with open(report_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                    timestamp = data.get('timestamp', '')
+                    # Chercher le timestamp dans audit_info
+                    audit_info = data.get('audit_info', {})
+                    timestamp = audit_info.get('timestamp', '')
                     if timestamp:
                         # Convertir le timestamp en date lisible
                         from datetime import datetime
@@ -743,7 +751,8 @@ class AuditGUI:
                         return dt.strftime('%d/%m/%Y %H:%M')
             
             return "Jamais audité"
-        except:
+        except Exception as e:
+            print(f"Erreur lors de la récupération de la date d'audit: {e}")
             return "Jamais audité"
     
     def on_project_select(self, event):
@@ -755,7 +764,9 @@ class AuditGUI:
             if project_path:
                 self.selected_project.set(project_path)
                 self.update_project_info()
+                # Charger automatiquement le rapport du projet sélectionné
                 self.load_report_for_project(project_path)
+                self.log_message(f"📋 Projet sélectionné: {Path(project_path).name}")
     
     def on_project_click(self, event):
         """Gère le clic sur les actions dans le tableau."""
@@ -769,15 +780,6 @@ class AuditGUI:
                     project_path = self.projects_tree.set(item, 'project')
                     if project_path:
                         self.show_project_actions_menu(event, project_path)
-            elif column == '#1':  # Colonne Projet
-                # Sélectionner le projet
-                selection = self.projects_tree.selection()
-                if selection:
-                    item = selection[0]
-                    project_path = self.projects_tree.set(item, 'project')
-                    if project_path:
-                        self.selected_project.set(project_path)
-                        self.update_project_info()
     
     def show_project_actions_menu(self, event, project_path):
         """Affiche le menu d'actions pour un projet."""
@@ -843,11 +845,11 @@ class AuditGUI:
     def create_status_bar(self, parent):
         """Crée la barre de statut."""
         self.status_var = tk.StringVar()
-        self.status_var.set("Prêt")
+        self.status_var.set("")
         
         status_bar = ttk.Label(parent, textvariable=self.status_var, 
                               style='Info.TLabel', anchor=tk.W)
-        status_bar.grid(row=4, column=0, sticky=(tk.W, tk.E))
+        status_bar.grid(row=3, column=0, sticky=(tk.W, tk.E))
     
 
     
@@ -876,58 +878,7 @@ class AuditGUI:
         )
         self.viz_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
-        # Boutons de contrôle
-        viz_buttons_frame = ttk.Frame(self.viz_frame, style='Dark.TFrame')
-        viz_buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(8, 0))
-        
-        load_btn = tk.Button(viz_buttons_frame, text="📄 Rapport", 
-                             command=self.load_report,
-                             bg='#ffffff', fg='#3b82f6', font=('Inter', 9, 'bold'),
-                             relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
-                             activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        load_btn.pack(side='left', padx=(0, 6))
-        ButtonAnimator.add_hover_effects(load_btn, "Charger le rapport d'audit dans la visualisation")
-        
-        refresh_btn = tk.Button(viz_buttons_frame, text="🔄", 
-                               command=self.refresh_viz,
-                               bg='#ffffff', fg='#3b82f6', font=('Inter', 9, 'bold'),
-                               relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
-                               activebackground='#f0f9ff', activeforeground='#1d4ed8')
-        refresh_btn.pack(side='left', padx=(0, 6))
-        ButtonAnimator.add_hover_effects(refresh_btn, "Mettre à jour la visualisation")
-        
-        clear_viz_btn = tk.Button(viz_buttons_frame, text="🗑️", 
-                                 command=self.clear_viz,
-                                 bg='#ffffff', fg='#ef4444', font=('Inter', 9, 'bold'),
-                                 relief='solid', borderwidth=1, cursor='hand2', padx=6, pady=3,
-                                 activebackground='#fef2f2', activeforeground='#dc2626')
-        clear_viz_btn.pack(side='left')
-        ButtonAnimator.add_hover_effects(clear_viz_btn, "Vider la zone de visualisation")
-        
-        # Explication de la visualisation
-        viz_explanation = ttk.Label(self.viz_frame, 
-                                  text="Zone d'affichage des rapports d'audit. Les résultats s'affichent ici après l'exécution d'un audit.",
-                                  style='Info.TLabel', font=('TkDefaultFont', 9))
-        viz_explanation.grid(row=2, column=0, sticky=tk.W, pady=(8, 0))
-        
-        # Message d'accueil
-        welcome_text = """🔍 SYSTÈME D'AUDIT UNIVERSEL
-
-Bienvenue dans le panneau de visualisation !
-
-📋 Fonctionnalités :
-• Charger Rapport : Affiche le dernier rapport d'audit
-• Actualiser : Met à jour la visualisation
-• Effacer : Vide la zone de visualisation
-
-📊 Contenu affiché :
-• Rapports d'audit détaillés
-• Résultats d'analyse
-• Métriques et statistiques
-• Recommandations
-
-💡 Conseil : Lancez un audit pour voir les résultats ici !"""
-        self.viz_text.insert(tk.END, welcome_text)
+        # Zone de visualisation vide au démarrage
         self.viz_text.config(state=tk.DISABLED)
     
 
@@ -1180,14 +1131,11 @@ Bienvenue dans le panneau de visualisation !
                                padx=10, pady=10)
         self.viz_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
-        welcome_text = """🔍 SYSTÈME D'AUDIT UNIVERSEL
-
-Zone de visualisation effacée.
-
-💡 Conseil : Lancez un audit pour voir les résultats ici !
-"""
-        self.viz_text.insert(tk.END, welcome_text)
+        # Laisser la zone de visualisation complètement vide
         self.viz_text.config(state=tk.DISABLED)
+        
+        # Ajouter un message dans les logs
+        self.log_message("🗑️ Zone de visualisation effacée par l'utilisateur")
     
     def open_folder(self):
         """Ouvre le dossier d'audit du projet."""
@@ -1220,6 +1168,7 @@ Zone de visualisation effacée.
     def clear_logs(self):
         """Efface les logs."""
         self.logs_text.delete(1.0, tk.END)
+        self.log_message("🧹 Logs effacés par l'utilisateur")
     
     def copy_logs(self):
         """Copie les logs dans le presse-papiers."""
@@ -1228,11 +1177,11 @@ Zone de visualisation effacée.
             if logs_content.strip():
                 self.root.clipboard_clear()
                 self.root.clipboard_append(logs_content)
-                ModernDialog(self.root, "Succès", "Logs copiés dans le presse-papiers!", "success")
+                self.log_message("📋 Logs copiés dans le presse-papiers")
             else:
-                ModernDialog(self.root, "Attention", "Aucun log à copier.", "warning")
+                self.log_message("⚠️ Aucun log à copier")
         except Exception as e:
-            ModernDialog(self.root, "Erreur", f"Erreur lors de la copie: {e}", "error")
+            self.log_message(f"❌ Erreur lors de la copie: {e}")
     
     def load_recent_projects(self):
         """Charge la liste des projets récents."""
@@ -1290,6 +1239,43 @@ Zone de visualisation effacée.
         """Supprime un projet de la liste des projets récents."""
         # Cette fonction est maintenant gérée par remove_project_from_table
         pass
+    
+    def open_reports_folder(self):
+        """Ouvre le dossier des rapports d'audit."""
+        try:
+            audit_system_dir = self.project_dir.parent
+            reports_dir = audit_system_dir / "audit_results" / "audit_reports"
+            
+            if reports_dir.exists():
+                if os.name == 'nt':  # Windows
+                    os.startfile(reports_dir)
+                else:  # Linux/Mac
+                    subprocess.run(['xdg-open', str(reports_dir)])
+                
+                self.log_message(f"📂 Dossier des rapports ouvert: {reports_dir}")
+            else:
+                ModernDialog(self.root, "Attention", "Dossier des rapports introuvable.", "warning")
+        except Exception as e:
+            self.log_message(f"❌ Erreur lors de l'ouverture: {e}")
+    
+    def show_about(self):
+        """Affiche les informations sur l'application."""
+        about_text = """🔍 SYSTÈME D'AUDIT UNIVERSEL
+
+Système automatisé d'analyse et d'audit de code source.
+
+FONCTIONNALITÉS :
+• Détection automatique du type de projet
+• Analyse de sécurité et vulnérabilités
+• Détection de code mort
+• Analyse des duplications
+• Génération de rapports HTML/JSON
+
+Version: 2.0
+Date: Août 2025
+© 2025 - Audit Universel"""
+        
+        ModernDialog(self.root, "À propos", about_text, "info")
 
 def main():
     """Fonction principale."""

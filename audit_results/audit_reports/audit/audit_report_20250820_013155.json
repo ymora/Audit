@@ -1,19 +1,19 @@
 {
   "audit_info": {
-    "project_name": "",
+    "project_name": "audit",
     "project_type": "python",
-    "timestamp": "2025-08-19T22:59:44.021872",
+    "timestamp": "2025-08-20T01:31:55.472985",
     "audit_version": "2.0.0",
-    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_reports"
+    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_reports\\audit"
   },
   "project_tests": {
-    "project_name": "",
+    "project_name": "audit",
     "project_type": "python",
     "tests_executed": [
       {
-        "name": "test_redirect_audit",
+        "name": "test_code_quality",
         "success": true,
-        "message": "✅ Redirection réussie - Audit exhaustif terminé: 10/10 points (code mort, duplications, sécurité, implémentations incomplètes)",
+        "message": "Audit exhaustif terminé: 10/10 points (code mort, duplications, sécurité, implémentations incomplètes)",
         "details": {
           "dead_code": {
             "dead_functions": 0,
@@ -76,8 +76,8 @@
             "message": "Audit générique terminé avec succès",
             "details": {
               "analysis_type": "generic",
-              "timestamp": "2025-08-19T22:59:40.494634",
-              "project_path": ".",
+              "timestamp": "2025-08-20T01:31:52.377353",
+              "project_path": "C:\\Users\\ymora\\Desktop\\audit",
               "findings": [
                 {
                   "type": "structure",
@@ -89,22 +89,22 @@
                   "type": "code_quality",
                   "severity": "warning",
                   "file": "core\\audit_gui.py",
-                  "line": 498,
-                  "message": "Fonction 'create_main_actions_section' très longue (22 lignes)"
+                  "line": 229,
+                  "message": "Fonction 'create_menu_bar' très longue (24 lignes)"
                 },
                 {
                   "type": "code_quality",
                   "severity": "warning",
                   "file": "core\\audit_gui.py",
-                  "line": 547,
+                  "line": 555,
                   "message": "Fonction 'create_projects_table_section' très longue (30 lignes)"
                 },
                 {
                   "type": "code_quality",
                   "severity": "warning",
                   "file": "core\\audit_gui.py",
-                  "line": 795,
-                  "message": "Fonction 'create_visualization_panel' très longue (23 lignes)"
+                  "line": 854,
+                  "message": "Fonction 'create_visualization_panel' très longue (21 lignes)"
                 },
                 {
                   "type": "code_quality",
@@ -150,26 +150,26 @@
                 }
               ],
               "metrics": {
-                "total_files": 610,
+                "total_files": 629,
                 "file_types": {
-                  "": 469,
+                  "": 485,
                   ".py": 35,
                   ".md": 11,
                   ".txt": 4,
                   ".pb": 1,
-                  ".json": 25,
+                  ".json": 26,
                   ".pyc": 21,
-                  ".log": 14,
-                  ".html": 16,
+                  ".log": 15,
+                  ".html": 17,
                   ".sample": 14
                 },
                 "code_files": 35,
                 "python": {
                   "total_files": 35,
-                  "total_lines": 8146,
-                  "total_functions": 257,
+                  "total_lines": 8211,
+                  "total_functions": 260,
                   "total_classes": 20,
-                  "avg_lines_per_file": 232.74285714285713
+                  "avg_lines_per_file": 234.6
                 }
               },
               "recommendations": [
@@ -181,7 +181,7 @@
             }
           },
           "structure": {
-            "total_files": 610,
+            "total_files": 629,
             "python_files": 35,
             "test_files": 13,
             "doc_files": 15,
@@ -189,14 +189,22 @@
           },
           "quality_score": 10
         }
+      },
+      {
+        "name": "test_security_analysis",
+        "success": false,
+        "message": "Erreur lors de l'analyse de sécurité: 'SecurityChecker' object has no attribute 'analyze_project'",
+        "details": {
+          "error": "'SecurityChecker' object has no attribute 'analyze_project'"
+        }
       }
     ],
     "tests_passed": 1,
-    "tests_failed": 0,
-    "total_tests": 1,
-    "start_time": "2025-08-19T22:59:40.470690",
-    "end_time": "2025-08-19T22:59:42.179655",
-    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit_20250819_225940.log"
+    "tests_failed": 1,
+    "total_tests": 2,
+    "start_time": "2025-08-20T01:31:52.331104",
+    "end_time": "2025-08-20T01:31:54.106787",
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\audit\\audit_20250820_013152.log"
   },
   "generic_audit": {
     "generic_audit": {
@@ -204,8 +212,8 @@
       "message": "Audit générique terminé avec succès",
       "details": {
         "analysis_type": "generic",
-        "timestamp": "2025-08-19T22:59:42.182081",
-        "project_path": ".",
+        "timestamp": "2025-08-20T01:31:54.107972",
+        "project_path": "C:\\Users\\ymora\\Desktop\\audit",
         "findings": [
           {
             "type": "structure",
@@ -217,22 +225,22 @@
             "type": "code_quality",
             "severity": "warning",
             "file": "core\\audit_gui.py",
-            "line": 498,
-            "message": "Fonction 'create_main_actions_section' très longue (22 lignes)"
+            "line": 229,
+            "message": "Fonction 'create_menu_bar' très longue (24 lignes)"
           },
           {
             "type": "code_quality",
             "severity": "warning",
             "file": "core\\audit_gui.py",
-            "line": 547,
+            "line": 555,
             "message": "Fonction 'create_projects_table_section' très longue (30 lignes)"
           },
           {
             "type": "code_quality",
             "severity": "warning",
             "file": "core\\audit_gui.py",
-            "line": 795,
-            "message": "Fonction 'create_visualization_panel' très longue (23 lignes)"
+            "line": 854,
+            "message": "Fonction 'create_visualization_panel' très longue (21 lignes)"
           },
           {
             "type": "code_quality",
@@ -278,26 +286,26 @@
           }
         ],
         "metrics": {
-          "total_files": 610,
+          "total_files": 629,
           "file_types": {
-            "": 469,
+            "": 485,
             ".py": 35,
             ".md": 11,
             ".txt": 4,
             ".pb": 1,
-            ".json": 25,
+            ".json": 26,
             ".pyc": 21,
-            ".log": 14,
-            ".html": 16,
+            ".log": 15,
+            ".html": 17,
             ".sample": 14
           },
           "code_files": 35,
           "python": {
             "total_files": 35,
-            "total_lines": 8146,
-            "total_functions": 257,
+            "total_lines": 8211,
+            "total_functions": 260,
             "total_classes": 20,
-            "avg_lines_per_file": 232.74285714285713
+            "avg_lines_per_file": 234.6
           }
         },
         "recommendations": [
@@ -310,9 +318,9 @@
     }
   },
   "summary": {
-    "total_tests": 1,
+    "total_tests": 2,
     "tests_passed": 1,
-    "tests_failed": 0,
-    "success_rate": 100.0
+    "tests_failed": 1,
+    "success_rate": 50.0
   }
 }

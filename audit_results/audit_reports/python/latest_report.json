@@ -1,0 +1,3652 @@
+{
+  "audit_info": {
+    "project_name": "python",
+    "project_type": "python",
+    "timestamp": "2025-08-20T01:42:19.520644",
+    "audit_version": "2.0.0",
+    "audit_directory": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_reports\\python"
+  },
+  "project_tests": {
+    "project_name": "python",
+    "project_type": "python",
+    "tests_executed": [],
+    "tests_passed": 0,
+    "tests_failed": 0,
+    "total_tests": 0,
+    "start_time": "2025-08-20T01:41:23.971698",
+    "end_time": null,
+    "log_file": "C:\\Users\\ymora\\Desktop\\audit\\audit_results\\audit_logs\\python\\audit_20250820_014123.log"
+  },
+  "generic_audit": {
+    "generic_audit": {
+      "success": true,
+      "message": "Audit générique terminé avec succès",
+      "details": {
+        "analysis_type": "generic",
+        "timestamp": "2025-08-20T01:41:23.975046",
+        "project_path": "C:\\Users\\ymora\\Desktop\\Python",
+        "findings": [
+          {
+            "type": "structure",
+            "severity": "info",
+            "message": "Dossiers recommandés manquants: src, lib, app, main, core, utils, tests, docs",
+            "recommendation": "Créer une structure de projet standardisée"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "interface_ui.py",
+            "line": 123,
+            "message": "Fonction '_setup_file_info_layout' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "module_main_windows.py",
+            "line": 244,
+            "message": "Fonction 'create_table' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "AnalyseDD\\mistral DD old.py",
+            "line": 206,
+            "message": "Fonction 'setup_ui' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "AnalyseDD\\mistral DD.py",
+            "line": 166,
+            "message": "Fonction 'setup_ui' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\charset_normalizer\\api.py",
+            "line": 33,
+            "message": "Fonction 'from_bytes' très longue (32 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\click\\core.py",
+            "line": 272,
+            "message": "Fonction '__init__' très longue (39 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\click\\core.py",
+            "line": 2533,
+            "message": "Fonction '__init__' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\click\\testing.py",
+            "line": 276,
+            "message": "Fonction 'isolation' très longue (32 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\click\\_termui_impl.py",
+            "line": 45,
+            "message": "Fonction '__init__' très longue (33 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\engineio\\base_client.py",
+            "line": 42,
+            "message": "Fonction '__init__' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\engineio\\base_server.py",
+            "line": 35,
+            "message": "Fonction '__init__' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\engineio\\client.py",
+            "line": 176,
+            "message": "Fonction '_connect_polling' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\engineio\\client.py",
+            "line": 237,
+            "message": "Fonction '_connect_websocket' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\geocoder\\base.py",
+            "line": 360,
+            "message": "Fonction '__init__' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\gpxpy\\gpx.py",
+            "line": 210,
+            "message": "Fonction '__init__' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\gpxpy\\gpx.py",
+            "line": 291,
+            "message": "Fonction '__init__' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\gpxpy\\gpx.py",
+            "line": 525,
+            "message": "Fonction '__init__' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\gpxpy\\gpx.py",
+            "line": 1989,
+            "message": "Fonction '__init__' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\jinja2\\compiler.py",
+            "line": 301,
+            "message": "Fonction '__init__' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\jinja2\\compiler.py",
+            "line": 614,
+            "message": "Fonction 'macro_body' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\jinja2\\compiler.py",
+            "line": 829,
+            "message": "Fonction 'visit_Template' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\jinja2\\compiler.py",
+            "line": 1181,
+            "message": "Fonction 'visit_For' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\jinja2\\environment.py",
+            "line": 294,
+            "message": "Fonction '__init__' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\jinja2\\ext.py",
+            "line": 355,
+            "message": "Fonction 'parse' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\libfuturize\\main.py",
+            "line": 84,
+            "message": "Fonction 'main' très longue (55 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\libpasteurize\\main.py",
+            "line": 51,
+            "message": "Fonction 'main' très longue (36 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\Builtins.py",
+            "line": 133,
+            "message": "Fonction '_getAnonBuiltins' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\MainControl.py",
+            "line": 593,
+            "message": "Fonction 'runSconsBackend' très longue (52 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\MainControl.py",
+            "line": 946,
+            "message": "Fonction '_main' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\Options.py",
+            "line": 409,
+            "message": "Fonction 'parseArgs' très longue (76 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\Options.py",
+            "line": 985,
+            "message": "Fonction 'commentArgs' très longue (51 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\__main__.py",
+            "line": 48,
+            "message": "Fonction 'main' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\requests\\auth.py",
+            "line": 126,
+            "message": "Fonction 'build_digest_header' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\requests\\sessions.py",
+            "line": 673,
+            "message": "Fonction 'send' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\simple_websocket\\ws.py",
+            "line": 26,
+            "message": "Fonction '__init__' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\socketio\\base_client.py",
+            "line": 38,
+            "message": "Fonction '__init__' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\socketio\\base_server.py",
+            "line": 16,
+            "message": "Fonction '__init__' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\urllib3\\connectionpool.py",
+            "line": 592,
+            "message": "Fonction 'urlopen' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\urllib3\\poolmanager.py",
+            "line": 409,
+            "message": "Fonction 'urlopen' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\test.py",
+            "line": 298,
+            "message": "Fonction '__init__' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\test.py",
+            "line": 667,
+            "message": "Fonction 'get_environ' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\utils.py",
+            "line": 319,
+            "message": "Fonction 'send_file' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\wsproto\\frame_protocol.py",
+            "line": 395,
+            "message": "Fonction 'parse_header' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\zstandard\\backend_cffi.py",
+            "line": 2767,
+            "message": "Fonction 'train_dictionary' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\zstandard\\backend_cffi.py",
+            "line": 403,
+            "message": "Fonction '__init__' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\zstandard\\backend_cffi.py",
+            "line": 4226,
+            "message": "Fonction 'decompress_content_dict_chain' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\routing\\rules.py",
+            "line": 459,
+            "message": "Fonction '__init__' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\routing\\rules.py",
+            "line": 740,
+            "message": "Fonction '_compile_builder' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\PySide6\\scripts\\deploy.py",
+            "line": 63,
+            "message": "Fonction 'main' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\PySide6\\scripts\\metaobjectdump.py",
+            "line": 197,
+            "message": "Fonction 'visit_ClassDef' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\PySide6\\scripts\\deploy_lib\\config.py",
+            "line": 101,
+            "message": "Fonction '__init__' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\typing_extensions.py",
+            "line": 985,
+            "message": "Fonction '__new__' très longue (30 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\cachecontrol\\controller.py",
+            "line": 169,
+            "message": "Fonction 'cached_request' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\distlib\\version.py",
+            "line": 461,
+            "message": "Fonction '_suggest_normalized_version' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\distlib\\wheel.py",
+            "line": 368,
+            "message": "Fonction 'build' très longue (30 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\msgpack\\fallback.py",
+            "line": 226,
+            "message": "Fonction '__init__' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\requests\\auth.py",
+            "line": 126,
+            "message": "Fonction 'build_digest_header' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\requests\\sessions.py",
+            "line": 673,
+            "message": "Fonction 'send' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\rich\\columns.py",
+            "line": 62,
+            "message": "Fonction '__rich_console__' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\rich\\console.py",
+            "line": 631,
+            "message": "Fonction '__init__' très longue (37 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\rich\\console.py",
+            "line": 2320,
+            "message": "Fonction 'export_svg' très longue (44 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\rich\\panel.py",
+            "line": 141,
+            "message": "Fonction '__rich_console__' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\rich\\table.py",
+            "line": 189,
+            "message": "Fonction '__init__' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\rich\\__main__.py",
+            "line": 39,
+            "message": "Fonction 'make_test_card' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+            "line": 535,
+            "message": "Fonction 'urlopen' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\poolmanager.py",
+            "line": 353,
+            "message": "Fonction 'urlopen' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\response.py",
+            "line": 195,
+            "message": "Fonction '__init__' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\ntlmpool.py",
+            "line": 48,
+            "message": "Fonction '_new_conn' très longue (32 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\commands\\download.py",
+            "line": 38,
+            "message": "Fonction 'add_options' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\commands\\download.py",
+            "line": 78,
+            "message": "Fonction 'run' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\commands\\install.py",
+            "line": 81,
+            "message": "Fonction 'add_options' très longue (39 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\commands\\install.py",
+            "line": 275,
+            "message": "Fonction 'run' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\commands\\lock.py",
+            "line": 49,
+            "message": "Fonction 'add_options' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\commands\\wheel.py",
+            "line": 44,
+            "message": "Fonction 'add_options' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\locations\\_distutils.py",
+            "line": 35,
+            "message": "Fonction 'distutils_scheme' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\req\\req_install.py",
+            "line": 72,
+            "message": "Fonction '__init__' très longue (36 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\operations\\install\\wheel.py",
+            "line": 419,
+            "message": "Fonction '_install_wheel' très longue (57 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\SconsCompilerSettings.py",
+            "line": 635,
+            "message": "Fonction 'setupCCompiler' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\SconsInterface.py",
+            "line": 482,
+            "message": "Fonction 'getCommonSconsOptions' très longue (52 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\SconsUtils.py",
+            "line": 183,
+            "message": "Fonction 'createEnvironment' très longue (46 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\ComparisonCodes.py",
+            "line": 60,
+            "message": "Fonction 'getRichComparisonCode' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\ConditionalCodes.py",
+            "line": 38,
+            "message": "Fonction 'generateConditionalAndOrCode' très longue (33 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\FrameCodes.py",
+            "line": 63,
+            "message": "Fonction 'generateStatementsFrameCode' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\GlobalConstants.py",
+            "line": 17,
+            "message": "Fonction 'getConstantDefaultPopulation' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\ModuleCodes.py",
+            "line": 44,
+            "message": "Fonction 'getModuleCode' très longue (32 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\TryCodes.py",
+            "line": 21,
+            "message": "Fonction 'generateTryCode' très longue (30 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\TryCodes.py",
+            "line": 215,
+            "message": "Fonction 'generateTryNextExceptStopIterationCode' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\importing\\Recursion.py",
+            "line": 152,
+            "message": "Fonction '_decideRecursion' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\ChildrenHavingMixins.py",
+            "line": 8090,
+            "message": "Fonction '__init__' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\ChildrenHavingMixins.py",
+            "line": 8159,
+            "message": "Fonction 'getVisitableNodes' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\ChildrenHavingMixins.py",
+            "line": 8246,
+            "message": "Fonction 'replaceChild' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\ChildrenHavingMixins.py",
+            "line": 8414,
+            "message": "Fonction 'finalize' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\ChildrenHavingMixins.py",
+            "line": 8483,
+            "message": "Fonction 'collectVariableAccesses' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\CodeObjectSpecs.py",
+            "line": 41,
+            "message": "Fonction '__init__' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\TryNodes.py",
+            "line": 40,
+            "message": "Fonction 'computeStatement' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\plugins\\PluginBase.py",
+            "line": 1315,
+            "message": "Fonction 'queryRuntimeInformationMultiple' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\reports\\Reports.py",
+            "line": 83,
+            "message": "Fonction '_getReportInputData' très longue (38 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\reports\\Reports.py",
+            "line": 508,
+            "message": "Fonction 'writeCompilationReport' très longue (30 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\specs\\ParameterSpecs.py",
+            "line": 312,
+            "message": "Fonction 'matchCall' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\specs\\ParameterSpecs.py",
+            "line": 60,
+            "message": "Fonction '__init__' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationClasses.py",
+            "line": 63,
+            "message": "Fonction 'buildClassNode2' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationClasses3.py",
+            "line": 146,
+            "message": "Fonction 'buildClassNode3' très longue (56 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationFunctionStatements.py",
+            "line": 227,
+            "message": "Fonction 'buildFunctionNode' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationFunctionStatements.py",
+            "line": 402,
+            "message": "Fonction 'buildAsyncFunctionNode' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationWithStatements.py",
+            "line": 56,
+            "message": "Fonction '_buildWithNode' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\data_composer\\DataComposer.py",
+            "line": 317,
+            "message": "Fonction '_writeConstantValueCodeObject' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\specialize\\SpecializeC.py",
+            "line": 1410,
+            "message": "Fonction 'main' très longue (47 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\testing\\Common.py",
+            "line": 295,
+            "message": "Fonction 'decideFilenameVersionSkip' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\watch\\__main__.py",
+            "line": 468,
+            "message": "Fonction 'main' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\testing\\compare_with_cpython\\__main__.py",
+            "line": 181,
+            "message": "Fonction 'main' très longue (118 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\testing\\measure_construct_performance\\__main__.py",
+            "line": 42,
+            "message": "Fonction 'main' très longue (34 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\testing\\run_nuitka_tests\\__main__.py",
+            "line": 35,
+            "message": "Fonction 'parseOptions' très longue (50 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\testing\\run_nuitka_tests\\__main__.py",
+            "line": 582,
+            "message": "Fonction 'main' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\testing\\run_nuitka_tests\\__main__.py",
+            "line": 603,
+            "message": "Fonction 'checkExecutableCommand' très longue (30 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\plugins\\standard\\AntiBloatPlugin.py",
+            "line": 41,
+            "message": "Fonction '__init__' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pefile\\pefile.py",
+            "line": 3013,
+            "message": "Fonction '__parse__' très longue (48 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pefile\\pefile.py",
+            "line": 3364,
+            "message": "Fonction 'parse_rich_header' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pefile\\pefile.py",
+            "line": 4609,
+            "message": "Fonction 'parse_resources_directory' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pefile\\pefile.py",
+            "line": 4969,
+            "message": "Fonction 'parse_version_information' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pefile\\pefile.py",
+            "line": 5397,
+            "message": "Fonction 'parse_export_directory' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pefile\\pefile.py",
+            "line": 6562,
+            "message": "Fonction 'dump_info' très longue (43 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pefile\\pefile.py",
+            "line": 6990,
+            "message": "Fonction 'dump_dict' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\yaml\\yaml\\emitter.py",
+            "line": 38,
+            "message": "Fonction '__init__' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\yaml\\yaml\\emitter.py",
+            "line": 626,
+            "message": "Fonction 'analyze_scalar' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\yaml\\yaml\\scanner.py",
+            "line": 156,
+            "message": "Fonction 'fetch_more_tokens' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\tqdm\\tqdm\\std.py",
+            "line": 665,
+            "message": "Fonction 'pandas' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\tqdm\\tqdm\\std.py",
+            "line": 842,
+            "message": "Fonction '__init__' très longue (53 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\tqdm\\tqdm\\tk.py",
+            "line": 41,
+            "message": "Fonction '__init__' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Action.py",
+            "line": 331,
+            "message": "Fonction '_object_instance_content' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Builder.py",
+            "line": 376,
+            "message": "Fonction '__init__' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\dblite.py",
+            "line": 214,
+            "message": "Fonction '_exercise' très longue (37 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Environment.py",
+            "line": 923,
+            "message": "Fonction '__init__' très longue (32 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Node\\FS.py",
+            "line": 573,
+            "message": "Fonction '__init__' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Node\\FS.py",
+            "line": 2304,
+            "message": "Fonction '__init__' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Node\\__init__.py",
+            "line": 556,
+            "message": "Fonction '__init__' très longue (38 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Node\\__init__.py",
+            "line": 1617,
+            "message": "Fonction 'explain' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Platform\\posix.py",
+            "line": 77,
+            "message": "Fonction 'generate' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Platform\\win32.py",
+            "line": 328,
+            "message": "Fonction 'generate' très longue (32 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Platform\\__init__.py",
+            "line": 185,
+            "message": "Fonction '__call__' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\Interactive.py",
+            "line": 151,
+            "message": "Fonction 'do_build' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\Main.py",
+            "line": 844,
+            "message": "Fonction '_main' très longue (70 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\Main.py",
+            "line": 1140,
+            "message": "Fonction '_build_targets' très longue (47 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\Main.py",
+            "line": 1369,
+            "message": "Fonction 'main' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\SConsOptions.py",
+            "line": 541,
+            "message": "Fonction 'Parser' très longue (85 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\cyglink.py",
+            "line": 153,
+            "message": "Fonction 'generate' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\mingw.py",
+            "line": 148,
+            "message": "Fonction 'generate' très longue (38 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\mslink.py",
+            "line": 257,
+            "message": "Fonction 'generate' très longue (49 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\msvc.py",
+            "line": 230,
+            "message": "Fonction 'generate' très longue (49 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\msvs.py",
+            "line": 2040,
+            "message": "Fonction 'generate' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\msvs.py",
+            "line": 423,
+            "message": "Fonction '__init__' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\msvs.py",
+            "line": 1245,
+            "message": "Fonction 'PrintProject' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Tool\\mwcc.py",
+            "line": 155,
+            "message": "Fonction 'generate' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\compiler.py",
+            "line": 246,
+            "message": "Fonction '__init__' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\compiler.py",
+            "line": 505,
+            "message": "Fonction 'macro_body' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\compiler.py",
+            "line": 695,
+            "message": "Fonction 'visit_Template' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\compiler.py",
+            "line": 1024,
+            "message": "Fonction 'visit_For' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\environment.py",
+            "line": 264,
+            "message": "Fonction '__init__' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\ext.py",
+            "line": 217,
+            "message": "Fonction 'parse' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\datetime.py",
+            "line": 312,
+            "message": "Fonction '__new__' très longue (40 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\socket.py",
+            "line": 153,
+            "message": "Fonction 'makefile' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\standard_library\\__init__.py",
+            "line": 449,
+            "message": "Fonction 'install_aliases' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\email\\_header_value_parser.py",
+            "line": 2642,
+            "message": "Fonction 'get_parameter' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\email\\_parseaddr.py",
+            "line": 63,
+            "message": "Fonction '_parsedate_tz' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\http\\server.py",
+            "line": 729,
+            "message": "Fonction 'list_directory' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\http\\server.py",
+            "line": 993,
+            "message": "Fonction 'run_cgi' très longue (48 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\test\\pystone.py",
+            "line": 81,
+            "message": "Fonction 'Proc0' très longue (25 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\future\\backports\\urllib\\request.py",
+            "line": 1956,
+            "message": "Fonction 'open_ftp' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\adapter\\clients.py",
+            "line": 287,
+            "message": "Fonction 'launch_request' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\adapter\\__main__.py",
+            "line": 16,
+            "message": "Fonction 'main' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\common\\log.py",
+            "line": 282,
+            "message": "Fonction 'get_environment_description' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\launcher\\handlers.py",
+            "line": 14,
+            "message": "Fonction 'launch_request' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd.py",
+            "line": 3496,
+            "message": "Fonction 'main' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd.py",
+            "line": 576,
+            "message": "Fonction '__init__' très longue (107 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd_file_utils.py",
+            "line": 712,
+            "message": "Fonction 'setup_client_server_paths' très longue (26 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_additional_thread_info_regular.py",
+            "line": 70,
+            "message": "Fonction '__init__' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_api.py",
+            "line": 416,
+            "message": "Fonction 'add_breakpoint' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_code_to_source.py",
+            "line": 370,
+            "message": "Fonction '_handle' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_process_net_command_json.py",
+            "line": 347,
+            "message": "Fonction '_set_debug_options' très longue (42 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_vars.py",
+            "line": 782,
+            "message": "Fonction 'dataframe_to_xml' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_sys_monitoring\\_pydevd_sys_monitoring.py",
+            "line": 519,
+            "message": "Fonction '_get_func_code_info' très longue (36 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_runfiles\\pydev_runfiles.py",
+            "line": 104,
+            "message": "Fonction 'parse_cmdline' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_runfiles\\pydev_runfiles.py",
+            "line": 755,
+            "message": "Fonction 'run_tests' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\concrete.py",
+            "line": 170,
+            "message": "Fonction 'from_code' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\concrete.py",
+            "line": 435,
+            "message": "Fonction 'to_bytecode' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\tests\\test_cfg.py",
+            "line": 524,
+            "message": "Fonction 'test_to_code' très longue (34 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\tests\\test_concrete.py",
+            "line": 88,
+            "message": "Fonction 'test_set_attr' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\tests\\test_concrete.py",
+            "line": 720,
+            "message": "Fonction 'test' très longue (261 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\tests\\test_instr.py",
+            "line": 95,
+            "message": "Fonction 'test_invalid_arg' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 2392,
+            "message": "Fonction 'to_dict' très longue (34 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 11011,
+            "message": "Fonction '__init__' très longue (44 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 11146,
+            "message": "Fonction 'to_dict' très longue (85 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 11547,
+            "message": "Fonction 'to_dict' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 11798,
+            "message": "Fonction 'to_dict' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 11934,
+            "message": "Fonction 'to_dict' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 12090,
+            "message": "Fonction 'to_dict' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 12839,
+            "message": "Fonction 'to_dict' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\_debug_adapter\\pydevd_schema.py",
+            "line": 13782,
+            "message": "Fonction 'to_dict' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd_attach_to_process\\winappdbg\\crash.py",
+            "line": 425,
+            "message": "Fonction '__init__' très longue (45 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd_attach_to_process\\winappdbg\\process.py",
+            "line": 4016,
+            "message": "Fonction 'start_process' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd_attach_to_process\\winappdbg\\sql.py",
+            "line": 625,
+            "message": "Fonction '__init__' très longue (31 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\typing_extensions.py",
+            "line": 985,
+            "message": "Fonction '__new__' très longue (30 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\cachecontrol\\controller.py",
+            "line": 169,
+            "message": "Fonction 'cached_request' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\distlib\\version.py",
+            "line": 461,
+            "message": "Fonction '_suggest_normalized_version' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\distlib\\wheel.py",
+            "line": 368,
+            "message": "Fonction 'build' très longue (30 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\msgpack\\fallback.py",
+            "line": 226,
+            "message": "Fonction '__init__' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\requests\\auth.py",
+            "line": 126,
+            "message": "Fonction 'build_digest_header' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\requests\\sessions.py",
+            "line": 673,
+            "message": "Fonction 'send' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\rich\\columns.py",
+            "line": 62,
+            "message": "Fonction '__rich_console__' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\rich\\console.py",
+            "line": 631,
+            "message": "Fonction '__init__' très longue (37 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\rich\\console.py",
+            "line": 2320,
+            "message": "Fonction 'export_svg' très longue (44 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\rich\\panel.py",
+            "line": 141,
+            "message": "Fonction '__rich_console__' très longue (28 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\rich\\table.py",
+            "line": 189,
+            "message": "Fonction '__init__' très longue (29 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\rich\\__main__.py",
+            "line": 39,
+            "message": "Fonction 'make_test_card' très longue (35 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+            "line": 535,
+            "message": "Fonction 'urlopen' très longue (22 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\poolmanager.py",
+            "line": 353,
+            "message": "Fonction 'urlopen' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\response.py",
+            "line": 195,
+            "message": "Fonction '__init__' très longue (27 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\ntlmpool.py",
+            "line": 48,
+            "message": "Fonction '_new_conn' très longue (32 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\commands\\download.py",
+            "line": 38,
+            "message": "Fonction 'add_options' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\commands\\download.py",
+            "line": 78,
+            "message": "Fonction 'run' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\commands\\install.py",
+            "line": 81,
+            "message": "Fonction 'add_options' très longue (39 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\commands\\install.py",
+            "line": 275,
+            "message": "Fonction 'run' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\commands\\lock.py",
+            "line": 49,
+            "message": "Fonction 'add_options' très longue (21 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\commands\\wheel.py",
+            "line": 44,
+            "message": "Fonction 'add_options' très longue (24 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\locations\\_distutils.py",
+            "line": 35,
+            "message": "Fonction 'distutils_scheme' très longue (23 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\req\\req_install.py",
+            "line": 72,
+            "message": "Fonction '__init__' très longue (36 lignes)"
+          },
+          {
+            "type": "code_quality",
+            "severity": "warning",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\operations\\install\\wheel.py",
+            "line": 419,
+            "message": "Fonction '_install_wheel' très longue (57 lignes)"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "250611 - module_main_windows.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "250615 - ok module_main_windows.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "260515 - new module_main_windows.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "260516 - new module_main_windows.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "260517 - new module_main_windows.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "module_main_windows.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\decorator.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\six.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\flask\\cli.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\flask\\config.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\jinja2\\debug.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\jinja2\\environment.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\jinja2\\lexer.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\jinja2\\nativetypes.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\jinja2\\nodes.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\MainControl.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\OptionParsing.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\Options.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\PostProcessing.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\PythonVersions.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\PythonVersions.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\__main__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\debug\\console.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\debug\\console.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\debug\\tbtools.py",
+            "message": "Pattern de sécurité détecté: secret",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\debug\\tbtools.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\debug\\__init__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\werkzeug\\routing\\rules.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\PySide6\\QtAsyncio\\events.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\PySide6\\scripts\\qml.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\PySide6\\scripts\\project_lib\\newproject.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\typing_extensions.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\typing_extensions.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\distlib\\scripts.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\packaging\\_parser.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\pkg_resources\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\rich\\markup.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\packages\\six.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\pygments\\formatters\\__init__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\pygments\\formatters\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\pygments\\lexers\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_vendor\\packaging\\licenses\\__init__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\utils\\misc.py",
+            "message": "Pattern de sécurité détecté: password",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\pip\\_internal\\utils\\setuptools_build.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\past\\translation\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\SconsCaching.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\EvalCodes.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\code_generation\\EvalCodes.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\freezer\\ImportDetection.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\ExecEvalNodes.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\ExecEvalNodes.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\IndicatorMixins.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\NodeBases.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\nodes\\NodeMetaClasses.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\optimizations\\OptimizeBuiltinCalls.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\optimizations\\OptimizeBuiltinCalls.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\plugins\\PluginBase.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\specs\\BuiltinParameterSpecs.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationExecStatements.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationFunctionStatements.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\ReformulationYieldExpressions.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\TreeHelpers.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tree\\VariableClosure.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\utils\\Execution.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\utils\\InstalledPythons.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\utils\\ModuleNames.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\utils\\WindowsResources.py",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\tools\\watch\\__main__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\plugins\\standard\\AntiBloatPlugin.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\plugins\\standard\\DelvewheelPlugin.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\plugins\\standard\\PySidePyQtPlugin.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\stubgen\\astunparse.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\stubgen\\six.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\pkg_resources\\pkg_resources\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\CacheDir.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\cpp.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Defaults.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Subst.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Taskmaster.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Platform\\__init__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\Main.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\SConscript.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Script\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Utilities\\sconsign.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Variables\\__init__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\lib\\scons-4.3.0\\SCons\\Variables\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\compiler.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\debug.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\environment.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\lexer.py",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\nativetypes.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\nodes.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\utils.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\nuitka\\build\\inline_copy\\jinja2\\jinja2\\_compat.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\libfuturize\\fixes\\fix_input.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\future\\builtins\\misc.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\future\\utils\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\adapter\\servers.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\common\\json.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\common\\util.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\server\\cli.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevconsole.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\setup_pydevd_cython.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd_plugins\\django_debug.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd_plugins\\jinja2_debug.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydev_ipython\\inputhookqt4.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydev_ipython\\inputhookqt5.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydev_ipython\\inputhookqt6.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydev_sitecustomize\\sitecustomize.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevconsole_code.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevconsole_code.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_api.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_breakpoints.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_comm.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_comm.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_console.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_exec2.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_process_net_command.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_runpy.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_suspended_frames.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_suspended_frames.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_vars.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_bundle\\pydevd_vars.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_bundle\\pydev_console_utils.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_bundle\\pydev_ipython_console.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_bundle\\pydev_ipython_console_011.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_bundle\\pydev_monkey.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_bundle\\_pydev_completer.py",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_bundle\\_pydev_completer.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydev_bundle\\_pydev_execfile.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\tests\\test_bytecode.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\_pydevd_frame_eval\\vendored\\bytecode\\tests\\test_concrete.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "venv\\Lib\\site-packages\\debugpy\\_vendored\\pydevd\\pydevd_attach_to_process\\winappdbg\\compat.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\typing_extensions.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\typing_extensions.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\distlib\\scripts.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\packaging\\_parser.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\pkg_resources\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\rich\\markup.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\packages\\six.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\pygments\\formatters\\__init__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\pygments\\formatters\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\pygments\\lexers\\__init__.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_vendor\\packaging\\licenses\\__init__.py",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\utils\\misc.py",
+            "message": "Pattern de sécurité détecté: password",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": ".venv\\Lib\\site-packages\\pip\\_internal\\utils\\setuptools_build.py",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\gulpfile.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\jshint-2.13.4\\jshint.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\jshint-2.13.4\\jshint.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dijit\\_BidiMixin.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\dojo.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\dojo.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\i18n.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\i18n.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\json.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\number.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\parser.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\date\\locale.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\date\\stamp.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\io\\iframe.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\io\\script.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\request\\handlers.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\request\\script.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\router\\RouterBase.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\rpc\\RpcService.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\selector\\lite.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_base\\configRhino.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_base\\json.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_base\\kernel.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_base\\loader.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_base\\loader.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_base\\xhr.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_firebug\\firebug.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dojo\\_firebug\\firebug.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dijit\\_editor\\html.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\dojo-release-1.10.4\\dijit\\_editor\\RichText.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\bin\\upload-release.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\keymap\\sublime.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\keymap\\vim.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\lib\\codemirror.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\test\\driver.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\test\\mode_test.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\test\\vim_test.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\src\\line\\line_data.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\src\\util\\browser.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\src\\util\\dom.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\clike\\clike.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\coffeescript\\coffeescript.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\ebnf\\ebnf.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\htmlmixed\\htmlmixed.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\javascript\\javascript.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\pug\\pug.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\rst\\rst.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\soy\\soy.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\swift\\swift.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\mode\\xml\\xml.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\comment\\continuecomment.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\display\\panel.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\edit\\continuelist.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\fold\\brace-fold.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\fold\\xml-fold.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\hint\\anyword-hint.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\mode\\multiplex.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\mode\\simple.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\search\\jump-to-line.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\search\\search.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\ThirdParty\\codemirror-5.52.0\\addon\\search\\searchcursor.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Specs\\jasmine\\jasmine.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Specs\\jasmine\\jasmine.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Core\\buildModuleUrl.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Core\\Color.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Core\\FeatureDetection.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Core\\Ion.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Core\\Resource.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Renderer\\ShaderProgram.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\ArcGisMapServerImageryProvider.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\ArcGisMapService.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\DebugInspector.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\Expression.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\GetFeatureInfoFormat.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\GltfLoader.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\InstanceAttributeSemantic.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\PointCloud.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\Primitive.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\VertexAttributeSemantic.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\Model\\CustomShader.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Source\\Scene\\Model\\PointCloudStylingPipelineStage.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Build\\Workers\\chunk-C5CE4OG6.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Build\\Workers\\chunk-I5TDPPC4.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\packages\\engine\\Build\\Workers\\chunk-KPY4F4BW.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Cesium\\Cesium.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Cesium\\Cesium.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Cesium\\index.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Cesium\\index.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\Cesium.js",
+            "message": "Pattern de sécurité détecté: password",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\Cesium.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\Cesium.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\Cesium.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\index.js",
+            "message": "Pattern de sécurité détecté: password",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\index.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\index.js",
+            "message": "Pattern de sécurité détecté: eval",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\index.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Specs\\SpecList.js",
+            "message": "Pattern de sécurité détecté: token",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Specs\\SpecList.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Documentation\\javascript\\cesiumDoc.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Documentation\\javascript\\prism.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\Workers\\chunk-C5CE4OG6.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\Workers\\chunk-I5TDPPC4.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\CesiumUnminified\\Workers\\chunk-KPY4F4BW.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Cesium\\Workers\\chunk-7RE2NPD7.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Cesium\\Workers\\chunk-H26ARMDM.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Build\\Cesium\\Workers\\chunk-URXUHQWZ.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          },
+          {
+            "type": "security",
+            "severity": "high",
+            "file": "templates\\Cesium-1.117\\Apps\\Sandcastle\\CesiumSandcastle.js",
+            "message": "Pattern de sécurité détecté: exec",
+            "recommendation": "Vérifier et sécuriser les données sensibles"
+          }
+        ],
+        "metrics": {
+          "total_files": 25226,
+          "file_types": {
+            "": 6641,
+            ".gpx": 8,
+            ".py": 2385,
+            ".bat": 9,
+            ".html": 842,
+            ".png": 2129,
+            ".ui": 2,
+            ".xml": 113,
+            ".txt": 89,
+            ".tag": 1,
+            ".md": 46,
+            ".cfg": 2,
+            ".json": 579,
+            ".sqlite": 1,
+            ".lnk": 1,
+            ".dblite": 4,
+            ".h": 271,
+            ".c": 894,
+            ".const": 764,
+            ".obj": 771,
+            ".bin": 88,
+            ".pyc": 2410,
+            ".fish": 2,
+            ".ps1": 2,
+            ".exe": 72,
+            ".cmd": 3,
+            ".typed": 47,
+            ".pem": 17,
+            ".pyd": 67,
+            ".rst": 10,
+            ".pyi": 62,
+            ".dll": 334,
+            ".lib": 3,
+            ".js": 3019,
+            ".css": 359,
+            ".cpp": 32,
+            ".qmltypes": 97,
+            ".dat": 1,
+            ".pak": 57,
+            ".qm": 285,
+            ".spec": 1,
+            ".icns": 1,
+            ".ico": 3,
+            ".jpg": 418,
+            ".qml": 892,
+            ".metainfo": 11,
+            ".mesh": 1,
+            ".frag": 2,
+            ".scons": 4,
+            ".j2": 36,
+            ".yml": 3,
+            ".pdb": 6,
+            ".pxd": 3,
+            ".pyx": 3,
+            ".hpp": 10,
+            ".sh": 3,
+            ".cjs": 5,
+            ".config": 1,
+            ".ts": 6,
+            ".ai": 1,
+            ".less": 37,
+            ".svg": 61,
+            ".map": 11,
+            ".mjs": 1,
+            ".gif": 119,
+            ".psd": 2,
+            ".geojson": 12,
+            ".wasm": 9,
+            ".terrain": 13,
+            ".czml": 9,
+            ".ktx2": 9,
+            ".woff": 2,
+            ".metadata": 1,
+            ".kmz": 8,
+            ".kml": 14,
+            ".mov": 1,
+            ".mp4": 1,
+            ".webm": 1,
+            ".gltf": 88,
+            ".dae": 2,
+            ".glb": 32,
+            ".csv": 1,
+            ".voxel": 1,
+            ".subtree": 2,
+            ".vctr": 50,
+            ".b3dm": 193,
+            ".pnts": 54,
+            ".i3dm": 29,
+            ".cmpt": 7,
+            ".geom": 81,
+            ".tile": 1,
+            ".glsl": 297,
+            ".html#arcgisbasemaptype": 1,
+            ".html#arctype": 1,
+            ".html#axis": 1,
+            ".html#barycentriccoordinates": 1,
+            ".html#binarysearch": 1,
+            ".html#binarysearchcomparator": 1,
+            ".html#bingmapsstyle": 1,
+            ".html#blendequation": 1,
+            ".html#blendfunction": 1,
+            ".html#blendoption": 1,
+            ".html#buildmoduleurl": 1,
+            ".html#cameraeventtype": 1,
+            ".html#cesium3dtilecolorblendmode": 1,
+            ".html#check": 1,
+            ".html#classificationtype": 1,
+            ".html#clockrange": 1,
+            ".html#clockstep": 1,
+            ".html#clone": 1,
+            ".html#cloudtype": 1,
+            ".html#colorblendmode": 1,
+            ".html#combine": 1,
+            ".html#componentdatatype": 1,
+            ".html#contextoptions": 1,
+            ".html#cornertype": 1,
+            ".html#createcommand": 1,
+            ".html#createelevationbandmaterial": 1,
+            ".html#createelevationbandmaterialband": 1,
+            ".html#createelevationbandmaterialentry": 1,
+            ".html#creategooglephotorealistic3dtileset": 1,
+            ".html#createguid": 1,
+            ".html#createosmbuildingsasync": 1,
+            ".html#createtangentspacedebugprimitive": 1,
+            ".html#createworldbathymetryasync": 1,
+            ".html#createworldimageryasync": 1,
+            ".html#createworldterrainasync": 1,
+            ".html#cullface": 1,
+            ".html#customshadermode": 1,
+            ".html#customshadertranslucencymode": 1,
+            ".html#defaultvalue": 1,
+            ".html#defined": 1,
+            ".html#depthfunction": 1,
+            ".html#destroyobject": 1,
+            ".html#directionup": 1,
+            ".html#dynamicatmospherelightingtype": 1,
+            ".html#excludesreverseaxis": 1,
+            ".html#exportkml": 1,
+            ".html#exportkmlmodelcallback": 1,
+            ".html#exportkmlresultkml": 1,
+            ".html#exportkmlresultkmz": 1,
+            ".html#extrapolationtype": 1,
+            ".html#formaterror": 1,
+            ".html#geocodetype": 1,
+            ".html#geometryupdaters": 1,
+            ".html#getabsoluteuri": 1,
+            ".html#getbaseuri": 1,
+            ".html#getextensionfromuri": 1,
+            ".html#getfilenamefromuri": 1,
+            ".html#getimagepixels": 1,
+            ".html#gettimestamp": 1,
+            ".html#headingpitchrollvalues": 1,
+            ".html#heightmapencoding": 1,
+            ".html#heightreference": 1,
+            ".html#horizontalorigin": 1,
+            ".html#imagerytypes": 1,
+            ".html#includesreverseaxis": 1,
+            ".html#indexdatatype": 1,
+            ".html#intersect": 1,
+            ".html#ionworldimagerystyle": 1,
+            ".html#isleapyear": 1,
+            ".html#keyboardeventmodifier": 1,
+            ".html#labelstyle": 1,
+            ".html#lightingmodel": 1,
+            ".html#loadgltfjson": 1,
+            ".html#mapmode2d": 1,
+            ".html#mergesort": 1,
+            ".html#mergesortcomparator": 1,
+            ".html#metadatacomponenttype": 1,
+            ".html#metadatatype": 1,
+            ".html#modelanimationloop": 1,
+            ".html#objecttoquery": 1,
+            ".html#pixeldatatype": 1,
+            ".html#pixelformat": 1,
+            ".html#pointinsidetriangle": 1,
+            ".html#postprocessstagesamplemode": 1,
+            ".html#primitivetype": 1,
+            ".html#querytoobject": 1,
+            ".html#referenceframe": 1,
+            ".html#removeextension": 1,
+            ".html#requeststate": 1,
+            ".html#requesttype": 1,
+            ".html#sampleterrain": 1,
+            ".html#sampleterrainmostdetailed": 1,
+            ".html#scenemode": 1,
+            ".html#screenspaceeventtype": 1,
+            ".html#sensorvolumeportiontodisplay": 1,
+            ".html#shaderdefines": 1,
+            ".html#shadermaximumintersectionslength": 1,
+            ".html#shaderuniforms": 1,
+            ".html#shadowmode": 1,
+            ".html#splitdirection": 1,
+            ".html#srgbtolinear": 1,
+            ".html#stencilfunction": 1,
+            ".html#stenciloperation": 1,
+            ".html#stereographic": 1,
+            ".html#stripeorientation": 1,
+            ".html#subdividearray": 1,
+            ".html#texturemagnificationfilter": 1,
+            ".html#textureminificationfilter": 1,
+            ".html#timestandard": 1,
+            ".html#uniformspecifier": 1,
+            ".html#uniformtype": 1,
+            ".html#varyingtype": 1,
+            ".html#verticalorigin": 1,
+            ".html#viewercesium3dtilesinspectormixin": 1,
+            ".html#viewercesiuminspectormixin": 1,
+            ".html#viewerdragdropmixin": 1,
+            ".html#viewerperformancewatchdogmixin": 1,
+            ".html#viewervoxelinspectormixin": 1,
+            ".html#visibility": 1,
+            ".html#voxelshapetype": 1,
+            ".html#webglconstants": 1,
+            ".html#webgloptions": 1,
+            ".html#windingorder": 1,
+            ".html#writetexttocanvas": 1,
+            ".topojson": 1,
+            ".license": 1,
+            ".vsidx": 8,
+            ".db": 1,
+            ".sample": 13
+          },
+          "code_files": 6336,
+          "python": {
+            "total_files": 2385,
+            "total_lines": 867592,
+            "total_functions": 39535,
+            "total_classes": 6607,
+            "avg_lines_per_file": 363.7702306079665
+          }
+        },
+        "recommendations": [
+          "Projet de grande taille - Considérer une architecture modulaire",
+          "Fichiers très longs - Diviser en modules plus petits",
+          "Problèmes de sécurité détectés - Audit de sécurité recommandé",
+          "Problèmes de qualité détectés - Refactoring recommandé"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 0,
+    "tests_passed": 0,
+    "tests_failed": 0,
+    "success_rate": 0.0
+  }
+}

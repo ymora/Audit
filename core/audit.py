@@ -519,7 +519,6 @@ class UniversalAuditor:
         </div>
         
         <div class="footer">
-            <p>Rapport généré automatiquement par le système d'audit universel</p>
         </div>
     </div>
 </body>
