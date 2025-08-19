@@ -17,8 +17,11 @@ from typing import Dict, List, Optional
 class ProjectCleaner:
     def __init__(self, project_path: Path):
         self.project_path = project_path
-        self.project_dir = project_path / ".project"
-        self.config_file = self.project_dir / "config" / "cleanup_config.json"
+        # Le système d'audit est dans le répertoire parent du projet audité
+        self.audit_system_dir = Path(__file__).parent.parent
+        self.project_name = project_path.name
+        self.reports_dir = self.audit_system_dir / "projects" / self.project_name
+        self.config_file = self.audit_system_dir / "project_audits" / self.project_name / "cleanup_config.json"
         
     def load_cleanup_config(self) -> Dict:
         """Charge la configuration de nettoyage."""
@@ -67,7 +70,7 @@ class ProjectCleaner:
         
         # Vérifier le planning de nettoyage
         schedule = config.get("cleanup_schedule", "daily")
-        last_cleanup_file = self.project_dir / "last_cleanup.txt"
+        last_cleanup_file = self.reports_dir / "last_cleanup.txt"
         
         if not last_cleanup_file.exists():
             return True
@@ -91,28 +94,28 @@ class ProjectCleaner:
             return True
     
     def cleanup_project_directory(self) -> Dict:
-        """Nettoie le dossier .project selon les règles configurées."""
-        if not self.project_dir.exists():
-            return {"status": "skipped", "reason": "Dossier .project inexistant"}
+        """Nettoie les rapports du projet selon les règles configurées."""
+        if not self.reports_dir.exists():
+            return {"status": "skipped", "reason": "Dossier de rapports inexistant"}
         
         config = self.load_cleanup_config()
         if not config.get("enabled", True):
             return {"status": "skipped", "reason": "Nettoyage désactivé"}
         
-        print(f"🧹 Nettoyage automatique du projet: {self.project_path.name}")
+        print(f"🧹 Nettoyage automatique des rapports: {self.project_name}")
         
         results = {
             "status": "success",
             "timestamp": datetime.now().isoformat(),
-            "project": self.project_path.name,
+            "project": self.project_name,
             "cleaned": {},
             "archived": {},
             "errors": []
         }
         
         # Nettoyer chaque sous-dossier
-        for subdir in ["logs", "reports", "tests"]:
-            subdir_path = self.project_dir / subdir
+        for subdir in ["logs", "reports"]:
+            subdir_path = self.reports_dir / subdir
             if subdir_path.exists():
                 try:
                     subdir_results = self._cleanup_subdirectory(
@@ -211,7 +214,7 @@ class ProjectCleaner:
     def _archive_file(self, file_path: Path, subdir_name: str) -> Optional[Path]:
         """Archive un fichier."""
         try:
-            archive_dir = self.project_dir / "archive" / subdir_name
+            archive_dir = self.reports_dir / "archive" / subdir_name
             archive_dir.mkdir(parents=True, exist_ok=True)
             
             # Créer un nom d'archive avec timestamp
@@ -228,24 +231,24 @@ class ProjectCleaner:
     
     def _mark_cleanup_completed(self):
         """Marque la date du dernier nettoyage."""
-        last_cleanup_file = self.project_dir / "last_cleanup.txt"
+        last_cleanup_file = self.reports_dir / "last_cleanup.txt"
         with open(last_cleanup_file, 'w') as f:
             f.write(datetime.now().isoformat())
     
     def get_cleanup_stats(self) -> Dict:
         """Obtient les statistiques de nettoyage."""
-        if not self.project_dir.exists():
-            return {"error": "Dossier .project inexistant"}
+        if not self.reports_dir.exists():
+            return {"error": "Dossier de rapports inexistant"}
         
         stats = {
-            "project": self.project_path.name,
+            "project": self.project_name,
             "total_size": 0,
             "subdirectories": {},
             "last_cleanup": None
         }
         
         # Vérifier la date du dernier nettoyage
-        last_cleanup_file = self.project_dir / "last_cleanup.txt"
+        last_cleanup_file = self.reports_dir / "last_cleanup.txt"
         if last_cleanup_file.exists():
             try:
                 with open(last_cleanup_file, 'r') as f:
@@ -254,8 +257,8 @@ class ProjectCleaner:
                 pass
         
         # Calculer les tailles
-        for subdir in ["logs", "reports", "tests", "config", "archive"]:
-            subdir_path = self.project_dir / subdir
+        for subdir in ["logs", "reports", "archive"]:
+            subdir_path = self.reports_dir / subdir
             if subdir_path.exists():
                 subdir_stats = self._calculate_directory_stats(subdir_path)
                 stats["subdirectories"][subdir] = subdir_stats

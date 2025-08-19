@@ -93,50 +93,33 @@ class UniversalAuditor:
         return 'generic'
     
     def _setup_project_audit_structure(self) -> Path:
-        """Configure la structure d'audit dans le projet."""
-        project_audit_dir = self.project_path / ".project"
+        """Configure la structure d'audit pour le projet."""
+        # Créer le dossier des tests spécifiques dans le système d'audit
+        project_audit_dir = self.project_dir / "project_audits" / self.project_name
+        project_audit_dir.mkdir(parents=True, exist_ok=True)
         
-        # Créer la structure de dossiers
+        # Créer le dossier des rapports dans le système d'audit
+        reports_dir = self.project_dir.parent / "projects" / self.project_name
+        reports_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Créer la structure de dossiers pour les rapports
         directories = [
-            project_audit_dir,
-            project_audit_dir / "reports",
-            project_audit_dir / "logs",
-            project_audit_dir / "config",
-            project_audit_dir / "tests"
+            reports_dir,
+            reports_dir / "reports",
+            reports_dir / "logs"
         ]
         
         for directory in directories:
             directory.mkdir(parents=True, exist_ok=True)
         
-        # Copier la configuration du projet si elle existe
-        source_config = self.project_dir / "projects" / self.project_name / "config.json"
-        target_config = project_audit_dir / "config" / "project_config.json"
-        
-        if source_config.exists():
-            shutil.copy2(source_config, target_config)
-        
-        # Copier les tests spécifiques au projet
-        source_tests_dir = self.project_dir / "projects" / self.project_name / "tests"
-        target_tests_dir = project_audit_dir / "tests"
-        
-        if source_tests_dir.exists():
-            for test_file in source_tests_dir.glob("*.py"):
-                shutil.copy2(test_file, target_tests_dir / test_file.name)
-        
         return project_audit_dir
     
     def _load_project_config(self) -> Dict[str, Any]:
         """Charge la configuration spécifique au projet."""
-        # Priorité 1: Configuration dans le projet
-        project_config_path = self.project_path / ".project" / "config" / "project_config.json"
+        # Priorité 1: Configuration dans le système d'audit
+        audit_config_path = self.project_dir / "project_audits" / self.project_name / "config.json"
         
-        # Priorité 2: Configuration dans le système d'audit
-        audit_config_path = self.project_dir / "projects" / self.project_name / "config.json"
-        
-        if project_config_path.exists():
-            with open(project_config_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        elif audit_config_path.exists():
+        if audit_config_path.exists():
             with open(audit_config_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         
@@ -195,22 +178,12 @@ class UniversalAuditor:
     
     def _get_project_tests(self) -> List[str]:
         """Récupère la liste des tests spécifiques au projet."""
-        # Priorité 1: Tests dans le projet
-        project_tests_dir = self.project_audit_dir / "tests"
-        
-        # Priorité 2: Tests dans le système d'audit
-        audit_tests_dir = self.project_dir / "projects" / self.project_name / "tests"
+        # Tests dans le système d'audit
+        audit_tests_dir = self.project_dir / "project_audits" / self.project_name
         
         tests = []
         
-        # Chercher dans le projet d'abord
-        if project_tests_dir.exists():
-            for test_file in project_tests_dir.glob("*.py"):
-                if test_file.name.startswith("test_") and test_file.name != "__init__.py":
-                    tests.append(test_file.stem)
-        
-        # Si aucun test dans le projet, chercher dans le système d'audit
-        if not tests and audit_tests_dir.exists():
+        if audit_tests_dir.exists():
             for test_file in audit_tests_dir.glob("*.py"):
                 if test_file.name.startswith("test_") and test_file.name != "__init__.py":
                     tests.append(test_file.stem)
@@ -219,23 +192,14 @@ class UniversalAuditor:
     
     def _load_test_module(self, test_name: str) -> Optional[Any]:
         """Charge dynamiquement un module de test."""
-        # Priorité 1: Test dans le projet
-        project_test_path = self.project_audit_dir / "tests" / f"{test_name}.py"
+        # Test dans le système d'audit
+        audit_test_path = self.project_dir / "project_audits" / self.project_name / f"{test_name}.py"
         
-        # Priorité 2: Test dans le système d'audit
-        audit_test_path = self.project_dir / "projects" / self.project_name / "tests" / f"{test_name}.py"
-        
-        test_path = None
-        if project_test_path.exists():
-            test_path = project_test_path
-        elif audit_test_path.exists():
-            test_path = audit_test_path
-        
-        if not test_path:
+        if not audit_test_path.exists():
             return None
         
         try:
-            spec = importlib.util.spec_from_file_location(test_name, test_path)
+            spec = importlib.util.spec_from_file_location(test_name, audit_test_path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             return module
@@ -252,7 +216,7 @@ class UniversalAuditor:
         logger.setLevel(logging.INFO)
         
         # Créer le gestionnaire de fichier
-        log_file = self.project_audit_dir / "logs" / f"audit_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        log_file = self.project_dir.parent / "projects" / self.project_name / "logs" / f"audit_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         file_handler = logging.FileHandler(log_file, encoding='utf-8')
         file_handler.setLevel(logging.INFO)
         
@@ -371,7 +335,8 @@ class UniversalAuditor:
         print(f"📁 Projet: {self.project_path}")
         print(f"🏷️ Type: {self.project_type}")
         print(f"⚙️ Configuration: {self.config.get('name', 'Par défaut')}")
-        print(f"📂 Dossier d'audit: {self.project_audit_dir}")
+        print(f"📂 Tests spécifiques: {self.project_audit_dir}")
+        print(f"📂 Rapports: {self.project_dir.parent / 'projects' / self.project_name}")
         print()
         
         # Exécuter les tests spécifiques au projet
@@ -387,7 +352,7 @@ class UniversalAuditor:
                 "project_type": self.project_type,
                 "timestamp": datetime.now().isoformat(),
                 "audit_version": "2.0.0",
-                "audit_directory": str(self.project_audit_dir)
+                "audit_directory": str(self.project_dir.parent / "projects" / self.project_name)
             },
             "project_tests": project_results,
             "generic_audit": generic_results,
@@ -399,9 +364,9 @@ class UniversalAuditor:
             }
         }
         
-        # Sauvegarder les résultats dans le projet
+        # Sauvegarder les résultats dans le système d'audit
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        reports_dir = self.project_audit_dir / "reports"
+        reports_dir = self.project_dir.parent / "projects" / self.project_name / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
         
         report_file = reports_dir / f"audit_report_{timestamp}.json"
