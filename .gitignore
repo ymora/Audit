@@ -1,6 +1,9 @@
 # Résultats d'audit (générés)
 resultats/
 
+# Projets spécifiques (configurations locales)
+projects/
+
 # Configuration locale
 config/audit.config.ps1
 
