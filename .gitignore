@@ -1,0 +1,21 @@
+# Résultats d'audit (générés)
+resultats/
+
+# Configuration locale
+config/audit.config.ps1
+
+# Données sensibles
+data/project_metadata.json
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
