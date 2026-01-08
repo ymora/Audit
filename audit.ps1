@@ -1,4 +1,4 @@
-﻿# ===============================================================================
+# ===============================================================================
 # SYSTÈME D'AUDIT OTT v2.0 - ARCHITECTURE RECONÇUE
 # ===============================================================================
 
@@ -297,15 +297,107 @@ $script:AuditPhases = @(
 
 # Fonctions utilitaires
 function Write-Log {
-    param([string]$Message, [string]$Level = "INFO", [switch]$NoTimestamp)
+    param(
+        [string]$Message,
+        [string]$Level = "INFO",
+        [switch]$NoNewline
+    )
     
-    if ($Quiet) { return }
-
-    if (Get-Command -Name Convert-ToAsciiSafe -ErrorAction SilentlyContinue) {
-        $Message = Convert-ToAsciiSafe -Text $Message
+    $timestamp = Get-Date -Format "HH:mm:ss"
+    $prefix = "[$timestamp] [$Level]"
+    
+    if ($NoNewline) {
+        Write-Host "$prefix $Message" -NoNewline
+    } else {
+        Write-Host "$prefix $Message"
     }
+}
+
+function Remove-OldAuditResults {
+    <#
+    .SYNOPSIS
+        Nettoie automatiquement les anciens résultats d'audit en ne conservant que les N plus récents
+    .DESCRIPTION
+        Supprime les anciens fichiers d'audit JSON en ne conservant que le nombre configuré d'audits les plus récents
+        S'exécute uniquement si l'audit actuel s'est terminé avec succès
+    .PARAMETER OutputDir
+        Répertoire contenant les résultats d'audit
+    .PARAMETER KeepCount
+        Nombre d'audits à conserver (défaut: 3)
+    #>
+    param(
+        [string]$OutputDir,
+        [int]$KeepCount = 3
+    )
     
-    $prefix = if (-not $NoTimestamp) { "[$(Get-Date -Format 'HH:mm:ss')]" } else { "" }
+    try {
+        Write-Log "Nettoyage automatique des anciens audits..." "INFO"
+        
+        # Récupérer tous les fichiers audit_summary_*.json
+        $auditFiles = Get-ChildItem -Path $OutputDir -Filter "audit_summary_*.json" | Sort-Object Name -Descending
+        
+        if ($auditFiles.Count -le $KeepCount) {
+            Write-Log "Nettoyage non nécessaire: $($auditFiles.Count) fichiers trouvés, conservation des $KeepCount plus récents" "INFO"
+            return
+        }
+        
+        # Supprimer les fichiers les plus anciens
+        $filesToDelete = $auditFiles | Select-Object -Skip $KeepCount
+        $deletedCount = 0
+        
+        foreach ($file in $filesToDelete) {
+            try {
+                Remove-Item -Path $file.FullName -Force
+                $deletedCount++
+                Write-Log "Supprimé: $($file.Name)" "INFO"
+            } catch {
+                Write-Log "Erreur lors de la suppression de $($file.Name): $($_.Exception.Message)" "WARN"
+            }
+        }
+        
+        if ($deletedCount -gt 0) {
+            Write-Log "Nettoyage terminé: $deletedCount ancien(s) audit(s) supprimé(s)" "SUCCESS"
+        }
+        
+        # Nettoyer aussi les fichiers de phase associés
+        $phaseFiles = Get-ChildItem -Path $OutputDir -Filter "phase_*.json" | Sort-Object Name -Descending
+        if ($phaseFiles.Count -gt 0) {
+            # Regrouper les fichiers de phase par timestamp et garder uniquement ceux des audits conservés
+            $keptTimestamps = $auditFiles | Select-Object -First $KeepCount | ForEach-Object {
+                if ($_.Name -match 'audit_summary_(\d{8}_\d{6})\.json') {
+                    return $matches[1]
+                }
+            }
+            
+            $phaseFilesToDelete = $phaseFiles | Where-Object {
+                if ($_.Name -match 'phase_\d+_(\d{8}_\d{6})\.json') {
+                    $timestamp = $matches[1]
+                    return $timestamp -notin $keptTimestamps
+                }
+                return $false
+            }
+            
+            $deletedPhaseCount = 0
+            foreach ($file in $phaseFilesToDelete) {
+                try {
+                    Remove-Item -Path $file.FullName -Force
+                    $deletedPhaseCount++
+                } catch {
+                    Write-Log "Erreur lors de la suppression du fichier de phase $($file.Name): $($_.Exception.Message)" "WARN"
+                }
+            }
+            
+            if ($deletedPhaseCount -gt 0) {
+                Write-Log "Nettoyage des phases: $deletedPhaseCount fichier(s) de phase supprimé(s)" "SUCCESS"
+            }
+        }
+        
+    } catch {
+        Write-Log "Erreur lors du nettoyage automatique: $($_.Exception.Message)" "ERROR"
+    }
+}
+
+function Write-Log {
     
     switch ($Level) {
         "INFO" { Write-Host "$prefix [INFO] $Message" -ForegroundColor White }
@@ -1298,6 +1390,25 @@ function Main {
             }
         } catch {
         Write-Log "Erreur lors de la mise à jour du tableau des scores: $($_.Exception.Message)" "WARN"
+    }
+    
+    # NETTOYAGE AUTOMATIQUE DES ANCIENS AUDITS (uniquement si audit réussi)
+    try {
+        # Vérifier si l'audit a réussi (pas d'erreurs critiques)
+        $hasCriticalErrors = $summary.PhaseResults | Where-Object { $_.Errors -gt 0 }
+        if (-not $hasCriticalErrors) {
+            # Configurer le nombre d'audits à conserver (3 par défaut)
+            $keepCount = 3
+            if ($script:AuditConfig -and $script:AuditConfig.Cleanup -and $script:AuditConfig.Cleanup.KeepCount) {
+                $keepCount = $script:AuditConfig.Cleanup.KeepCount
+            }
+            
+            Remove-OldAuditResults -OutputDir $script:Config.OutputDir -KeepCount $keepCount
+        } else {
+            Write-Log "Nettoyage automatique désactivé: des erreurs critiques ont été détectées" "WARN"
+        }
+    } catch {
+        Write-Log "Erreur lors du nettoyage automatique: $($_.Exception.Message)" "ERROR"
     }
     }
 } catch {
