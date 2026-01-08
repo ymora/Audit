@@ -19,7 +19,7 @@ $AuditScript = Join-Path $PSScriptRoot "audit.ps1"
 
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Audit Intelligent - OTT"
-$form.Size = New-Object System.Drawing.Size(550, 620)
+$form.Size = New-Object System.Drawing.Size(550, 700)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedDialog"
 $form.MaximizeBox = $false
@@ -47,12 +47,58 @@ $labelSubtitle.Size = New-Object System.Drawing.Size(500, 20)
 $form.Controls.Add($labelSubtitle)
 
 # ===============================================================================
+# SECTION: SÉLECTION DU PROJET
+# ===============================================================================
+
+$groupProject = New-Object System.Windows.Forms.GroupBox
+$groupProject.Text = "Sélection du projet à auditer"
+$groupProject.Location = New-Object System.Drawing.Point(20, 80)
+$groupProject.Size = New-Object System.Drawing.Size(495, 90)
+$groupProject.ForeColor = [System.Drawing.Color]::White
+$form.Controls.Add($groupProject)
+
+$comboProject = New-Object System.Windows.Forms.ComboBox
+$comboProject.Location = New-Object System.Drawing.Point(15, 25)
+$comboProject.Size = New-Object System.Drawing.Size(250, 25)
+$comboProject.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 45)
+$comboProject.ForeColor = [System.Drawing.Color]::White
+$comboProject.DropDownStyle = "DropDownList"
+$groupProject.Controls.Add($comboProject)
+
+# Charger les projets disponibles
+$projectsDir = Join-Path $PSScriptRoot "projects"
+if (Test-Path $projectsDir) {
+    $projects = Get-ChildItem -Path $projectsDir -Directory | Select-Object -ExpandProperty Name
+    foreach ($project in $projects) {
+        $comboProject.Items.Add($project)
+    }
+    if ($comboProject.Items.Count -gt 0) {
+        $comboProject.SelectedIndex = 0
+    }
+}
+
+$labelProjectInfo = New-Object System.Windows.Forms.Label
+$labelProjectInfo.Text = "Sélectionnez le projet à auditer dans la liste"
+$labelProjectInfo.Location = New-Object System.Drawing.Point(15, 55)
+$labelProjectInfo.Size = New-Object System.Drawing.Size(460, 20)
+$labelProjectInfo.ForeColor = [System.Drawing.Color]::Gray
+$groupProject.Controls.Add($labelProjectInfo)
+
+$comboProject.Add_SelectedIndexChanged({
+    $selectedProject = $comboProject.SelectedItem
+    if ($selectedProject) {
+        $labelProjectInfo.Text = "Projet sélectionné: $selectedProject"
+        $labelProjectInfo.ForeColor = [System.Drawing.Color]::FromArgb(0, 200, 100)
+    }
+})
+
+# ===============================================================================
 # SECTION: CIBLE
 # ===============================================================================
 
 $groupTarget = New-Object System.Windows.Forms.GroupBox
 $groupTarget.Text = "Cible de l'audit"
-$groupTarget.Location = New-Object System.Drawing.Point(20, 80)
+$groupTarget.Location = New-Object System.Drawing.Point(20, 180)
 $groupTarget.Size = New-Object System.Drawing.Size(495, 90)
 $groupTarget.ForeColor = [System.Drawing.Color]::White
 $form.Controls.Add($groupTarget)
@@ -138,7 +184,7 @@ $btnBrowse.Add_Click({
 
 $groupPhases = New-Object System.Windows.Forms.GroupBox
 $groupPhases.Text = "Phases à exécuter"
-$groupPhases.Location = New-Object System.Drawing.Point(20, 180)
+$groupPhases.Location = New-Object System.Drawing.Point(20, 280)
 $groupPhases.Size = New-Object System.Drawing.Size(495, 220)
 $groupPhases.ForeColor = [System.Drawing.Color]::White
 $form.Controls.Add($groupPhases)
@@ -203,7 +249,7 @@ $checkAll.Add_CheckedChanged({
 
 $groupOptions = New-Object System.Windows.Forms.GroupBox
 $groupOptions.Text = "Options"
-$groupOptions.Location = New-Object System.Drawing.Point(20, 410)
+$groupOptions.Location = New-Object System.Drawing.Point(20, 510)
 $groupOptions.Size = New-Object System.Drawing.Size(495, 60)
 $groupOptions.ForeColor = [System.Drawing.Color]::White
 $form.Controls.Add($groupOptions)
@@ -236,7 +282,7 @@ $groupOptions.Controls.Add($checkOpenReport)
 
 $btnLaunch = New-Object System.Windows.Forms.Button
 $btnLaunch.Text = "🚀 Lancer l'Audit"
-$btnLaunch.Location = New-Object System.Drawing.Point(20, 485)
+$btnLaunch.Location = New-Object System.Drawing.Point(20, 585)
 $btnLaunch.Size = New-Object System.Drawing.Size(240, 45)
 $btnLaunch.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 215)
 $btnLaunch.ForeColor = [System.Drawing.Color]::White
@@ -247,7 +293,7 @@ $form.Controls.Add($btnLaunch)
 
 $btnOpenResults = New-Object System.Windows.Forms.Button
 $btnOpenResults.Text = "📂 Ouvrir Résultats"
-$btnOpenResults.Location = New-Object System.Drawing.Point(275, 485)
+$btnOpenResults.Location = New-Object System.Drawing.Point(275, 585)
 $btnOpenResults.Size = New-Object System.Drawing.Size(240, 45)
 $btnOpenResults.BackColor = [System.Drawing.Color]::FromArgb(60, 60, 60)
 $btnOpenResults.ForeColor = [System.Drawing.Color]::White
@@ -262,7 +308,7 @@ $form.Controls.Add($btnOpenResults)
 
 $statusBar = New-Object System.Windows.Forms.Label
 $statusBar.Text = "Prêt"
-$statusBar.Location = New-Object System.Drawing.Point(20, 545)
+$statusBar.Location = New-Object System.Drawing.Point(20, 645)
 $statusBar.Size = New-Object System.Drawing.Size(495, 25)
 $statusBar.ForeColor = [System.Drawing.Color]::Gray
 $form.Controls.Add($statusBar)
@@ -272,16 +318,26 @@ $form.Controls.Add($statusBar)
 # ===============================================================================
 
 $btnLaunch.Add_Click({
+    # Vérifier qu'un projet est sélectionné
+    if ($comboProject.SelectedItem -eq $null -or $comboProject.SelectedItem -eq "") {
+        [System.Windows.Forms.MessageBox]::Show("Veuillez sélectionner un projet à auditer.", "Erreur", "OK", "Error")
+        return
+    }
+    
     # Construire les arguments
     $auditArgs = @()
     
-    # Target
+    # Ajouter le projet sélectionné
+    $selectedProject = $comboProject.SelectedItem
+    $projectPath = Join-Path $PSScriptRoot "..\$selectedProject"
+    $auditArgs += '-Target "project"'
+    $auditArgs += "-Path `"$projectPath`""
+    
+    # Target (si différent du projet complet)
     if ($radioFile.Checked) {
-        $auditArgs += '-Target "file"'
-        $auditArgs += "-Path `"$($textPath.Text)`""
+        $auditArgs = @('-Target "file"', "-Path `"$($textPath.Text)`"")
     } elseif ($radioDir.Checked) {
-        $auditArgs += '-Target "directory"'
-        $auditArgs += "-Path `"$($textPath.Text)`""
+        $auditArgs = @('-Target "directory"', "-Path `"$($textPath.Text)`"")
     }
     
     # Phases

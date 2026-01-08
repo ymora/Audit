@@ -1193,60 +1193,66 @@ function Main {
         } else {
             # FORCER LES QUESTIONS ENRICHIES SI AUCUNES NE SONT DETECTEES
             $aiSummary += "---`n`n## PROBLEMES A ANALYSER`n`n"
-            $aiSummary += "### SemanticAnalysis`n`n"
-            $aiSummary += "#### [1] MissingAccessibility - MOYEN`n"
-            $aiSummary += "- **Fichier**: ``App-clean.jsx```n"
-            $aiSummary += "- **Question**: Le fichier 'App-clean.jsx' a des boutons sans attributs ARIA. Faut-il ajouter aria-label ou title pour l'accessibilité ?`n"
-            $aiSummary += "- **Suggestion**: Ajouter aria-label sur tous les boutons interactifs`n"
-            $aiSummary += "`n"
-            $aiSummary += "#### [2] HardcodedText - INFO`n"
-            $aiSummary += "- **Fichier**: ``App-clean.jsx```n"
-            $aiSummary += "- **Question**: Le fichier 'App-clean.jsx' contient des textes hardcodés comme 'Haies Bessancourt'. Faut-il implémenter un système d'internationalisation (i18n) ?`n"
-            $aiSummary += "- **Suggestion**: Utiliser react-i18next pour l'internationalisation`n"
-            $aiSummary += "`n"
-            $aiSummary += "#### [3] DomainSpecificData - IMPORTANT`n"
-            $aiSummary += "- **Fichier**: ``client/src/data/arbustesData.js```n"
-            $aiSummary += "- **Question**: Les données botaniques (plantation, entretien) sont-elles cohérentes avec le climat de Bessancourt ? Faut-il valider les informations ?`n"
-            $aiSummary += "- **Suggestion**: Valider les données avec un expert botanique local`n"
-            $aiSummary += "`n"
-            $aiSummary += "### RefactoringAdvice`n`n"
-            $aiSummary += "#### [4] LargeComponent - MOYEN`n"
-            $aiSummary += "- **Fichier**: ``App-clean.jsx```n"
-            $aiSummary += "- **Question**: Le composant 'App-clean.jsx' a 314 lignes. Faut-il le découper en sous-composants plus petits ?`n"
-            $aiSummary += "- **Suggestion**: Découper en Header, Sidebar, MainContent, Footer`n"
-            $aiSummary += "`n"
-            $aiSummary += "#### [5] Performance3D - MOYEN`n"
-            $aiSummary += "- **Fichier**: ``client/src/components/CanvasTerrain.jsx```n"
-            $aiSummary += "- **Question**: Le composant 3D pourrait-il être optimisé pour les appareils bas de gamme ? Faut-il ajouter des LOD ou réduire la qualité ?`n"
-            $aiSummary += "- **Suggestion**: Implémenter Level of Detail (LOD) et réduction de polygones`n"
-            $aiSummary += "`n"
-            $aiSummary += "### ArchitectureReview`n`n"
-            $aiSummary += "#### [6] MissingErrorHandling - MOYEN`n"
-            $aiSummary += "- **Fichier**: ``App-clean.jsx```n"
-            $aiSummary += "- **Question**: Le fichier 'App-clean.jsx' utilise des hooks React mais ne semble pas avoir de gestion d'erreur. Faut-il ajouter des try/catch ?`n"
-            $aiSummary += "- **Suggestion**: Ajouter ErrorBoundary et try/catch dans les hooks`n"
-            $aiSummary += "`n"
-            $aiSummary += "#### [7] UXNavigation - INFO`n"
-            $aiSummary += "- **Fichier**: ``App-clean.jsx```n"
-            $aiSummary += "- **Question**: La navigation entre modes Explorer/Planifier est-elle optimisée pour mobile ? Faut-il ajouter des gestes tactiles ?`n"
-            $aiSummary += "- **Suggestion**: Ajouter swipe gestures et navigation mobile-friendly`n"
-            $aiSummary += "`n"
-            $aiSummary += "### SecurityReview`n`n"
-            $aiSummary += "#### [8] DataValidation - MOYEN`n"
-            $aiSummary += "- **Fichier**: ``client/src/data/arbustesData.js```n"
-            $aiSummary += "- **Question**: Les données d'arbustes chargées dynamiquement sont-elles validées côté client ? Faut-il ajouter des vérifications ?`n"
-            $aiSummary += "- **Suggestion**: Ajouter schéma de validation avec Yup ou Zod`n"
-            $aiSummary += "`n"
-            
-            # Ajouter les métriques de qualité
-            $aiSummary += "---`n`n## MÉTRIQUES DE QUALITÉ IA`n`n"
-            $aiSummary += "- **Score de qualité**: 80/100`n"
-            $aiSummary += "- **Nombre de questions**: 8`n"
-            $aiSummary += "- **Priorité HAUTE**: 1`n"
-            $aiSummary += "- **Catégories couvertes**: 4`n"
-            $aiSummary += "- **Spécifique domaine**: Écologie/Botanique`n"
-            $aiSummary += "`n"
-        }
+            # Utiliser les vraies questions du AI-QuestionGenerator
+            if ($script:Results.AIContext) {
+                $questionId = 1
+                $categories = @("SemanticAnalysis", "RefactoringAdvice", "ArchitectureReview", "SecurityReview")
+                
+                foreach ($categoryName in $categories) {
+                    if ($script:Results.AIContext.$categoryName -and $script:Results.AIContext.$categoryName.Questions) {
+                        $aiSummary += "### $categoryName`n`n"
+                        
+                        foreach ($q in $script:Results.AIContext.$categoryName.Questions) {
+                            $priority = switch ($q.Priority) {
+                                "high" { "IMPORTANT" }
+                                "medium" { "MOYEN" }
+                                "low" { "INFO" }
+                                default { "MOYEN" }
+                            }
+                            
+                            $aiSummary += "#### [$questionId] $($q.Type) - $priority`n"
+                            $aiSummary += "- **Fichier**: ``$($q.File)```n"
+                            $aiSummary += "- **Question**: $($q.Question)`n"
+                            $aiSummary += "- **Suggestion**: $($q.Suggestion)`n`n"
+                            
+                            $questionId++
+                        }
+                    }
+                }
+                
+                # Ajouter les métriques de qualité réelles
+                $aiSummary += "---`n`n## MÉTRIQUES DE QUALITÉ IA`n`n"
+                if ($script:Results.AIContext.QualityMetrics) {
+                    $metrics = $script:Results.AIContext.QualityMetrics
+                    $aiSummary += "- **Score de qualité**: $($metrics.Score)/100`n"
+                    $aiSummary += "- **Nombre de questions**: $($metrics.TotalQuestions)`n"
+                    $aiSummary += "- **Priorité HAUTE**: $($metrics.HighPriorityCount)`n"
+                    $aiSummary += "- **Catégories couvertes**: $($metrics.Categories -join ', ')`n"
+                    $aiSummary += "- **Spécifique domaine**: $($metrics.ProjectType)`n"
+                } else {
+                    $aiSummary += "- **Score de qualité**: N/A`n"
+                    $aiSummary += "- **Nombre de questions**: $($questionId - 1)`n"
+                    $aiSummary += "- **Priorité HAUTE**: N/A`n"
+                    $aiSummary += "- **Catégories couvertes**: SemanticAnalysis, RefactoringAdvice, ArchitectureReview, SecurityReview`n"
+                    $aiSummary += "- **Spécifique domaine**: Inconnu`n"
+                }
+                $aiSummary += "`n"
+            } else {
+                # Fallback si pas de AIContext (ne devrait pas arriver)
+                $aiSummary += "### SemanticAnalysis`n`n"
+                $aiSummary += "#### [1] NoData - INFO`n"
+                $aiSummary += "- **Fichier**: N/A`n"
+                $aiSummary += "- **Question**: Aucune question IA générée. Vérifier la configuration de l'audit.`n"
+                $aiSummary += "- **Suggestion**: Relancer l'audit avec la phase 14`n`n"
+                
+                $aiSummary += "---`n`n## MÉTRIQUES DE QUALITÉ IA`n`n"
+                $aiSummary += "- **Score de qualité**: N/A`n"
+                $aiSummary += "- **Nombre de questions**: 0`n"
+                $aiSummary += "- **Priorité HAUTE**: 0`n"
+                $aiSummary += "- **Catégories couvertes**: N/A`n"
+                $aiSummary += "- **Spécifique domaine**: Inconnu`n"
+                $aiSummary += "`n"
+            }
         
         # Format de reponse attendu
         $aiSummary += "---`n`n## FORMAT DE REPONSE ATTENDU`n`n"
@@ -1260,6 +1266,11 @@ function Main {
         
         $aiSummary | Out-File -FilePath $aiSummaryFile -Encoding UTF8 -Force
         Write-Log "Resume IA genere: $aiSummaryFile" "SUCCESS"
+
+        # SAUVEGARDER LE RAPPORT GLOBAL JSON
+        $globalSummaryFile = Join-Path $script:Config.OutputDir "audit_summary_$($script:Config.Timestamp).json"
+        $summary | ConvertTo-Json -Depth 10 | Out-File -FilePath $globalSummaryFile -Encoding UTF8 -Force
+        Write-Log "Rapport global JSON sauvegardé: $globalSummaryFile" "SUCCESS"
 
         # Mise à jour du tableau récapitulatif des scores d'audit
         try {
@@ -1286,14 +1297,14 @@ function Main {
                 Write-Log "Module Checks-AuditScoresUpdate.ps1 non trouvé, mise à jour des scores ignorée" "WARN"
             }
         } catch {
-            Write-Log "Erreur lors de la mise à jour du tableau des scores: $($_.Exception.Message)" "WARN"
-        }
-
-    } catch {
-        Write-Log "Erreur fatale: $($_.Exception.Message)" "ERROR"
-        Write-Log "Stack trace: $($_.ScriptStackTrace)" "ERROR"
-        exit 1
+        Write-Log "Erreur lors de la mise à jour du tableau des scores: $($_.Exception.Message)" "WARN"
     }
+    }
+} catch {
+    Write-Log "Erreur critique: $($_.Exception.Message)" "ERROR"
+    Write-Log "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+    exit 1
+}
 }
 
 # Lancement du programme principal
