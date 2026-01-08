@@ -238,14 +238,11 @@ function Invoke-Check-StructureAPI {
                 }
                 
                 $aiContext += @{
-                    Handler = $handler
-                    DefinedIn = $handlerInfo.File
-                    DefinedAt = $handlerInfo.Path
-                    Line = $handlerInfo.Line
-                    RoutingPatterns = $routingPatterns
-                    PotentialRoutes = $potentialRoutes
+                    Type = "Unused Handler"
                     Severity = "warning"  # Pas critique, peut être un faux positif
-                    NeedsAICheck = $true
+                    File = $handlerInfo.File
+                    Line = $handlerInfo.Line
+                    Context = $null
                     Question = "Le handler '$handler' est-il utilisé via un routing dynamique non détecté automatiquement ?"
                 }
             }
@@ -263,6 +260,15 @@ function Invoke-Check-StructureAPI {
                 $criticalIssues += "Handler $handler appelé mais NON DÉFINI"
                 $missingHandlers++
                 $structureScore -= 2.0
+
+                $aiContext += @{
+                    Type = "Missing Handler"
+                    Severity = "critical"
+                    File = "api.php"
+                    Line = 0
+                    Context = $handlersCalled[$handler].Context
+                    Question = "Le handler '$handler' est appelé par le routing mais n'est pas défini. Où devrait-il être déclaré ?"
+                }
             }
         }
         
@@ -270,15 +276,17 @@ function Invoke-Check-StructureAPI {
             Write-OK "Structure API cohérente"
         }
         
-        # Sauvegarder le contexte pour l'IA
-        $Results.AIContext = @{
-            StructureAPI = @{
-                HandlersDefined = $handlersDefined.Count
-                HandlersCalled = $handlersCalled.Count
-                UnusedHandlers = $unusedHandlers.Count
-                RoutingPatterns = $routingPatterns
-                Questions = $aiContext
-            }
+        # Sauvegarder le contexte pour l'IA (sans écraser les autres catégories)
+        if (-not $Results.ContainsKey('AIContext') -or -not $Results.AIContext) {
+            $Results.AIContext = @{}
+        }
+
+        $Results.AIContext.StructureAPI = @{
+            HandlersDefined = $handlersDefined.Count
+            HandlersCalled = $handlersCalled.Count
+            UnusedHandlers = $unusedHandlers.Count
+            RoutingPatterns = $routingPatterns
+            Questions = $aiContext
         }
         
         $Results.Scores["Structure API"] = [Math]::Max($structureScore, 0)

@@ -1,4 +1,4 @@
-# ===============================================================================
+nnecté a git hub pour mon projet ott depuis qu'on est sur le disque dur D ?# ===============================================================================
 # GENERE LE RESUME IA A PARTIR DU DERNIER AUDIT
 # Usage: .\audit\generate-ai-summary.ps1
 # ===============================================================================

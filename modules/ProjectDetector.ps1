@@ -17,8 +17,56 @@ function Get-ProjectInfo {
         HasBackend = $false
         HasFrontend = $false
         PackageManager = $null
+        ProjectSpecific = $false
     }
     
+    # DÉTECTION SPÉCIFIQUE - Projets connus
+    $projectName = (Split-Path -Leaf $Path).ToLower()
+    
+    # Projet HAIES
+    if ($projectName -eq "haies" -or 
+        (Test-Path (Join-Path $Path "ADMIN_README.md")) -and 
+        (Test-Path (Join-Path $Path "admin/server.js")) -and
+        (Test-Path (Join-Path $Path "client/package.json"))) {
+        
+        $info.Name = "haies"
+        $info.Type = "Admin Interface"
+        $info.Framework = "Express + React"
+        $info.Language += @("JavaScript", "PHP", "HTML")
+        $info.HasBackend = $true
+        $info.HasFrontend = $true
+        $info.PackageManager = "npm"
+        $info.ProjectSpecific = $true
+        
+        # Lire la version du package.json racine
+        if (Test-Path (Join-Path $Path "package.json")) {
+            try {
+                $package = Get-Content (Join-Path $Path "package.json") -Raw | ConvertFrom-Json
+                $info.Version = $package.version
+            } catch { }
+        }
+        
+        return $info
+    }
+    
+    # Projet OTT (détection existante améliorée)
+    if ($projectName -eq "ott" -or 
+        (Test-Path (Join-Path $Path "api.php")) -and 
+        (Test-Path (Join-Path $Path "composer.json"))) {
+        
+        $info.Name = "ott"
+        $info.Type = "Medical Device"
+        $info.Framework = "PHP API"
+        $info.Language += @("PHP", "JavaScript", "Arduino")
+        $info.HasBackend = $true
+        $info.HasFrontend = $true
+        $info.PackageManager = "composer"
+        $info.ProjectSpecific = $true
+        
+        return $info
+    }
+    
+    # DÉTECTION GÉNÉRIQUE (code existant)
     # Détecter package.json (Node.js/React)
     if (Test-Path (Join-Path $Path "package.json")) {
         try {
