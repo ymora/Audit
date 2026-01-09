@@ -14,7 +14,7 @@ function Invoke-AuditModuleSimple {
     )
     
     # Charger le module
-    $modulePath = Get-ModulePath -ModuleName $Module -ProjectName $ProjectName -BasePath (Join-Path $PSScriptRoot "modules")
+    $modulePath = Get-ModulePath -ModuleName $Module -ProjectName $ProjectName -BasePath $PSScriptRoot
     
     if ($null -eq $modulePath) {
         throw "Module introuvable: $Module"
@@ -39,22 +39,22 @@ function Invoke-AuditModuleSimple {
     $cmd = Get-Command $functionName -ErrorAction SilentlyContinue
     
     if ($cmd) {
-        if ($cmd.Parameters.ContainsKey('Config') -and $Config.Count -gt 0) { 
+        if ($cmd.Parameters.ContainsKey('Config')) { 
             $invokeParams.Config = $Config 
         }
-        if ($cmd.Parameters.ContainsKey('Results') -and $Results.Count -gt 0) { 
+        if ($cmd.Parameters.ContainsKey('Results')) { 
             $invokeParams.Results = $Results 
         }
-        if ($cmd.Parameters.ContainsKey('ProjectInfo') -and $ProjectInfo.Count -gt 0) { 
+        if ($cmd.Parameters.ContainsKey('ProjectInfo')) { 
             $invokeParams.ProjectInfo = $ProjectInfo 
         }
-        if ($cmd.Parameters.ContainsKey('ProjectPath') -and $ProjectPath) { 
+        if ($cmd.Parameters.ContainsKey('ProjectPath')) { 
             $invokeParams.ProjectPath = $ProjectPath 
         }
-        if ($cmd.Parameters.ContainsKey('Files') -and $Files.Count -gt 0) { 
+        if ($cmd.Parameters.ContainsKey('Files')) { 
             $invokeParams.Files = $Files 
         }
-        if ($cmd.Parameters.ContainsKey('ProjectRoot') -and $ProjectPath) { 
+        if ($cmd.Parameters.ContainsKey('ProjectRoot')) { 
             $invokeParams.ProjectRoot = $ProjectPath 
         }
     }

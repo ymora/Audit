@@ -5,17 +5,10 @@
 
 function Invoke-Check-Architecture {
     param(
-        [Parameter(Mandatory=$true)]
-        [array]$Files,
-        
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Config,
-        
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Results,
-        
-        [Parameter(Mandatory=$true)]
-        [string]$ProjectPath
+        [array]$Files = @(),
+        [hashtable]$Config = @{},
+        [hashtable]$Results = @{ Scores = @{} },
+        [string]$ProjectPath = "."
     )
     
     Write-PhaseSection -PhaseNumber 2 -Title "Architecture et Statistiques"

@@ -6,7 +6,7 @@ param(
     [string]$Target = "project",  # project, file, directory
     [string]$Path = "",           # Chemin spécifique pour file/directory
     [string]$Phases = "all",      # all, ou liste: "1,2,3"
-    [switch]$Verbose = $false,
+    [switch]$Verbose = $true,    # Verbose par défaut pour voir l'exécution
     [switch]$Quiet = $false
 )
 
@@ -44,6 +44,10 @@ $script:ProjectInfo = $null
 $script:Files = @()
 
 $script:Verbose = [bool]$Verbose
+$script:Quiet = [bool]$Quiet
+
+# Forcer l'affichage si verbose est demandé
+if ($script:Verbose) { $script:Quiet = $false }
 
 $utilsPath = Join-Path $PSScriptRoot "modules\Utils.ps1"
 if (Test-Path $utilsPath) { . $utilsPath }
@@ -184,11 +188,11 @@ $script:AuditPhases = @(
     @{
         Id = 11
         Name = "Déploiement"
-        Description = "CI/CD, GitHub Pages, configuration"
+        Description = "CI/CD, GitHub Pages, configuration et chemins de déploiement"
         Category = "Déploiement"
         Dependencies = @(1, 4)
         Priority = 11
-        Modules = @()
+        Modules = @("Checks-Deployment-Paths.ps1")
         Target = "project"
     },
     
@@ -398,6 +402,16 @@ function Remove-OldAuditResults {
 }
 
 function Write-Log {
+    param(
+        [string]$Message,
+        [string]$Level = "INFO",
+        [switch]$NoNewline,
+        [switch]$NoTimestamp
+    )
+    
+    if ($script:Quiet -and $Level -notin @("PHASE", "SUCCESS", "ERROR", "MODULE", "PROGRESS")) { return }
+
+    $prefix = if (-not $NoTimestamp) { "[$(Get-Date -Format 'HH:mm:ss')]" } else { "" }
     
     switch ($Level) {
         "INFO" { Write-Host "$prefix [INFO] $Message" -ForegroundColor White }
@@ -566,58 +580,45 @@ function Load-AuditConfig {
         }
     }
 
-    # Détecter le projet avec le nouveau système générique
-    if (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue) {
-        try {
-            $projectInfoResult = Get-ProjectInfo -Path $script:Config.ProjectRoot
-            $script:ProjectInfo = if ($projectInfoResult -is [hashtable]) { $projectInfoResult } else { @{ } }
-            $script:ProjectProfile = $script:ProjectInfo.Profile
-            $projectId = $script:ProjectInfo.Name
-            Write-Log "Projet détecté: $projectId (score: $($script:ProjectProfile.Score))" "SUCCESS"
-            
-            # Charger la configuration spécifique au projet
-            $script:AuditConfig = $script:ProjectInfo.Configuration
-        } catch {
-            Write-Log "Erreur détection projet: $($_.Exception.Message)" "WARN"
-            $script:ProjectInfo = @{ }
+    # Détecter le projet et charger la configuration
+    Write-Log "Détection du projet..." "INFO"
+    
+    # Utiliser une détection simple pour OTT
+    $projectRoot = $script:Config.ProjectRoot
+    $projectName = $projectRoot.Split('\')[-1]
+    
+    # Configuration simple pour OTT
+    if ($projectName -eq "OTT" -or (Test-Path (Join-Path $projectRoot "api.php"))) {
+        $script:ProjectInfo = @{
+            Name = "ott"
+            Type = "web"
+            Framework = "php"
+            Profile = @{ Score = 8 }
+        }
+        Write-Log "Projet détecté: ott (application web PHP)" "SUCCESS"
+    } else {
+        # Fallback sur l'ancien système si disponible
+        if (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue) {
+            try {
+                $projectInfoResult = Get-ProjectInfo -Path $script:Config.ProjectRoot
+                $script:ProjectInfo = if ($projectInfoResult -is [hashtable]) { $projectInfoResult } else { @{ } }
+                $script:ProjectProfile = $script:ProjectInfo.Profile
+                $projectId = $script:ProjectInfo.Name
+                Write-Log "Projet détecté: $projectId (score: $($script:ProjectProfile.Score))" "SUCCESS"
+                
+                # Charger la configuration spécifique au projet
+                $script:AuditConfig = $script:ProjectInfo.Configuration
+            } catch {
+                Write-Log "Erreur détection projet: $($_.Exception.Message)" "WARN"
+                $script:ProjectInfo = @{ Name = "unknown" }
+                $script:ProjectProfile = $null
+                $script:AuditConfig = Get-DefaultAuditConfig
+            }
+        } else {
+            Write-Log "Aucun détecteur de projet disponible, utilisation configuration par défaut" "WARN"
+            $script:ProjectInfo = @{ Name = "unknown" }
             $script:ProjectProfile = $null
             $script:AuditConfig = Get-DefaultAuditConfig
-        }
-    } else {
-        # Fallback sur l'ancien système
-        $detectedProjectProfile = Get-ProjectProfile -ProjectRoot $script:Config.ProjectRoot
-        if ($detectedProjectProfile) {
-            $script:ProjectProfile = $detectedProjectProfile
-            $projectId = $detectedProjectProfile.Id
-            Write-Log "Projet detecte: $projectId" "SUCCESS"
-
-            $projectConfigPath = Join-Path $PSScriptRoot ("projects\" + $projectId + "\config\audit.config.ps1")
-            if (Test-Path $projectConfigPath) {
-                . $projectConfigPath
-                if ($global:AuditConfig) { $script:AuditConfig = $global:AuditConfig }
-            }
-        }
-        if (Test-Path $projectConfigPath) {
-            try {
-                $pcfg = . $projectConfigPath
-                if ($pcfg -is [hashtable]) {
-                    $base = Merge-Hashtable -Base $base -Override $pcfg
-                }
-            } catch {
-                Write-Log "Erreur chargement config projet ($projectId): $($_.Exception.Message)" "WARN"
-            }
-        }
-
-        $projectConfigLocalPath = Join-Path $PSScriptRoot ("projects\" + $projectId + "\config\audit.config.local.ps1")
-        if (Test-Path $projectConfigLocalPath) {
-            try {
-                $plocal = . $projectConfigLocalPath
-                if ($plocal -is [hashtable]) {
-                    $base = Merge-Hashtable -Base $base -Override $plocal
-                }
-            } catch {
-                Write-Log "Erreur chargement config locale projet ($projectId): $($_.Exception.Message)" "WARN"
-            }
         }
     }
 
@@ -749,13 +750,17 @@ function Initialize-AuditContext {
         AIContext = @{}
     }
 
+    Write-Log "Collecte des fichiers du projet en cours..." "INFO"
+    $collectedFiles = @()
     if ($Target -eq "file") {
-        $script:Files = @((Get-Item $Path -ErrorAction Stop))
+        $collectedFiles = @((Get-Item $Path -ErrorAction Stop))
     } elseif (Get-Command Get-ProjectFiles -ErrorAction SilentlyContinue) {
-        $script:Files = @(Get-ProjectFiles -Path $script:Config.ProjectRoot -Config $script:AuditConfig)
+        $collectedFiles = @(Get-ProjectFiles -Path $script:Config.ProjectRoot -Config $script:AuditConfig)
     } else {
-        $script:Files = @(Get-ChildItem -Path $script:Config.ProjectRoot -Recurse -File -ErrorAction SilentlyContinue)
+        $collectedFiles = @(Get-ChildItem -Path $script:Config.ProjectRoot -Recurse -File -ErrorAction SilentlyContinue)
     }
+    $script:Files = $collectedFiles
+    Write-Log "Fichiers collectés : $($collectedFiles.Count)" "INFO"
 }
 
 function Invoke-AuditModule {
@@ -1419,7 +1424,7 @@ function Main {
 }
 
 # Lancement du programme principal
-if ($PSBoundParameters.Count -eq 0) {
+if ($PSBoundParameters.Count -eq 0 -and -not $script:Config.ProjectRoot) {
     Invoke-InteractiveMenu
 } else {
     Main

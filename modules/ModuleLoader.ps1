@@ -14,7 +14,7 @@ function Get-ModulePath {
         [string]$BasePath = $PSScriptRoot
     )
     
-    # 1. Chercher d'abord dans les modules spécifiques au projet
+    # 1. Chercher d'abord dans les modules spécifiques au projet (uniquement si le dossier existe)
     if (-not [string]::IsNullOrWhiteSpace($ProjectName)) {
         $projectModulePath = Join-Path $BasePath "..\projects\$ProjectName\modules\$ModuleName"
         if (Test-Path $projectModulePath) {

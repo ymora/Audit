@@ -9,7 +9,7 @@ function Invoke-AuditModuleUltraSimple {
     )
     
     # Charger le module
-    $modulePath = Get-ModulePath -ModuleName $Module -ProjectName $ProjectName -BasePath (Join-Path $PSScriptRoot "modules")
+    $modulePath = Get-ModulePath -ModuleName $Module -ProjectName $ProjectName -BasePath $PSScriptRoot
     
     if ($null -eq $modulePath) {
         return @{
@@ -50,12 +50,44 @@ function Invoke-AuditModuleUltraSimple {
         }
     }
     
-    # Exécuter avec try-catch et sans paramètres complexes
+    # Exécuter avec les paramètres disponibles
     try {
-        # Essayer d'abord sans paramètres
-        $result = & $functionName
+        if (-not $global:AuditConfig) { $global:AuditConfig = @{ Scores = @{} } }
+        if (-not $global:Results) { 
+            $global:Results = @{
+                Scores = @{}
+                Issues = @()
+                Warnings = @()
+                Recommendations = @()
+            }
+        }
+        if (-not $global:ProjectInfo) { $global:ProjectInfo = @{} }
+        if (-not $global:Files) { $global:Files = @() }
+        if (-not $global:Config) { $global:Config = @{ ProjectRoot = $PSScriptRoot } }
+
+        $basicParamSet = @{
+            Config = $global:AuditConfig
+            Results = $global:Results
+            ProjectInfo = $global:ProjectInfo
+            ProjectPath = $global:Config.ProjectRoot
+            ProjectRoot = $global:Config.ProjectRoot
+            Files = $global:Files
+        }
+        $functionInfo = Get-Command $functionName -ErrorAction Stop
+        $allowedParams = $functionInfo.Parameters.Keys
+        $splat = @{}
+        foreach ($paramName in $basicParamSet.Keys) {
+            if ($allowedParams -contains $paramName) {
+                $splat[$paramName] = $basicParamSet[$paramName]
+            }
+        }
+
+        if ($splat.Count -gt 0) {
+            $result = & $functionName @splat
+        } else {
+            $result = & $functionName
+        }
         
-        # Si ça fonctionne, retourner le résultat normalisé
         if ($null -eq $result) {
             return @{
                 Success = $true
@@ -87,58 +119,13 @@ function Invoke-AuditModuleUltraSimple {
             }
         }
     } catch {
-        # Si ça échoue, essayer avec des paramètres basiques
-        try {
-            $basicParams = @{
-                Config = $global:AuditConfig
-                Results = $global:Results
-                ProjectInfo = $global:ProjectInfo
-                ProjectPath = $global:Config.ProjectRoot
-                Files = $global:Files
-            }
-            
-            $result = & $functionName @basicParams
-            
-            if ($null -eq $result) {
-                return @{
-                    Success = $true
-                    Errors = 0
-                    Warnings = 0
-                    Issues = @()
-                    Score = 10
-                    Result = @{}
-                }
-            }
-            
-            if ($result -is [hashtable]) {
-                return @{
-                    Success = $true
-                    Errors = if ($result.ContainsKey('Errors')) { $result.Errors } else { 0 }
-                    Warnings = if ($result.ContainsKey('Warnings')) { $result.Warnings } else { 0 }
-                    Issues = if ($result.ContainsKey('Issues')) { $result.Issues } else { @() }
-                    Score = if ($result.ContainsKey('Score')) { $result.Score } else { 10 }
-                    Result = $result
-                }
-            } else {
-                return @{
-                    Success = $true
-                    Errors = 0
-                    Warnings = 0
-                    Issues = @()
-                    Score = 10
-                    Result = @{ Value = $result }
-                }
-            }
-        } catch {
-            # En dernier recours, retourner une erreur mais marquer comme succès pour éviter de bloquer
-            return @{
-                Success = $true
-                Errors = 1
-                Warnings = 0
-                Issues = @("Erreur module $Module`: $($_.Exception.Message)")
-                Score = 5
-                Result = @{ Error = $_.Exception.Message }
-            }
+        return @{
+            Success = $true
+            Errors = 1
+            Warnings = 0
+            Issues = @("Erreur module $Module`: $($_.Exception.Message)")
+            Score = 5
+            Result = @{ Error = $_.Exception.Message }
         }
     }
 }

@@ -5,13 +5,8 @@
 
 function Invoke-Check-Inventory {
     param(
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Config,
-        
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Results,
-        
-        [Parameter(Mandatory=$false)]
+        [hashtable]$Config = @{},
+        [hashtable]$Results = @{},
         [hashtable]$ProjectInfo = @{}
     )
     

@@ -197,6 +197,64 @@ function Invoke-Check-ConfigConsistency {
                 $score -= 0.3
             }
         }
+
+        # =======================================================================
+        # VARIABLES SENSIBLES : pas de valeurs en dur dans les fichiers serveur
+        # =======================================================================
+        $sensitivePatterns = @(
+            @{ Key = "DATABASE_URL"; Regex = "(?i)(?:define\s*\(\s*['""]DATABASE_URL['""]|const\s+DATABASE_URL|['""]DATABASE_URL['""]\s*=>)\s*['""][^'""]+['""]" },
+            @{ Key = "DB_HOST"; Regex = "(?i)['""]DB_HOST['""]\s*=>\s*['""][^'""]+['""]" },
+            @{ Key = "DB_NAME"; Regex = "(?i)['""]DB_NAME['""]\s*=>\s*['""][^'""]+['""]" },
+            @{ Key = "DB_USER"; Regex = "(?i)['""]DB_USER['""]\s*=>\s*['""][^'""]+['""]" },
+            @{ Key = "DB_PASS"; Regex = "(?i)['""]DB_PASS['""]\s*=>\s*['""][^'""]+['""]" },
+            @{ Key = "JWT_SECRET"; Regex = "(?i)(?:define\s*\(\s*['""]JWT_SECRET['""]|['""]JWT_SECRET['""]\s*=>)\s*['""][^'""]+['""]" },
+            @{ Key = "SENDGRID_API_KEY"; Regex = "(?i)(?:define\s*\(\s*['""]SENDGRID_API_KEY['""]|['""]SENDGRID_API_KEY['""]\s*=>)\s*['""][^'""]+['""]" },
+            @{ Key = "TWILIO_AUTH_TOKEN"; Regex = "(?i)(?:define\s*\(\s*['""]TWILIO_AUTH_TOKEN['""]|['""]TWILIO_AUTH_TOKEN['""]\s*=>)\s*['""][^'""]+['""]" }
+        )
+
+        $sensitiveIssues = @()
+        $aiSensitiveContext = @()
+        $phpFilesToScan = Get-ChildItem -Path $ProjectRoot -Recurse -File -Include *.php -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -notmatch 'vendor|node_modules|\.git|\.next|hardware|docs' }
+
+        foreach ($file in $phpFilesToScan) {
+            $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+            if (-not $content) { continue }
+
+            foreach ($pattern in $sensitivePatterns) {
+                $matches = [regex]::Matches($content, $pattern.Regex, [System.Text.RegularExpressions.RegexOptions]::Singleline)
+                foreach ($match in $matches) {
+                    $lineNumber = ($content.Substring(0, $match.Index) -split "`n").Count
+                    $snippet = ($match.Value -split "`n")[0].Trim()
+                    $sensitiveIssues += @{
+                        File = $file.Name
+                        Path = $file.FullName
+                        Line = $lineNumber
+                        Key = $pattern.Key
+                        Snippet = $snippet
+                    }
+                    $aiSensitiveContext += @{
+                        Category = "Configuration"
+                        Type = "Variable sensible en dur"
+                        File = $file.Name
+                        Line = $lineNumber
+                        Severity = "high"
+                        NeedsAICheck = $true
+                        Question = "La variable '$($pattern.Key)' doit-elle provenir d'un getenv() plutôt que d'une valeur littérale dans $($file.Name) ?"
+                    }
+                }
+            }
+        }
+
+        if ($sensitiveIssues.Count -gt 0) {
+            Write-Warn "$($sensitiveIssues.Count) variable(s) sensibles définie(s) en dur"
+            $score -= 0.5 * $sensitiveIssues.Count
+            foreach ($issue in $sensitiveIssues) {
+                $Results.Issues += "Cohérence Configuration: '$($issue.Key)' défini en dur dans $($issue.Path):$($issue.Line) ($($issue.Snippet))"
+            }
+        } else {
+            Write-OK "Aucune variable sensible définie en dur"
+        }
         
         # ===============================================================================
         # DÉTERMINER L'ENVIRONNEMENT PRINCIPAL
