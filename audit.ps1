@@ -72,7 +72,7 @@ $script:AuditPhases = @(
         Category = "Structure"
         Dependencies = @()
         Priority = 1
-        Modules = @("Checks-Inventory.ps1")
+        Modules = @("Checks-ProjectInventory.ps1")
         Target = "project"
     },
     
@@ -144,7 +144,7 @@ $script:AuditPhases = @(
         Category = "Qualité"
         Dependencies = @(1, 2)
         Priority = 7
-        Modules = @("Checks-CodeMort.ps1", "Checks-Duplication.ps1", "Checks-Complexity.ps1")
+        Modules = @("Checks-CodeQuality.ps1", "Checks-Duplication.ps1", "Checks-Complexity.ps1")
         Target = "project"
     },
     
@@ -168,7 +168,7 @@ $script:AuditPhases = @(
         Category = "Documentation"
         Dependencies = @(1, 2)
         Priority = 9
-        Modules = @("Checks-Documentation.ps1", "Checks-MarkdownFiles.ps1")
+        Modules = @("Checks-Documentation.ps1", "Checks-MarkdownQuality.ps1")
         Target = "project"
     },
     
@@ -180,7 +180,7 @@ $script:AuditPhases = @(
         Category = "Tests"
         Dependencies = @(1, 2, 5)
         Priority = 10
-        Modules = @("Checks-Tests.ps1", "Checks-FunctionalTests.ps1")
+        Modules = @("Checks-TestCoverage.ps1", "Checks-FunctionalTests-Placeholder.ps1")
         Target = "project"
     },
     
@@ -204,7 +204,7 @@ $script:AuditPhases = @(
         Category = "Hardware"
         Dependencies = @(1)
         Priority = 12
-        Modules = @("Checks-FirmwareInteractive.ps1")
+        Modules = @("Checks-HardwareFirmware.ps1")
         Target = "project"
     },
     

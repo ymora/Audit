@@ -140,7 +140,7 @@ function Get-DefaultAuditConfig {
         }
         
         Modules = @{
-            "Checks-Tests" = @{
+            "Checks-TestCoverage" = @{
                 MinTestFiles = 1
                 TestPatterns = @("test/*", "tests/*", "*test*", "*spec*")
                 Required = $false

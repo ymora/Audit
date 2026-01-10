@@ -1,11 +1,11 @@
 # ===============================================================================
-# VÉRIFICATION : FIRMWARE INTERACTIF (USB)
+# VÉRIFICATION : FIRMWARE MATÉRIEL (USB)
 # ===============================================================================
 # Teste le firmware en temps réel via USB si un dispositif est connecté
 # Vérifie que le firmware répond correctement aux commandes
 # ===============================================================================
 
-function Invoke-Check-FirmwareInteractive {
+function Invoke-Check-HardwareFirmware {
     param(
         [Parameter(Mandatory=$true)]
         [array]$Files,

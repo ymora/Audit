@@ -1,8 +1,9 @@
 # ===============================================================================
-# VÉRIFICATION : FICHIERS MARKDOWN - CONSOLIDATION ET NETTOYAGE
+# VÉRIFICATION : QUALITÉ DES FICHIERS MARKDOWN
 # ===============================================================================
+# Analyse et nettoyage des fichiers markdown
 
-function Invoke-Check-MarkdownFiles {
+function Invoke-Check-MarkdownQuality {
     param(
         [Parameter(Mandatory=$true)]
         [string]$ProjectRoot,

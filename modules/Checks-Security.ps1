@@ -23,7 +23,7 @@ function Invoke-Check-Security {
         return
     }
     
-    Write-PhaseSection -PhaseNumber 3 -Title "Sécurité"
+    Write-PhaseSectionNamed -Title "Sécurité et Vulnérabilités" -Description "Vérification des failles de sécurité et données sensibles"
     
     try {
         $securityScore = 10

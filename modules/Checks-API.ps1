@@ -11,7 +11,7 @@ function Invoke-Check-API {
         [hashtable]$Results
     )
     
-    Write-PhaseSection -PhaseNumber 5 -Title "Endpoints API"
+    Write-PhaseSectionNamed -Title "API et Backend" -Description "Analyse des endpoints API et de la structure backend"
     
     $apiScore = 0
     $endpointsTotal = 0

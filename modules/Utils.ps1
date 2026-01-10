@@ -14,12 +14,32 @@ function Convert-ToAsciiSafe {
 
 function Write-PhaseSection {
     param(
-        [Parameter(Mandatory=$true)][int]$PhaseNumber,
+        [Parameter(Mandatory=$false)][int]$PhaseNumber = 0,
         [Parameter(Mandatory=$true)][string]$Title
     )
     Write-Host ""
     $title = Convert-ToAsciiSafe -Text $Title
-    Write-Host "=== Phase $PhaseNumber / $PhaseNumber - $title ===" -ForegroundColor Cyan
+    if ($PhaseNumber -gt 0) {
+        Write-Host "=== Phase $PhaseNumber - $title ===" -ForegroundColor Cyan
+    } else {
+        Write-Host "=== $title ===" -ForegroundColor Cyan
+    }
+}
+
+function Write-PhaseSectionNamed {
+    param(
+        [Parameter(Mandatory=$true)][string]$Title,
+        [string]$Description = ""
+    )
+    Write-Host ""
+    $title = Convert-ToAsciiSafe -Text $Title
+    if ($Description) {
+        $desc = Convert-ToAsciiSafe -Text $Description
+        Write-Host "=== $title ===" -ForegroundColor Cyan
+        Write-Host "   $desc" -ForegroundColor Gray
+    } else {
+        Write-Host "=== $title ===" -ForegroundColor Cyan
+    }
 }
 
 function Write-OK {

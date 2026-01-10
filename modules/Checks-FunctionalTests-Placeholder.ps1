@@ -1,4 +1,4 @@
-function Invoke-Check-FunctionalTests {
+function Invoke-Check-FunctionalTests-Placeholder {
     param(
         [Parameter(Mandatory=$true)]
         [hashtable]$Config,
@@ -17,8 +17,8 @@ function Invoke-Check-FunctionalTests {
         $Results.Recommendations = @()
     }
 
-    $Results.Recommendations += "Tests fonctionnels: aucun scénario générique n'est fourni. Ajouter des tests end-to-end spécifiques projet (ex: Playwright/Cypress, Postman/Newman, tests API dédiés) ou fournir une surcharge via audit/projects/<project>/modules/Checks-FunctionalTests.ps1."
+    $Results.Recommendations += "Tests fonctionnels: aucun scénario générique n'est fourni. Ajouter des tests end-to-end spécifiques projet (ex: Playwright/Cypress, Postman/Newman, tests API dédiés) ou fournir une surcharge via audit/projects/<project>/modules/Checks-FunctionalTests-Placeholder.ps1."
 
-    $Results.Scores["FunctionalTests"] = 10
+    $Results.Scores["Tests Fonctionnels"] = 10
     Write-OK "Module générique: aucun test fonctionnel exécuté (à surcharger par projet)."
 }

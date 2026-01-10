@@ -1,8 +1,9 @@
 # ===============================================================================
-# VÉRIFICATION : TESTS
+# VÉRIFICATION : COUVERTURE DE TESTS
 # ===============================================================================
+# Détecte et analyse les fichiers de tests existants
 
-function Invoke-Check-Tests {
+function Invoke-Check-TestCoverage {
     param(
         [Parameter(Mandatory=$true)]
         [array]$Files,
@@ -19,7 +20,7 @@ function Invoke-Check-Tests {
         return
     }
     
-    Write-PhaseSection -PhaseNumber 10 -Title "Tests"
+    Write-PhaseSectionNamed -Title "Couverture de Tests" -Description "Analyse des fichiers de tests existants et de la couverture"
     
     try {
         # Détecter les fichiers de tests (pattern .test.js, .spec.js, etc.)
@@ -65,7 +66,7 @@ function Invoke-Check-Tests {
             Write-OK "$($allTestFiles.Count) fichiers de tests détectés"
         }
         
-        $Results.Scores["Tests"] = $testScore
+        $Results.Scores["Couverture de Tests"] = $testScore
         
         # Sauvegarder le contexte pour l'IA
         if (-not $Results.AIContext) {
@@ -77,7 +78,7 @@ function Invoke-Check-Tests {
             }
         }
     } catch {
-        $Results.Scores["Tests"] = 4
+        $Results.Scores["Couverture de Tests"] = 4
     }
 }
 

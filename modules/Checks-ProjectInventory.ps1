@@ -3,14 +3,14 @@
 # ===============================================================================
 # Inventaire complet de tous les fichiers du projet
 
-function Invoke-Check-Inventory {
+function Invoke-Check-ProjectInventory {
     param(
         [hashtable]$Config = @{},
         [hashtable]$Results = @{},
         [hashtable]$ProjectInfo = @{}
     )
     
-    Write-PhaseSection -PhaseNumber 1 -Title "Inventaire Exhaustif"
+    Write-PhaseSectionNamed -Title "Inventaire Complet du Projet" -Description "Analyse exhaustive de tous les fichiers et composants"
     
     try {
         Write-Info "Parcours exhaustif de tous les fichiers..."
