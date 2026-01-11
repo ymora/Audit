@@ -39,11 +39,11 @@ function Invoke-Check-API {
         Write-Info "URL API: $ApiUrl"
         Write-Info "Email: $Email"
         
-        # Vérifier si Docker est démarré (si l'URL est localhost:8000)
-        if ($ApiUrl -match "localhost:8000" -or $ApiUrl -match "127\.0\.0\.1:8000") {
+        # Vérifier si Docker est démarré (si l'URL est localhost:8000 ou localhost:8080)
+        if ($ApiUrl -match "localhost:8000" -or $ApiUrl -match "127\.0\.0\.1:8000" -or $ApiUrl -match "localhost:8080" -or $ApiUrl -match "127\.0\.0\.1:8080") {
             Write-Info "Vérification Docker (API locale)..."
             try {
-                $dockerPs = docker ps --filter "name=ott-api" --format "{{.Names}}" 2>$null
+                $dockerPs = & docker ps --filter "name=ott-api" --format "{{.Names}}" 2>$null
                 if ($dockerPs -match "ott-api") {
                     Write-OK "Conteneur Docker ott-api détecté"
                 } else {
@@ -95,7 +95,7 @@ function Invoke-Check-API {
         $apiMode = "inconnu"
         
         # Détecter le mode (Docker ou Render)
-        if ($ApiUrl -match "localhost:8000|127\.0\.0\.1:8000") {
+        if ($ApiUrl -match "localhost:8000|127\.0\.0\.1:8000|localhost:8080|127\.0\.0\.1:8080") {
             $apiMode = "Docker"
         } elseif ($ApiUrl -match "render\.com|onrender\.com") {
             $apiMode = "Render"

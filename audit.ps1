@@ -596,6 +596,20 @@ function Load-AuditConfig {
             Profile = @{ Score = 8 }
         }
         Write-Log "Projet détecté: ott (application web PHP)" "SUCCESS"
+        
+        # Charger la configuration spécifique au projet OTT
+        $projectConfigPath = Join-Path $PSScriptRoot "projects\ott\config\audit.config.ps1"
+        if (Test-Path $projectConfigPath) {
+            try {
+                $projectConfig = . $projectConfigPath
+                if ($projectConfig -is [hashtable]) {
+                    $base = Merge-Hashtable -Base $base -Override $projectConfig
+                    Write-Log "Configuration spécifique OTT chargée" "SUCCESS"
+                }
+            } catch {
+                Write-Log "Erreur chargement config OTT: $($_.Exception.Message)" "WARN"
+            }
+        }
     } else {
         # Fallback sur l'ancien système si disponible
         if (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue) {
@@ -714,6 +728,7 @@ function Initialize-AuditContext {
     $script:Verbose = [bool]$Verbose
 
     $script:AuditConfig = Load-AuditConfig
+    $global:AuditConfig = $script:AuditConfig  # Assurer la disponibilité globale
 
     if (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue) {
         try {
