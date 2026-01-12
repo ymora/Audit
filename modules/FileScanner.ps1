@@ -35,8 +35,10 @@ function Get-ProjectFiles {
     $excludeDirs = $Config.Exclude.Directories + $defaultExcludeDirs
     $excludeFiles = $Config.Exclude.Files + $defaultExcludeFiles
     
-    # Patterns de fichiers à analyser
-    $patterns = @("*.js", "*.jsx", "*.ts", "*.tsx", "*.php", "*.py", "*.java", "*.go", "*.rs")
+    # Patterns de fichiers à analyser (élargi pour tous les modules d'audit)
+    $patterns = @("*.js", "*.jsx", "*.ts", "*.tsx", "*.php", "*.py", "*.java", "*.go", "*.rs", 
+                  "*.md", "*.txt", "*.json", "*.yml", "*.yaml", "*.html", "*.css", "*.ps1",
+                  "*.sh", "*.bat", "*.sql", "*.xml", "*.ini", "*.env", "*.dockerfile")
     
     foreach ($pattern in $patterns) {
         $found = Get-ChildItem -Path $Path -Recurse -File -Filter $pattern -ErrorAction SilentlyContinue | Where-Object {

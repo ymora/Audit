@@ -26,6 +26,14 @@ function Invoke-Check-UI {
     
     try {
         $uiScore = 10.0
+        
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour l'UI - passage de cette phase"
+            $Results.Scores["UI"] = 10
+            return
+        }
+        
         $uiFiles = $Files | Where-Object {
             $_.Extension -match "\.jsx?$" -and
             $_.FullName -match 'components|app|pages' -and

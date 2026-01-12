@@ -28,21 +28,19 @@ function Invoke-Check-Organization {
         }
         
         if ($validFiles.Count -eq 0) {
-            Write-Warn "Aucun fichier valide à analyser"
+            Write-Warn "Aucun fichier valide à analyser - passage de cette phase"
             $Results.Scores["Organization"] = 10
             return
         }
         
-        # TODO/FIXME
+        # Détection des marqueurs TODO/FIXME
         $todoFiles = Select-String -Path $validFiles -Pattern "TODO|FIXME|XXX|HACK" -ErrorAction SilentlyContinue | 
             Group-Object Path
-        
-        # Générer contexte pour l'IA si nécessaire
-        $aiContext = @()
         
         if ($todoFiles.Count -gt 0) {
             Write-Warn "$($todoFiles.Count) fichier(s) avec TODO/FIXME"
             $Results.Recommendations += "Nettoyer les TODO/FIXME ($($todoFiles.Count) fichiers)"
+            $aiContext = @()
             $aiContext += @{
                 Category = "Organization"
                 Type = "TODO/FIXME Found"
@@ -56,62 +54,53 @@ function Invoke-Check-Organization {
             Write-OK "Aucun TODO/FIXME en attente"
         }
         
-        # Code désactivé temporairement (commenté ou avec marqueurs)
-        Write-Info "Détection code désactivé temporairement..."
-        $disabledCodePatterns = @(
-            # Patterns pour code commenté avec marqueurs
-            "//\s*(TODO|FIXME|DISABLED|TEMP|TEMPORARY|OLD|DEPRECATED|REMOVE|DELETE).*"
-            "/\*\s*(TODO|FIXME|DISABLED|TEMP|TEMPORARY|OLD|DEPRECATED|REMOVE|DELETE).*\*/"
-            # Blocs de code commentés volumineux (> 5 lignes)
-            # Pattern pour détecter de gros blocs commentés (délicat sans parser AST, on utilise une heuristique)
-        )
-        
+        # Détection des blocs de code désactivés
         $disabledCodeFiles = @()
         foreach ($file in $validFiles) {
             if ($file -match '\.(js|jsx|ts|tsx|php)$') {
                 $content = Get-Content $file -Raw -ErrorAction SilentlyContinue
                 if ($content) {
-                    # Détecter les marqueurs DISABLED/TEMP dans les commentaires
-                    $hasDisabledMarker = $false
-                    foreach ($pattern in $disabledCodePatterns) {
+                    # Détection des marqueurs de code désactivé
+                    $patterns = @(
+                        "//\\s*(DISABLED|TEMP|TEMPORARY|OLD|DEPRECATED|REMOVE|DELETE).*",
+                        "/\\*\\s*(DISABLED|TEMP|TEMPORARY|OLD|DEPRECATED|REMOVE|DELETE).*\\*/"
+                    )
+                    
+                    $hasDisabled = $false
+                    foreach ($pattern in $patterns) {
                         if ($content -match $pattern) {
-                            $hasDisabledMarker = $true
+                            $hasDisabled = $true
                             break
                         }
                     }
                     
-                    # Détecter de gros blocs commentés (heuristique: > 5 lignes consécutives commentées)
-                    # Compter les lignes consécutives commentées
+                    # Détection des gros blocs commentés (>10 lignes)
                     $lines = $content -split "`n"
                     $consecutiveCommented = 0
-                    $maxConsecutiveCommented = 0
                     foreach ($line in $lines) {
                         $trimmedLine = $line.Trim()
-                        if ($trimmedLine -match '^\s*(//|/\*|\*)' -and $trimmedLine -notmatch '^\s*\*/\s*$') {
+                        if ($trimmedLine -match '^\\s*(//|/\\*|\\*)' -and $trimmedLine -notmatch '^\\s*\\*/\\s*$') {
                             $consecutiveCommented++
-                            if ($consecutiveCommented -gt $maxConsecutiveCommented) {
-                                $maxConsecutiveCommented = $consecutiveCommented
+                            if ($consecutiveCommented -ge 10) {
+                                $hasDisabled = $true
+                                break
                             }
                         } else {
                             $consecutiveCommented = 0
                         }
                     }
                     
-                    # Considérer comme code désactivé si marqueur ou > 10 lignes commentées consécutives
-                    if ($hasDisabledMarker -or $maxConsecutiveCommented -gt 10) {
-                        $disabledCodeFiles += @{
-                            File = $file
-                            Reason = if ($hasDisabledMarker) { "Marqueur DISABLED/TEMP détecté" } else { "$maxConsecutiveCommented lignes commentées consécutives" }
-                        }
+                    if ($hasDisabled) {
+                        $disabledCodeFiles += $file
                     }
                 }
             }
         }
         
         if ($disabledCodeFiles.Count -gt 0) {
-            Write-Warn "$($disabledCodeFiles.Count) fichier(s) avec code désactivé temporairement"
-            $Results.Recommendations += "Vérifier code désactivé temporairement ($($disabledCodeFiles.Count) fichiers)"
-            $fileList = ($disabledCodeFiles | ForEach-Object { "$($_.File) ($($_.Reason))" }) -join ", "
+            Write-Warn "$($disabledCodeFiles.Count) fichier(s) avec code désactivé"
+            $Results.Recommendations += "Vérifier le code désactivé ($($disabledCodeFiles.Count) fichiers)"
+            $fileList = ($disabledCodeFiles | ForEach-Object { $_ }) -join ", "
             $aiContext += @{
                 Category = "Organization"
                 Type = "Disabled Code Found"
@@ -119,10 +108,10 @@ function Invoke-Check-Organization {
                 Files = $fileList
                 Severity = "medium"
                 NeedsAICheck = $true
-                Question = "$($disabledCodeFiles.Count) fichier(s) contiennent du code désactivé temporairement (commenté avec marqueurs DISABLED/TEMP ou gros blocs commentés). Ce code doit-il être supprimé, réactivé, ou laissé tel quel ? Fichiers: $fileList"
+                Question = "$($disabledCodeFiles.Count) fichier(s) contiennent du code désactivé (commenté avec marqueurs DISABLED/TEMP ou gros blocs commentés). Ce code doit-il être supprimé, réactivé, ou laissé tel quel ? Fichiers: $fileList"
             }
         } else {
-            Write-OK "Aucun code désactivé temporairement détecté"
+            Write-OK "Aucun code désactivé détecté"
         }
         
         # console.log
@@ -325,4 +314,3 @@ function Invoke-Check-Organization {
         $Results.Scores["Organization"] = 7
     }
 }
-

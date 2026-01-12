@@ -27,6 +27,13 @@ function Invoke-Check-Performance {
     Write-PhaseSection -PhaseNumber 8 -Title "Performance"
     
     try {
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour la performance - passage de cette phase"
+            $Results.Scores["Performance"] = 10
+            return
+        }
+        
         $jsFiles = $Files | Where-Object { $_.Extension -match "\.jsx?$" }
         $aiContext = @()  # Contexte pour l'IA
         

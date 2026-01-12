@@ -8,7 +8,9 @@ function Invoke-Check-API {
         [hashtable]$Config,
         
         [Parameter(Mandatory=$true)]
-        [hashtable]$Results
+        [hashtable]$Results,
+        
+        [string]$ProjectRoot = $global:ProjectRoot
     )
     
     Write-PhaseSectionNamed -Title "API et Backend" -Description "Analyse des endpoints API et de la structure backend"
@@ -133,40 +135,92 @@ function Invoke-Check-API {
         $fullAuthUrl = "$ApiUrl$authEndpoint"
         Write-Info "Endpoint authentification: $fullAuthUrl"
         
-        try {
-            # Timeout réduit à 5 secondes pour éviter les blocages
-            $authResponse = Invoke-RestMethod -Uri $fullAuthUrl -Method POST -Body $loginBody -ContentType "application/json" -TimeoutSec 5 -ErrorAction Stop
-            $script:authToken = $authResponse.token
-            if ([string]::IsNullOrEmpty($script:authToken)) {
-                throw "Token non reçu dans la réponse"
+        # Nouveau paramètre de configuration pour les retries
+        $maxRetries = $Config.API.MaxRetries ?? 3
+        $retryDelay = $Config.API.RetryDelay ?? 1000  # ms
+        
+        $attempt = 1
+        $success = $false
+        
+        while ($attempt -le $maxRetries -and -not $success) {
+            try {
+                # Timeout réduit à 5 secondes pour éviter les blocages
+                $authResponse = Invoke-RestMethod -Uri $fullAuthUrl -Method POST -Body $loginBody -ContentType "application/json" -TimeoutSec 5 -ErrorAction Stop
+                $script:authToken = $authResponse.token
+                if ([string]::IsNullOrEmpty($script:authToken)) {
+                    throw "Token non reçu dans la réponse"
+                }
+                $script:authHeaders = @{Authorization = "Bearer $script:authToken"}
+                Write-OK "Authentification reussie"
+                $success = $true
+            } catch {
+                $errorMsg = $_.Exception.Message
+                if ($_.Exception.Response) {
+                    try {
+                        $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+                        $responseBody = $reader.ReadToEnd()
+                        $reader.Close()
+                        if ($responseBody) {
+                            $errorMsg = "$errorMsg - Réponse: $responseBody"
+                        }
+                    } catch {
+                        # Ignorer les erreurs de lecture de la réponse
+                    }
+                }
+                Write-Warn "Echec authentification: $errorMsg"
+                Write-Info "URL testée: $fullAuthUrl"
+                if ($ApiUrl -match "localhost:8000" -or $ApiUrl -match "127\.0\.0\.1:8000") {
+                    Write-Info "💡 L'API est sur Docker - Vérifiez que Docker est démarré:"
+                    Write-Info "   • docker-compose up -d"
+                    Write-Info "   • Ou: .\scripts\dev\start_docker.ps1"
+                    Write-Info "   • Vérifier: docker ps | findstr ott-api"
+                } else {
+                    Write-Info "L'audit continue - Vérifiez que le serveur API est démarré et accessible"
+                }
+                $script:apiAuthFailed = $true
+                $apiScore = 5
+                
+                if ($attempt -lt $maxRetries) {
+                    Write-Info "Tentative $attempt/$maxRetries échouée - Nouvelle tentative dans ${retryDelay}ms"
+                    Start-Sleep -Milliseconds $retryDelay
+                }
             }
-            $script:authHeaders = @{Authorization = "Bearer $script:authToken"}
-            Write-OK "Authentification reussie"
+            $attempt++
+        }
+        
+        if (-not $success) {
+            $Results.Recommendations += "Corriger l'authentification API"
+        }
+        
+        # Utiliser la configuration ou valeurs par défaut
+        if ($apiConfig -and $apiConfig.Endpoints) {
+            $endpoints = $apiConfig.Endpoints
+        } else {
+            $endpoints = @(
+                @{Path="/api.php/devices"; Name="Dispositifs"},
+                @{Path="/api.php/patients"; Name="Patients"},
+                @{Path="/api.php/users"; Name="Utilisateurs"},
+                @{Path="/api.php/alerts"; Name="Alertes"},
+                @{Path="/api.php/firmwares"; Name="Firmwares"},
+                @{Path="/api.php/roles"; Name="Roles"},
+                @{Path="/api.php/permissions"; Name="Permissions"},
+                @{Path="/api.php/health"; Name="Healthcheck"}
+            )
+        }
+        
+        Write-Info "Test de $($endpoints.Count) endpoint(s) (timeout 3s chacun)..."
+        foreach ($endpoint in $endpoints) {
+            $url = $Config.Api.BaseUrl + $endpoint.Path
+            $attempt = 1
+            $success = $false
             
-            # Utiliser la configuration ou valeurs par défaut
-            if ($apiConfig -and $apiConfig.Endpoints) {
-                $endpoints = $apiConfig.Endpoints
-            } else {
-                $endpoints = @(
-                    @{Path="/api.php/devices"; Name="Dispositifs"},
-                    @{Path="/api.php/patients"; Name="Patients"},
-                    @{Path="/api.php/users"; Name="Utilisateurs"},
-                    @{Path="/api.php/alerts"; Name="Alertes"},
-                    @{Path="/api.php/firmwares"; Name="Firmwares"},
-                    @{Path="/api.php/roles"; Name="Roles"},
-                    @{Path="/api.php/permissions"; Name="Permissions"},
-                    @{Path="/api.php/health"; Name="Healthcheck"}
-                )
-            }
-            
-            Write-Info "Test de $($endpoints.Count) endpoint(s) (timeout 3s chacun)..."
-            foreach ($endpoint in $endpoints) {
-                $endpointsTotal++
+            while ($attempt -le $maxRetries -and -not $success) {
                 try {
                     # Timeout très court (3s) pour éviter les blocages
-                    $null = Invoke-RestMethod -Uri "$ApiUrl$($endpoint.Path)" -Headers $script:authHeaders -TimeoutSec 3 -ErrorAction Stop
+                    $null = Invoke-RestMethod -Uri $url -Headers $script:authHeaders -TimeoutSec 3 -ErrorAction Stop
                     Write-OK $endpoint.Name
                     $endpointsOK++
+                    $success = $true
                 } catch {
                     $errorMsg = $_.Exception.Message
                     # Raccourcir les messages d'erreur trop longs
@@ -184,41 +238,25 @@ function Invoke-Check-API {
                         NeedsAICheck = $true
                         Question = "L'endpoint '$($endpoint.Path)' échoue. Est-ce normal (permissions, endpoint désactivé) ou y a-t-il un problème à corriger ?"
                     }
-                }
-            }
-            
-            if ($endpointsTotal -gt 0) {
-                $apiScore = [math]::Round(($endpointsOK / $endpointsTotal) * 10, 1)
-            } else {
-                $apiScore = 10
-            }
-            
-        } catch {
-            $errorMsg = $_.Exception.Message
-            if ($_.Exception.Response) {
-                try {
-                    $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
-                    $responseBody = $reader.ReadToEnd()
-                    $reader.Close()
-                    if ($responseBody) {
-                        $errorMsg = "$errorMsg - Réponse: $responseBody"
+                    
+                    if ($attempt -lt $maxRetries) {
+                        Write-Info "Tentative $attempt/$maxRetries échouée - Nouvelle tentative dans ${retryDelay}ms"
+                        Start-Sleep -Milliseconds $retryDelay
                     }
-                } catch {
-                    # Ignorer les erreurs de lecture de la réponse
                 }
+                $attempt++
             }
-            Write-Warn "Echec authentification: $errorMsg"
-            Write-Info "URL testée: $fullAuthUrl"
-            if ($ApiUrl -match "localhost:8000" -or $ApiUrl -match "127\.0\.0\.1:8000") {
-                Write-Info "💡 L'API est sur Docker - Vérifiez que Docker est démarré:"
-                Write-Info "   • docker-compose up -d"
-                Write-Info "   • Ou: .\scripts\dev\start_docker.ps1"
-                Write-Info "   • Vérifier: docker ps | findstr ott-api"
-            } else {
-                Write-Info "L'audit continue - Vérifiez que le serveur API est démarré et accessible"
+            
+            if (-not $success) {
+                $Results.Recommendations += "Corriger l'endpoint $($endpoint.Name) ($url)"
             }
-            $script:apiAuthFailed = $true
-            $apiScore = 5
+            $endpointsTotal++
+        }
+        
+        if ($endpointsTotal -gt 0) {
+            $apiScore = [math]::Round(($endpointsOK / $endpointsTotal) * 10, 1)
+        } else {
+            $apiScore = 10
         }
         
     } catch {
@@ -267,4 +305,3 @@ function Invoke-Check-API {
         }
     }
 }
-

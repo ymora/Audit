@@ -24,6 +24,13 @@ function Invoke-Check-Documentation {
         $projectRoot = if ($Config.ProjectRoot) { $Config.ProjectRoot } else { Get-Location }
         $aiContext = @()
         
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour la documentation - passage de cette phase"
+            $Results.Scores["Documentation"] = 10
+            return
+        }
+        
         # 1. Compter les fichiers de documentation
         $mdFiles = $Files | Where-Object { $_.Extension -eq ".md" }
         $htmlDocs = @()

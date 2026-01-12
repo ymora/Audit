@@ -26,6 +26,13 @@ function Invoke-Check-Complexity {
         $maxFileLines = $null
         $maxFunctionLines = $null
         $aiQuestionMinLines = $null
+        
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour la complexité - passage de cette phase"
+            $Results.Scores["Complexity"] = 10
+            return
+        }
 
         if ($Config.Checks -and $Config.Checks.Complexity) {
             $maxFileLines = $Config.Checks.Complexity.MaxFileLines

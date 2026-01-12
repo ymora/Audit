@@ -29,6 +29,13 @@ function Invoke-Check-Security {
         $securityScore = 10
         $aiContext = @()  # Contexte pour l'IA
         
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour la sécurité - passage de cette phase"
+            $Results.Scores["Security"] = 10
+            return
+        }
+        
         # 1. SQL Injection (PHP) - AMÉLIORÉ
         if ($ProjectInfo.Language -contains "PHP") {
             Write-Info "Vérification SQL avec détection patterns sécurisés..."

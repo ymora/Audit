@@ -27,6 +27,13 @@ function Invoke-Check-Routes {
         $missingPages = 0
         $routesDetected = @()
         
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour les routes - passage de cette phase"
+            $Results.Scores["Routes"] = 10
+            return
+        }
+        
         # Détecter automatiquement le framework et les routes
         if ($ProjectInfo.Framework -match "Next.js") {
             # Next.js - Détecter App Router ou Pages Router

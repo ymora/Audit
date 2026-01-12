@@ -7,14 +7,9 @@
 
 function Invoke-Check-CodeQuality {
     param(
-        [Parameter(Mandatory=$true)]
-        [array]$Files,
-        
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Config,
-        
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Results
+        [array]$Files = @(),
+        [hashtable]$Config = @{},
+        [hashtable]$Results = @{}
     )
     
     # Si Checks n'existe pas ou CodeQuality.Enabled n'est pas défini, activer par défaut
@@ -234,7 +229,14 @@ function Invoke-Check-CodeQuality {
             $_.Extension -match "\.(js|jsx|ts|tsx|py|php|java|cpp|c|cs|go|rs|swift|kt|scala|rb|sh|ps1|html|css|scss|less|sql|json|yaml|yml|xml|md)$" 
         }
         
+        # Exclusions pour les fichiers de test et documentation
+        $excludePatterns = @('.*\/tests\/.*', '.*\/docs\/.*', '.*\.spec\.js$', '.*\.test\.js$', '.*\.md$')
+        
         foreach ($file in $allSourceFiles) {
+            if ($file.FullName -match ($excludePatterns -join '|')) {
+                continue
+            }
+            
             try {
                 $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
                 if (-not $content) { continue }
@@ -254,39 +256,28 @@ function Invoke-Check-CodeQuality {
                         continue
                     }
                     
-                    # Patterns à détecter
+                    # Patterns optimisés avec groupes de capture précis
                     $patterns = @{
-                        # TODO/FIXME/HACK
                         "TODO" = @(
-                            "^\s*//\s*TODO\s*[:\-]?\s*(.+)",
-                            "^\s*/\*\s*TODO\s*[:\-]?\s*(.+)\*/",
-                            "^\s*#\s*TODO\s*[:\-]?\s*(.+)",
-                            "^\s*<!--\s*TODO\s*[:\-]?\s*(.+)\s*-->",
-                            "TODO\s*[:\-]?\s*(.+)"
+                            "(?:^|\n)\s*//\s*TODO:\s*(.*?)(?:\n|$)",
+                            "<\!--\s*TODO:\s*(.*?)-->",
+                            "#\s*TODO:\s*(.*?)\n"
                         )
-                        
                         "FIXME" = @(
-                            "^\s*//\s*FIXME\s*[:\-]?\s*(.+)",
-                            "^\s*/\*\s*FIXME\s*[:\-]?\s*(.+)\*/",
-                            "^\s*#\s*FIXME\s*[:\-]?\s*(.+)",
-                            "FIXME\s*[:\-]?\s*(.+)"
+                            "(?:^|\n)\s*//\s*FIXME:\s*(.*?)(?:\n|$)",
+                            "<\!--\s*FIXME:\s*(.*?)-->",
+                            "#\s*FIXME:\s*(.*?)\n"
                         )
-                        
                         "HACK" = @(
-                            "^\s*//\s*HACK\s*[:\-]?\s*(.+)",
-                            "^\s*/\*\s*HACK\s*[:\-]?\s*(.+)\*/",
-                            "^\s*#\s*HACK\s*[:\-]?\s*(.+)",
-                            "HACK\s*[:\-]?\s*(.+)"
+                            "(?:^|\n)\s*//\s*HACK:\s*(.*?)(?:\n|$)",
+                            "<\!--\s*HACK:\s*(.*?)-->",
+                            "#\s*HACK:\s*(.*?)\n"
                         )
-                        
                         "XXX" = @(
-                            "^\s*//\s*XXX\s*[:\-]?\s*(.+)",
-                            "^\s*/\*\s*XXX\s*[:\-]?\s*(.+)\*/",
-                            "^\s*#\s*XXX\s*[:\-]?\s*(.+)",
-                            "XXX\s*[:\-]?\s*(.+)"
+                            "(?:^|\n)\s*//\s*XXX:\s*(.*?)(?:\n|$)",
+                            "<\!--\s*XXX:\s*(.*?)-->",
+                            "#\s*XXX:\s*(.*?)\n"
                         )
-                        
-                        # Simulations et données de test
                         "SIMULATION" = @(
                             "(?i)(simulation|simulated|mock|stub|dummy|fake).*data",
                             "(?i)data.*(simulation|simulated|mock|stub|dummy|fake)",
@@ -296,8 +287,6 @@ function Invoke-Check-CodeQuality {
                             "(?i)hardcoded.*value",
                             "(?i)placeholder.*data"
                         )
-                        
-                        # Contournements et solutions temporaires
                         "WORKAROUND" = @(
                             "(?i)workaround\s*[:\-]?\s*(.+)",
                             "(?i)temporaire|temporary\s*[:\-]?\s*(.+)",
@@ -306,8 +295,6 @@ function Invoke-Check-CodeQuality {
                             "(?i)hotfix\s*[:\-]?\s*(.+)",
                             "(?i)patch\s*[:\-]?\s*(.+)"
                         )
-                        
-                        # Code de débogage
                         "DEBUG" = @(
                             "(?i)console\.(log|debug|warn|error)",
                             "(?i)print\(",
@@ -315,12 +302,10 @@ function Invoke-Check-CodeQuality {
                             "(?i)alert\(",
                             "(?i)console\.assert"
                         )
-                        
-                        # Credentials et données sensibles
                         "SENSITIVE" = @(
-                            "(?i)(password|pwd|secret|token|key|api_key)\s*[:=]\s*['\"]\w+['\"]",
-                            "(?i)(username|user|login)\s*[:=]\s*['\"]\w+['\"]",
-                            "(?i)(connection|conn)\s*[:=]\s*['\"]\w+['\"]"
+                            "(?i)(password|pwd|secret|token|key|api_key)\s*[:=]\s*['""]\w+['""]",
+                            "(?i)(username|user|login)\s*[:=]\s*['""]\w+['""]",
+                            "(?i)(connection|conn)\s*[:=]\s*['""]\w+['""]"
                         )
                     }
                     
@@ -369,6 +354,27 @@ function Invoke-Check-CodeQuality {
                 }
             } catch {
                 # Ignorer les erreurs de lecture de fichiers
+            }
+        }
+        
+        # Détection des fichiers aux noms simplifiés
+        Write-Info "Recherche de fichiers aux noms suggérant des simplifications excessives..."
+        $simplifiedFiles = $Files | Where-Object {
+            $_.Name -match "Simple|Ultra|Basic" -and 
+            -not (Test-Path (Join-Path $_.DirectoryName ($_.Name -replace "Simple|Ultra|Basic", "")))
+        }
+        
+        if ($simplifiedFiles.Count -gt 0) {
+            Write-Warn "Fichiers simplifiés détectés: $($simplifiedFiles.Count)"
+            foreach ($file in $simplifiedFiles) {
+                $aiContext += @{
+                    Category = "Simplification"
+                    Type = "Fichier Simplifié"
+                    File = $file.FullName
+                    Severity = "medium"
+                    NeedsAICheck = $true
+                    Question = "Ce fichier '$($file.Name)' semble être une version simplifiée. A-t-il remplacé une version plus complète ? Des fonctionnalités ont-elles été perdues ?"
+                }
             }
         }
         
@@ -421,4 +427,3 @@ function Invoke-Check-CodeQuality {
         $Results.Scores["Qualité de Code"] = 7
     }
 }
-

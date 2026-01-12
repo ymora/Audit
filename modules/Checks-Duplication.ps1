@@ -23,6 +23,13 @@ function Invoke-Check-Duplication {
     Write-PhaseSection -PhaseNumber 7 -Title "Duplication de Code"
     
     try {
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour la duplication - passage de cette phase"
+            $Results.Scores["Duplication"] = 10
+            return
+        }
+        
         $searchFiles = $Files | Where-Object { $_.Extension -match "\.jsx?$|\.php$" }
         $threshold = $Config.Checks.Duplication.Threshold
         $aiContext = @()  # Contexte pour l'IA

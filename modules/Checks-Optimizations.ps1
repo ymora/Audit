@@ -26,6 +26,13 @@ function Invoke-Check-Optimizations {
         $optimizationIssues = @()
         $aiContext = @()  # Contexte pour l'IA
         
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour les optimisations - passage de cette phase"
+            $Results.Scores["Optimizations"] = 10
+            return
+        }
+        
         # 1. Vérifier requêtes SQL N+1 dans PHP (AMÉLIORÉ - Vérifie les JOINs)
         if ($ProjectInfo.Language -contains "PHP") {
             Write-Info "Vérification requêtes SQL N+1 (backend) avec détection JOINs..."

@@ -649,6 +649,382 @@ function Resolve-AuditModulePath {
     return Get-ModulePath -ModuleName $Module -ProjectName $ProjectName -BasePath (Join-Path $PSScriptRoot "modules")
 }
 
+function Initialize-AuditContext {
+    $script:Verbose = [bool]$Verbose
+
+    $script:AuditConfig = Load-AuditConfig
+    $global:AuditConfig = $script:AuditConfig  # Assurer la disponibilité globale
+
+    if (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue) {
+        try {
+            $script:ProjectInfo = Get-ProjectInfo -Path $script:Config.ProjectRoot
+        } catch {
+            $script:ProjectInfo = @{ }
+        }
+    } else {
+        $script:ProjectInfo = @{ }
+    }
+
+    # Déterminer le nom du projet et créer le répertoire de sortie
+    $projectName = if ($script:ProjectInfo.Name) { $script:ProjectInfo.Name } else { 
+        $script:Config.ProjectRoot.Split('\')[-1] 
+    }
+    $script:Config.ProjectName = $projectName -replace '[^a-zA-Z0-9_-]', '_'
+    
+    # Créer le répertoire de sortie par projet
+    $projectOutputDir = Join-Path $script:Config.OutputDir $script:Config.ProjectName
+    if (-not (Test-Path $projectOutputDir)) {
+        New-Item -ItemType Directory -Path $projectOutputDir -Force | Out-Null
+    }
+    $script:Config.OutputDir = $projectOutputDir
+
+    $script:Results = @{
+        StartTime = Get-Date
+        Scores = @{}
+        Issues = @()
+        Warnings = @()
+        Recommendations = @()
+        Stats = @{}
+        Statistics = @{}
+        API = @{}
+        AIContext = @{}
+    }
+
+    Write-Log "Collecte des fichiers du projet en cours..." "INFO"
+    $collectedFiles = @()
+    if ($Target -eq "file") {
+        $collectedFiles = @((Get-Item $Path -ErrorAction Stop))
+    } elseif (Get-Command Get-ProjectFiles -ErrorAction SilentlyContinue) {
+        $collectedFiles = @(Get-ProjectFiles -Path $script:Config.ProjectRoot -Config $script:AuditConfig)
+    } else {
+        $collectedFiles = @(Get-ChildItem -Path $script:Config.ProjectRoot -Recurse -File -ErrorAction SilentlyContinue)
+    }
+    $script:Files = $collectedFiles
+    
+    # Ensure files are not empty
+    if ($collectedFiles.Count -eq 0) {
+        Write-Log "No files collected - using fallback method" "WARN"
+        $script:Files = @(Get-ChildItem -Path $script:Config.ProjectRoot -Recurse -File -ErrorAction SilentlyContinue)
+    }
+    
+    Write-Log "Files collected : $($script:Files.Count)" "INFO"
+}
+
+function Invoke-AuditModule {
+    param(
+        [Parameter(Mandatory=$true)][string]$Module,
+        [string]$ProjectName = ""
+    )
+
+    # Utiliser le système ultra-simple qui fonctionne
+    $result = Invoke-AuditModuleUltraSimple -Module $Module -ProjectName $ProjectName
+    
+    return $result
+}
+
+function Test-ModuleExists {
+    param([string]$ModuleName)
+    $modulePath = Resolve-AuditModulePath -Module $ModuleName
+    return Test-Path $modulePath
+}
+
+function Get-PhaseDependencies {
+    param([int]$PhaseId, [hashtable]$Visited = @{ })
+
+    if ($Visited.ContainsKey($PhaseId)) {
+        return @()
+    }
+
+    $phase = $script:AuditPhases | Where-Object { $_.Id -eq $PhaseId }
+    if (-not $phase) {
+        return @()
+    }
+
+    $allDeps = @()
+
+    foreach ($depId in $phase.Dependencies) {
+        $allDeps += Get-PhaseDependencies -PhaseId $depId -Visited $Visited
+        $allDeps += $depId
+    }
+
+    return ($allDeps | Sort-Object -Unique)
+}
+
+function Resolve-PhaseExecution {
+    param([array]$RequestedPhases)
+
+    $allPhases = @()
+    foreach ($phaseId in $RequestedPhases) {
+        $deps = Get-PhaseDependencies -PhaseId $phaseId
+        foreach ($dep in $deps) {
+            if ($allPhases -notcontains $dep) {
+                $allPhases += $dep
+            }
+        }
+        if ($allPhases -notcontains $phaseId) {
+            $allPhases += $phaseId
+        }
+    }
+
+    # Filtrer les phases spÃ©cifiques projet si non dÃtectÃ
+    $availablePhases = @()
+    foreach ($phaseId in $allPhases) {
+        $phase = $script:AuditPhases | Where-Object { $_.Id -eq $phaseId }
+        if ($phase -and $phase.ProjectSpecific) {
+            # Phase spÃcifique projet : vÃrifier si le projet dÃtectÃ est autorisÃ
+            if ($script:ProjectProfile -and $phase.ProjectSpecific -contains $script:ProjectProfile.Id) {
+                $availablePhases += $phaseId
+            }
+            # Sinon, ignorer cette phase
+        } else {
+            # Phase gÃnÃrique : toujours inclure
+            $availablePhases += $phaseId
+        }
+    }
+
+    # Trier par prioritÃ en respectant les dÃpendances (tri topologique)
+    $sortedPhases = @()
+    $processed = @{}
+    
+    # Tri topologique : traiter les phases dans l'ordre de prioritÃ, mais seulement si leurs dÃpendances sont dÃjÃ  traitÃes
+    $remainingPhases = $availablePhases | ForEach-Object { $_ }
+    while ($remainingPhases.Count -gt 0) {
+        $found = $false
+        # Parcourir les phases par ordre de prioritÃ
+        foreach ($phase in $script:AuditPhases | Sort-Object Priority, Id) {
+            if ($remainingPhases -contains $phase.Id) {
+                # VÃrifier si toutes les dÃpendances sont traitÃes
+                $allDepsProcessed = $true
+                foreach ($depId in $phase.Dependencies) {
+                    if ($availablePhases -contains $depId -and -not $processed.ContainsKey($depId)) {
+                        $allDepsProcessed = $false
+                        break
+                    }
+                }
+                
+                if ($allDepsProcessed) {
+                    $sortedPhases += $phase.Id
+                    $processed[$phase.Id] = $true
+                    $remainingPhases = $remainingPhases | Where-Object { $_ -ne $phase.Id }
+                    $found = $true
+                    break
+                }
+            }
+        }
+        if (-not $found) {
+            # Si aucune phase ne peut Ãªtre traitÃe (cycle de dÃpendances), prendre la suivante par prioritÃ
+            $nextPhase = $script:AuditPhases | Where-Object { $remainingPhases -contains $_.Id } | Sort-Object Priority, Id | Select-Object -First 1
+            if ($nextPhase) {
+                $sortedPhases += $nextPhase.Id
+                $processed[$nextPhase.Id] = $true
+                $remainingPhases = $remainingPhases | Where-Object { $_ -ne $nextPhase.Id }
+            } else {
+                break
+            }
+        }
+    }
+
+    # VÃrifier que l'ordre est correct (debug)
+    if ($script:Verbose) {
+        Write-Log "Ordre des phases aprÃ¨s tri topologique: $($sortedPhases -join ', ')" "DETAIL"
+    }
+
+    return $sortedPhases
+}
+
+function Invoke-InteractiveMenu {
+    Write-Host "" 
+    Write-Host "==============================" -ForegroundColor Cyan
+    Write-Host "Menu Audit" -ForegroundColor Cyan
+    Write-Host "==============================" -ForegroundColor Cyan
+
+    $targetChoice = Read-Host "Cible (1=projet, 2=fichier, 3=repertoire) [1]"
+    if ([string]::IsNullOrWhiteSpace($targetChoice)) { $targetChoice = "1" }
+
+    switch ($targetChoice) {
+        "2" { $script:Target = "file" }
+        "3" { $script:Target = "directory" }
+        default { $script:Target = "project" }
+    }
+
+    if ($script:Target -ne "project") {
+        $p = Read-Host "Chemin (relatif ou absolu)"
+        if ([string]::IsNullOrWhiteSpace($p)) {
+            throw "Chemin requis pour Target=$script:Target"
+        }
+        $script:Path = $p
+    }
+
+    Write-Host "" 
+    Write-Host "Phases disponibles:" -ForegroundColor Gray
+    # Trier par Priority pour garantir l'ordre correct (synchronisé avec l'exécution)
+    # Forcer le tri numérique explicite pour éviter les problèmes de type
+    $sortedPhases = $script:AuditPhases | Sort-Object @{Expression={[int]$_.Priority}}, @{Expression={[int]$_.Id}}
+    foreach ($ph in $sortedPhases) {
+        Write-Host ("  " + $ph.Id + " - " + $ph.Name) -ForegroundColor Gray
+    }
+
+    Write-Host "" 
+    Write-Host "Mode forcé: exécution de TOUTES les phases avec logs VERBOSE (aucun mode silencieux)" -ForegroundColor Yellow
+    $script:Phases = "all"
+    $script:Verbose = $true
+    $script:Quiet = $false
+
+    Write-Host "" 
+    Write-Host "RÃsumÃ" -ForegroundColor Cyan
+    Write-Host ("  Target: " + $script:Target) -ForegroundColor Cyan
+    if ($script:Target -ne "project") {
+        Write-Host ("  Path: " + $script:Path) -ForegroundColor Cyan
+    }
+    Write-Host ("  Phases: " + $script:Phases) -ForegroundColor Cyan
+    Write-Host ("  Verbose: " + [bool]$script:Verbose) -ForegroundColor Cyan
+    Write-Host ("  Quiet: " + [bool]$script:Quiet) -ForegroundColor Cyan
+
+    $confirm = Read-Host "Lancer l'audit ? (o/n) [o]"
+    if ([string]::IsNullOrWhiteSpace($confirm)) { $confirm = "o" }
+    if ($confirm -notmatch '^(o|oui|y|yes)$') {
+        Write-Host "Audit annulÃ" -ForegroundColor Yellow
+        exit 0
+    }
+}
+
+function Initialize-AuditEnvironment {
+    Write-Log "Initialisation de l'environnement d'audit..." "INFO"
+
+    $script:Config.ProjectRoot = Resolve-TargetRoot
+
+    $script:OriginalLocation = (Get-Location).Path
+
+    try {
+        Push-Location -Path $script:Config.ProjectRoot
+    } catch {
+        throw "Impossible de se placer dans le rÃpertoire projet '$($script:Config.ProjectRoot)': $($_.Exception.Message)"
+    }
+
+    # CrÃation du rÃpertoire de rÃsultats
+    if (-not (Test-Path $script:Config.OutputDir)) {
+        New-Item -ItemType Directory -Path $script:Config.OutputDir -Force | Out-Null
+        Write-Log "CrÃation du rÃpertoire de rÃsultats: $($script:Config.OutputDir)" "INFO"
+    }
+
+    Write-Log "Projet: $($script:Config.ProjectRoot)" "SUCCESS"
+    Write-Log "Cible: $Target" "INFO"
+
+    Import-AuditDependencies
+    Initialize-AuditContext
+
+    $projectDisplayName = $null
+    if ($script:AuditConfig -and $script:AuditConfig.Project -and $script:AuditConfig.Project.Name) {
+        $projectDisplayName = $script:AuditConfig.Project.Name
+    } elseif ($script:ProjectInfo -and $script:ProjectInfo.Name) {
+        $projectDisplayName = $script:ProjectInfo.Name
+    } elseif ($script:Config.ProjectName) {
+        $projectDisplayName = $script:Config.ProjectName
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($projectDisplayName)) {
+        $idText = if ($script:ProjectProfile -and $script:ProjectProfile.Id) { " (id: $($script:ProjectProfile.Id))" } else { "" }
+        Write-Log "Projet en cours: $projectDisplayName$idText" "SUCCESS"
+    }
+}
+
+function Execute-Phase {
+    param([object]$Phase, [string]$ProjectName = "")
+
+    $phaseStartTime = Get-Date
+    Write-PhaseHeader -PhaseId $Phase.Id -PhaseName $Phase.Name -Description $Phase.Description -ModuleCount $Phase.Modules.Count
+
+    if ($Phase.Dependencies.Count -gt 0) {
+        Write-Log "DÃpendances: $($Phase.Dependencies -join ', ')" "DETAIL"
+    }
+
+    $results = @{}
+    $moduleIndex = 0
+    
+    foreach ($module in $Phase.Modules) {
+        $moduleIndex++
+        
+        Write-ModuleStart -ModuleName $module -ModulePath $module
+        Write-Log "[$moduleIndex/$($Phase.Modules.Count)] ExÃcution en cours..." "PROGRESS"
+
+        try {
+            $sw = [System.Diagnostics.Stopwatch]::StartNew()
+            $moduleResult = Invoke-AuditModule -Module $module -ProjectName $ProjectName
+            $sw.Stop()
+            
+            # Adapter le rÃsultat au format attendu
+            $status = if ($moduleResult.Error) { 
+                "ERROR"
+            } elseif ($moduleResult.Errors -gt 0) { 
+                "WARNING"
+            } else {
+                "SUCCESS"
+            }
+            
+            $issues = if ($moduleResult.Errors) { $moduleResult.Errors } else { 0 }
+            if ($moduleResult.Warnings) { $issues += $moduleResult.Warnings }
+            
+            $results[$module] = @{
+                Status = $status
+                Duration = $sw.Elapsed
+                DurationMs = $sw.ElapsedMilliseconds
+                Timestamp = Get-Date
+                Issues = $issues
+                Errors = if ($moduleResult.Errors) { $moduleResult.Errors } else { 0 }
+                Warnings = if ($moduleResult.Warnings) { $moduleResult.Warnings } else { 0 }
+                Result = $moduleResult
+            }
+            
+            Write-ModuleResult -ModuleName $module -Status $status -Duration $sw.Elapsed -Issues $issues
+            
+            if ($Verbose -and $issues -gt 0) {
+                Write-Log "  DÃtail: $($moduleResult.Errors) erreurs, $($moduleResult.Warnings) avertissements" "DETAIL"
+            }
+            
+        } catch {
+            $sw.Stop()
+            $results[$module] = @{
+                Status = "ERROR"
+                Duration = $sw.Elapsed
+                DurationMs = $sw.ElapsedMilliseconds
+                Timestamp = Get-Date
+                Issues = 1
+                Errors = 1
+                Warnings = 0
+                Error = $_.Exception.Message
+            }
+            
+            Write-ModuleResult -ModuleName $module -Status "ERROR" -Duration $sw.Elapsed -Issues 1
+            Write-Log "  Erreur: $($_.Exception.Message)" "ERROR"
+        }
+    }
+
+    # Sauvegarde des rÃsultats de la phase
+    $phaseEndTime = Get-Date
+    $totalDuration = $phaseEndTime - $phaseStartTime
+    
+    $phaseResult = @{
+        Phase = $Phase
+        Results = $results
+        StartTime = $phaseStartTime
+        EndTime = $phaseEndTime
+        TotalDuration = $totalDuration
+        TotalDurationMs = $totalDuration.TotalMilliseconds
+        Timestamp = $phaseEndTime
+        ModuleCount = $Phase.Modules.Count
+        SuccessCount = ($results.Values | Where-Object { $_.Status -eq "SUCCESS" }).Count
+        WarningCount = ($results.Values | Where-Object { $_.Status -eq "WARNING" }).Count
+        ErrorCount = ($results.Values | Where-Object { $_.Status -eq "ERROR" }).Count
+    }
+
+    # DESACTIVE: Plus de fichiers phase_*.json (tout dans AI-SUMMARY.md)
+    # $resultFile = Join-Path $script:Config.OutputDir "phase_$($Phase.Id)_$($script:Config.Timestamp).json"
+    # $phaseResult | ConvertTo-Json -Depth 10 | Out-File -FilePath $resultFile -Encoding UTF8
+
+    Write-PhaseSummary -PhaseId $Phase.Id -PhaseName $Phase.Name -TotalDuration $totalDuration -Results $results
+    return $phaseResult
+}
+
 function Resolve-TargetRoot {
     if ($Target -eq "project") {
         if (-not [string]::IsNullOrWhiteSpace($Path)) {
@@ -724,380 +1100,6 @@ function Resolve-TargetRoot {
     return (Get-Location).Path
 }
 
-function Initialize-AuditContext {
-    $script:Verbose = [bool]$Verbose
-
-    $script:AuditConfig = Load-AuditConfig
-    $global:AuditConfig = $script:AuditConfig  # Assurer la disponibilité globale
-
-    if (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue) {
-        try {
-            $script:ProjectInfo = Get-ProjectInfo -Path $script:Config.ProjectRoot
-        } catch {
-            $script:ProjectInfo = @{ }
-        }
-    } else {
-        $script:ProjectInfo = @{ }
-    }
-
-    # Déterminer le nom du projet et créer le répertoire de sortie
-    $projectName = if ($script:ProjectInfo.Name) { $script:ProjectInfo.Name } else { 
-        $script:Config.ProjectRoot.Split('\')[-1] 
-    }
-    $script:Config.ProjectName = $projectName -replace '[^a-zA-Z0-9_-]', '_'
-    
-    # Créer le répertoire de sortie par projet
-    $projectOutputDir = Join-Path $script:Config.OutputDir $script:Config.ProjectName
-    if (-not (Test-Path $projectOutputDir)) {
-        New-Item -ItemType Directory -Path $projectOutputDir -Force | Out-Null
-    }
-    $script:Config.OutputDir = $projectOutputDir
-
-    $script:Results = @{
-        StartTime = Get-Date
-        Scores = @{}
-        Issues = @()
-        Warnings = @()
-        Recommendations = @()
-        Stats = @{}
-        Statistics = @{}
-        API = @{}
-        AIContext = @{}
-    }
-
-    Write-Log "Collecte des fichiers du projet en cours..." "INFO"
-    $collectedFiles = @()
-    if ($Target -eq "file") {
-        $collectedFiles = @((Get-Item $Path -ErrorAction Stop))
-    } elseif (Get-Command Get-ProjectFiles -ErrorAction SilentlyContinue) {
-        $collectedFiles = @(Get-ProjectFiles -Path $script:Config.ProjectRoot -Config $script:AuditConfig)
-    } else {
-        $collectedFiles = @(Get-ChildItem -Path $script:Config.ProjectRoot -Recurse -File -ErrorAction SilentlyContinue)
-    }
-    $script:Files = $collectedFiles
-    Write-Log "Fichiers collectés : $($collectedFiles.Count)" "INFO"
-}
-
-function Invoke-AuditModule {
-    param(
-        [Parameter(Mandatory=$true)][string]$Module,
-        [string]$ProjectName = ""
-    )
-
-    # Utiliser le système ultra-simple qui fonctionne
-    $result = Invoke-AuditModuleUltraSimple -Module $Module -ProjectName $ProjectName
-    
-    return $result
-}
-
-function Test-ModuleExists {
-    param([string]$ModuleName)
-    $modulePath = Resolve-AuditModulePath -Module $ModuleName
-    return Test-Path $modulePath
-}
-
-function Get-PhaseDependencies {
-    param([int]$PhaseId, [hashtable]$Visited = @{ })
-
-    if ($Visited.ContainsKey($PhaseId)) {
-        return @()
-    }
-
-    $phase = $script:AuditPhases | Where-Object { $_.Id -eq $PhaseId }
-    if (-not $phase) {
-        return @()
-    }
-
-    $Visited[$PhaseId] = $true
-    $allDeps = @()
-
-    foreach ($depId in $phase.Dependencies) {
-        $allDeps += Get-PhaseDependencies -PhaseId $depId -Visited $Visited
-        $allDeps += $depId
-    }
-
-    return ($allDeps | Sort-Object -Unique)
-}
-
-function Resolve-PhaseExecution {
-    param([array]$RequestedPhases)
-
-    $allPhases = @()
-    foreach ($phaseId in $RequestedPhases) {
-        $deps = Get-PhaseDependencies -PhaseId $phaseId
-        foreach ($dep in $deps) {
-            if ($allPhases -notcontains $dep) {
-                $allPhases += $dep
-            }
-        }
-        if ($allPhases -notcontains $phaseId) {
-            $allPhases += $phaseId
-        }
-    }
-
-    # Filtrer les phases spÃ©cifiques projet si non dÃ©tectÃ©
-    $availablePhases = @()
-    foreach ($phaseId in $allPhases) {
-        $phase = $script:AuditPhases | Where-Object { $_.Id -eq $phaseId }
-        if ($phase -and $phase.ProjectSpecific) {
-            # Phase spÃ©cifique projet : vÃ©rifier si le projet dÃ©tectÃ© est autorisÃ©
-            if ($script:ProjectProfile -and $phase.ProjectSpecific -contains $script:ProjectProfile.Id) {
-                $availablePhases += $phaseId
-            }
-            # Sinon, ignorer cette phase
-        } else {
-            # Phase gÃ©nÃ©rique : toujours inclure
-            $availablePhases += $phaseId
-        }
-    }
-
-    # Trier par prioritÃ© en respectant les dÃ©pendances (tri topologique)
-    $sortedPhases = @()
-    $processed = @{}
-    
-    # Tri topologique : traiter les phases dans l'ordre de prioritÃ©, mais seulement si leurs dÃ©pendances sont dÃ©jÃ  traitÃ©es
-    $remainingPhases = $availablePhases | ForEach-Object { $_ }
-    while ($remainingPhases.Count -gt 0) {
-        $found = $false
-        # Parcourir les phases par ordre de prioritÃ©
-        foreach ($phase in $script:AuditPhases | Sort-Object Priority, Id) {
-            if ($remainingPhases -contains $phase.Id) {
-                # VÃ©rifier si toutes les dÃ©pendances sont traitÃ©es
-                $allDepsProcessed = $true
-                foreach ($depId in $phase.Dependencies) {
-                    if ($availablePhases -contains $depId -and -not $processed.ContainsKey($depId)) {
-                        $allDepsProcessed = $false
-                        break
-                    }
-                }
-                
-                if ($allDepsProcessed) {
-                    $sortedPhases += $phase.Id
-                    $processed[$phase.Id] = $true
-                    $remainingPhases = $remainingPhases | Where-Object { $_ -ne $phase.Id }
-                    $found = $true
-                    break
-                }
-            }
-        }
-        if (-not $found) {
-            # Si aucune phase ne peut Ãªtre traitÃ©e (cycle de dÃ©pendances), prendre la suivante par prioritÃ©
-            $nextPhase = $script:AuditPhases | Where-Object { $remainingPhases -contains $_.Id } | Sort-Object Priority, Id | Select-Object -First 1
-            if ($nextPhase) {
-                $sortedPhases += $nextPhase.Id
-                $processed[$nextPhase.Id] = $true
-                $remainingPhases = $remainingPhases | Where-Object { $_ -ne $nextPhase.Id }
-            } else {
-                break
-            }
-        }
-    }
-
-    # VÃ©rifier que l'ordre est correct (debug)
-    if ($script:Verbose) {
-        Write-Log "Ordre des phases aprÃ¨s tri topologique: $($sortedPhases -join ', ')" "DETAIL"
-    }
-
-    return $sortedPhases
-}
-
-function Invoke-InteractiveMenu {
-    Write-Host "" 
-    Write-Host "==============================" -ForegroundColor Cyan
-    Write-Host "Menu Audit" -ForegroundColor Cyan
-    Write-Host "==============================" -ForegroundColor Cyan
-
-    $targetChoice = Read-Host "Cible (1=projet, 2=fichier, 3=repertoire) [1]"
-    if ([string]::IsNullOrWhiteSpace($targetChoice)) { $targetChoice = "1" }
-
-    switch ($targetChoice) {
-        "2" { $script:Target = "file" }
-        "3" { $script:Target = "directory" }
-        default { $script:Target = "project" }
-    }
-
-    if ($script:Target -ne "project") {
-        $p = Read-Host "Chemin (relatif ou absolu)"
-        if ([string]::IsNullOrWhiteSpace($p)) {
-            throw "Chemin requis pour Target=$script:Target"
-        }
-        $script:Path = $p
-    }
-
-    Write-Host "" 
-    Write-Host "Phases disponibles:" -ForegroundColor Gray
-    # Trier par Priority puis Id pour garantir l'ordre correct (synchronisé avec l'exécution)
-    # Forcer le tri numérique explicite pour éviter les problèmes de type
-    $sortedPhases = $script:AuditPhases | Sort-Object @{Expression={[int]$_.Priority}}, @{Expression={[int]$_.Id}}
-    foreach ($ph in $sortedPhases) {
-        Write-Host ("  " + $ph.Id + " - " + $ph.Name) -ForegroundColor Gray
-    }
-
-    $phasesChoice = Read-Host "Phases (all ou liste ex: 1,2,3) [all]"
-    if ([string]::IsNullOrWhiteSpace($phasesChoice)) { $phasesChoice = "all" }
-    $script:Phases = $phasesChoice
-
-    $verboseChoice = Read-Host "Verbose ? (o/n) [n]"
-    $script:Verbose = ($verboseChoice -match '^(o|oui|y|yes)$')
-
-    $quietChoice = Read-Host "Silencieux ? (o/n) [n]"
-    $script:Quiet = ($quietChoice -match '^(o|oui|y|yes)$')
-
-    Write-Host "" 
-    Write-Host "RÃ©sumÃ©:" -ForegroundColor Cyan
-    Write-Host ("  Target: " + $script:Target) -ForegroundColor Cyan
-    if ($script:Target -ne "project") {
-        Write-Host ("  Path: " + $script:Path) -ForegroundColor Cyan
-    }
-    Write-Host ("  Phases: " + $script:Phases) -ForegroundColor Cyan
-    Write-Host ("  Verbose: " + [bool]$script:Verbose) -ForegroundColor Cyan
-    Write-Host ("  Quiet: " + [bool]$script:Quiet) -ForegroundColor Cyan
-
-    $confirm = Read-Host "Lancer l'audit ? (o/n) [o]"
-    if ([string]::IsNullOrWhiteSpace($confirm)) { $confirm = "o" }
-    if ($confirm -notmatch '^(o|oui|y|yes)$') {
-        Write-Host "Audit annulÃ©." -ForegroundColor Yellow
-        exit 0
-    }
-}
-
-function Initialize-AuditEnvironment {
-    Write-Log "Initialisation de l'environnement d'audit..." "INFO"
-
-    $script:Config.ProjectRoot = Resolve-TargetRoot
-
-    $script:OriginalLocation = (Get-Location).Path
-
-    try {
-        Push-Location -Path $script:Config.ProjectRoot
-    } catch {
-        throw "Impossible de se placer dans le rÃ©pertoire projet '$($script:Config.ProjectRoot)': $($_.Exception.Message)"
-    }
-
-    # CrÃ©ation du rÃ©pertoire de rÃ©sultats
-    if (-not (Test-Path $script:Config.OutputDir)) {
-        New-Item -ItemType Directory -Path $script:Config.OutputDir -Force | Out-Null
-        Write-Log "CrÃ©ation du rÃ©pertoire de rÃ©sultats: $($script:Config.OutputDir)" "INFO"
-    }
-
-    Write-Log "Projet: $($script:Config.ProjectRoot)" "SUCCESS"
-    Write-Log "Cible: $Target" "INFO"
-
-    Import-AuditDependencies
-    Initialize-AuditContext
-
-    $projectDisplayName = $null
-    if ($script:AuditConfig -and $script:AuditConfig.Project -and $script:AuditConfig.Project.Name) {
-        $projectDisplayName = $script:AuditConfig.Project.Name
-    } elseif ($script:ProjectInfo -and $script:ProjectInfo.Name) {
-        $projectDisplayName = $script:ProjectInfo.Name
-    } elseif ($script:Config.ProjectName) {
-        $projectDisplayName = $script:Config.ProjectName
-    }
-
-    if (-not [string]::IsNullOrWhiteSpace($projectDisplayName)) {
-        $idText = if ($script:ProjectProfile -and $script:ProjectProfile.Id) { " (id: $($script:ProjectProfile.Id))" } else { "" }
-        Write-Log "Projet en cours: $projectDisplayName$idText" "SUCCESS"
-    }
-}
-
-function Execute-Phase {
-    param([object]$Phase, [string]$ProjectName = "")
-
-    $phaseStartTime = Get-Date
-    Write-PhaseHeader -PhaseId $Phase.Id -PhaseName $Phase.Name -Description $Phase.Description -ModuleCount $Phase.Modules.Count
-
-    if ($Phase.Dependencies.Count -gt 0) {
-        Write-Log "DÃ©pendances: $($Phase.Dependencies -join ', ')" "DETAIL"
-    }
-
-    $results = @{}
-    $moduleIndex = 0
-    
-    foreach ($module in $Phase.Modules) {
-        $moduleIndex++
-        
-        Write-ModuleStart -ModuleName $module -ModulePath $module
-        Write-Log "[$moduleIndex/$($Phase.Modules.Count)] ExÃ©cution en cours..." "PROGRESS"
-
-        try {
-            $sw = [System.Diagnostics.Stopwatch]::StartNew()
-            $moduleResult = Invoke-AuditModule -Module $module -ProjectName $ProjectName
-            $sw.Stop()
-            
-            # Adapter le résultat au format attendu
-            $status = if ($moduleResult.Error) { 
-                "ERROR"
-            } elseif ($moduleResult.Errors -gt 0) { 
-                "WARNING"
-            } else {
-                "SUCCESS"
-            }
-            
-            $issues = if ($moduleResult.Errors) { $moduleResult.Errors } else { 0 }
-            if ($moduleResult.Warnings) { $issues += $moduleResult.Warnings }
-            
-            $results[$module] = @{
-                Status = $status
-                Duration = $sw.Elapsed
-                DurationMs = $sw.ElapsedMilliseconds
-                Timestamp = Get-Date
-                Issues = $issues
-                Errors = if ($moduleResult.Errors) { $moduleResult.Errors } else { 0 }
-                Warnings = if ($moduleResult.Warnings) { $moduleResult.Warnings } else { 0 }
-                Result = $moduleResult
-            }
-            
-            Write-ModuleResult -ModuleName $module -Status $status -Duration $sw.Elapsed -Issues $issues
-            
-            if ($Verbose -and $issues -gt 0) {
-                Write-Log "  DÃ©tail: $($moduleResult.Errors) erreurs, $($moduleResult.Warnings) avertissements" "DETAIL"
-            }
-            
-        } catch {
-            $sw.Stop()
-            $results[$module] = @{
-                Status = "ERROR"
-                Duration = $sw.Elapsed
-                DurationMs = $sw.ElapsedMilliseconds
-                Timestamp = Get-Date
-                Issues = 1
-                Errors = 1
-                Warnings = 0
-                Error = $_.Exception.Message
-            }
-            
-            Write-ModuleResult -ModuleName $module -Status "ERROR" -Duration $sw.Elapsed -Issues 1
-            Write-Log "  Erreur: $($_.Exception.Message)" "ERROR"
-        }
-    }
-
-    # Sauvegarde des rÃ©sultats de la phase
-    $phaseEndTime = Get-Date
-    $totalDuration = $phaseEndTime - $phaseStartTime
-    
-    $phaseResult = @{
-        Phase = $Phase
-        Results = $results
-        StartTime = $phaseStartTime
-        EndTime = $phaseEndTime
-        TotalDuration = $totalDuration
-        TotalDurationMs = $totalDuration.TotalMilliseconds
-        Timestamp = $phaseEndTime
-        ModuleCount = $Phase.Modules.Count
-        SuccessCount = ($results.Values | Where-Object { $_.Status -eq "SUCCESS" }).Count
-        WarningCount = ($results.Values | Where-Object { $_.Status -eq "WARNING" }).Count
-        ErrorCount = ($results.Values | Where-Object { $_.Status -eq "ERROR" }).Count
-    }
-
-    # DESACTIVE: Plus de fichiers phase_*.json (tout dans AI-SUMMARY.md)
-    # $resultFile = Join-Path $script:Config.OutputDir "phase_$($Phase.Id)_$($script:Config.Timestamp).json"
-    # $phaseResult | ConvertTo-Json -Depth 10 | Out-File -FilePath $resultFile -Encoding UTF8
-
-    Write-PhaseSummary -PhaseId $Phase.Id -PhaseName $Phase.Name -TotalDuration $totalDuration -Results $results
-    return $phaseResult
-}
-
 # Programme principal
 function Main {
     try {
@@ -1107,7 +1109,7 @@ function Main {
 
         Initialize-AuditEnvironment
 
-        # RÃ©solution des phases Ã  exÃ©cuter
+        # RÃsultion des phases Ã  exÃcute
         $requestedPhases = @()
         if ($Phases -eq "all") {
             # Trier par Priority pour garantir l'ordre correct
@@ -1119,22 +1121,22 @@ function Main {
                 if ($script:AuditPhases | Where-Object { $_.Id -eq $num }) {
                     $num
                 } else {
-                    Write-Log "Phase $num invalide, ignorÃ©e" "WARN"
+                    Write-Log "Phase $num invalide, ignorÃe" "WARN"
                 }
             }
-            Write-Log "Mode: Phases sÃ©lectives - $($Phases)" "INFO"
+            Write-Log "Mode: Phases sÃlectives - $($Phases)" "INFO"
         }
 
         if ($requestedPhases.Count -eq 0) {
-            Write-Log "Aucune phase valide Ã  exÃ©cuter" "ERROR"
+            Write-Log "Aucune phase valide Ã  exÃcute" "ERROR"
             return
         }
 
         $executionPlan = Resolve-PhaseExecution -RequestedPhases $requestedPhases
 
-        Write-Log "Plan d'exÃ©cution: $($executionPlan -join ', ')" "INFO"
+        Write-Log "Plan d'exÃcution: $($executionPlan -join ', ')" "INFO"
         Write-Log "Nombre de phases: $($executionPlan.Count)" "INFO"
-        # VÃ©rifier l'ordre des phases (debug)
+        # VÃrifier l'ordre des phases (debug)
         if ($executionPlan.Count -gt 1) {
             $isOrdered = $true
             for ($i = 1; $i -lt $executionPlan.Count; $i++) {
@@ -1150,15 +1152,15 @@ function Main {
         }
         
         if ($script:ProjectProfile) {
-            Write-Log "Projet dÃ©tectÃ©: $($script:ProjectProfile.Id) (score: $($script:ProjectProfile.Score))" "SUCCESS"
+            Write-Log "Projet dÃtectÃ: $($script:ProjectProfile.Id) (score: $($script:ProjectProfile.Score))" "SUCCESS"
         } else {
-            Write-Log "Aucun projet spÃ©cifique dÃ©tectÃ© (mode gÃ©nÃ©rique)" "INFO"
+            Write-Log "Aucun projet spÃcifique dÃtectÃ (mode gÃnÃrique)" "INFO"
         }
 
-        Write-Log "RÃ©pertoire de sortie: $($script:Config.OutputDir)" "INFO"
+        Write-Log "RÃpertoire de sortie: $($script:Config.OutputDir)" "INFO"
         Write-Log "Timestamp: $($script:Config.Timestamp)" "DETAIL"
 
-        # ExÃ©cution des phases
+        # ExÃcution des phases
         $auditStartTime = Get-Date
         $allPhaseResults = @()
         $totalModules = 0
@@ -1172,7 +1174,7 @@ function Main {
             if (-not $phase) { continue }
             
             Write-Log "" "INFO"
-            Write-Log "[$($i + 1)/$($executionPlan.Count)] DÃ©marrage Phase $phaseId" "PROGRESS"
+            Write-Log "[$($i + 1)/$($executionPlan.Count)] DÃmarrage Phase $phaseId" "PROGRESS"
             
             try {
                 $phaseResult = Execute-Phase -Phase $phase -ProjectName $script:ProjectInfo.Name
@@ -1192,7 +1194,7 @@ function Main {
             }
         }
 
-        # RÃ©sumÃ© final
+        # RÃsultat final
         $auditEndTime = Get-Date
         $totalDuration = $auditEndTime - $auditStartTime
         
@@ -1201,19 +1203,19 @@ function Main {
         Write-Host "AUDIT TERMINE AVEC SUCCÃˆS" -ForegroundColor Green
         Write-Host "================================================================" -ForegroundColor Green
         
-        Write-Log "DurÃ©e totale: $([math]::Round($totalDuration.TotalMinutes, 2)) minutes" "SUCCESS"
-        Write-Log "Phases exÃ©cutÃ©es: $($allPhaseResults.Count)" "SUCCESS"
-        Write-Log "Modules exÃ©cutÃ©s: $totalModules" "SUCCESS"
+        Write-Log "DurÃe totale: $([math]::Round($totalDuration.TotalMinutes, 2)) minutes" "SUCCESS"
+        Write-Log "Phases exÃcutÃes: $($allPhaseResults.Count)" "SUCCESS"
+        Write-Log "Modules exÃcutÃes: $totalModules" "SUCCESS"
         
         if ($totalErrors -gt 0 -or $totalWarnings -gt 0) {
-            Write-Log "ProblÃ¨mes dÃ©tectÃ©s: $totalErrors erreurs, $totalWarnings avertissements" "WARN"
+            Write-Log "ProblÃ¨mes dÃtectÃs: $totalErrors erreurs, $totalWarnings avertissements" "WARN"
         } else {
-            Write-Log "Aucun problÃ¨me dÃ©tectÃ©" "SUCCESS"
+            Write-Log "Aucun problÃ¨me dÃtectÃ" "SUCCESS"
         }
         
         Write-Log "Rapport complet: $($script:Config.OutputDir)\audit_summary_$($script:Config.Timestamp).json" "INFO"
 
-        # GÃ©nÃ©ration du rÃ©sumÃ© global
+        # GÃnÃration du rÃsultat global
         $summary = @{
             AuditVersion = $script:Config.Version
             StartTime = $auditStartTime
@@ -1303,68 +1305,20 @@ function Main {
                 }
             }
         } else {
-            # FORCER LES QUESTIONS ENRICHIES SI AUCUNES NE SONT DETECTEES
-            $aiSummary += "---`n`n## PROBLEMES A ANALYSER`n`n"
-            # Utiliser les vraies questions du AI-QuestionGenerator
-            if ($script:Results.AIContext) {
-                $questionId = 1
-                $categories = @("SemanticAnalysis", "RefactoringAdvice", "ArchitectureReview", "SecurityReview")
-                
-                foreach ($categoryName in $categories) {
-                    if ($script:Results.AIContext.$categoryName -and $script:Results.AIContext.$categoryName.Questions) {
-                        $aiSummary += "### $categoryName`n`n"
-                        
-                        foreach ($q in $script:Results.AIContext.$categoryName.Questions) {
-                            $priority = switch ($q.Priority) {
-                                "high" { "IMPORTANT" }
-                                "medium" { "MOYEN" }
-                                "low" { "INFO" }
-                                default { "MOYEN" }
-                            }
-                            
-                            $aiSummary += "#### [$questionId] $($q.Type) - $priority`n"
-                            $aiSummary += "- **Fichier**: ``$($q.File)```n"
-                            $aiSummary += "- **Question**: $($q.Question)`n"
-                            $aiSummary += "- **Suggestion**: $($q.Suggestion)`n`n"
-                            
-                            $questionId++
-                        }
-                    }
-                }
-                
-                # Ajouter les métriques de qualité réelles
-                $aiSummary += "---`n`n## MÉTRIQUES DE QUALITÉ IA`n`n"
-                if ($script:Results.AIContext.QualityMetrics) {
-                    $metrics = $script:Results.AIContext.QualityMetrics
-                    $aiSummary += "- **Score de qualité**: $($metrics.Score)/100`n"
-                    $aiSummary += "- **Nombre de questions**: $($metrics.TotalQuestions)`n"
-                    $aiSummary += "- **Priorité HAUTE**: $($metrics.HighPriorityCount)`n"
-                    $aiSummary += "- **Catégories couvertes**: $($metrics.Categories -join ', ')`n"
-                    $aiSummary += "- **Spécifique domaine**: $($metrics.ProjectType)`n"
-                } else {
-                    $aiSummary += "- **Score de qualité**: N/A`n"
-                    $aiSummary += "- **Nombre de questions**: $($questionId - 1)`n"
-                    $aiSummary += "- **Priorité HAUTE**: N/A`n"
-                    $aiSummary += "- **Catégories couvertes**: SemanticAnalysis, RefactoringAdvice, ArchitectureReview, SecurityReview`n"
-                    $aiSummary += "- **Spécifique domaine**: Inconnu`n"
-                }
-                $aiSummary += "`n"
-            } else {
-                # Fallback si pas de AIContext (ne devrait pas arriver)
-                $aiSummary += "### SemanticAnalysis`n`n"
-                $aiSummary += "#### [1] NoData - INFO`n"
-                $aiSummary += "- **Fichier**: N/A`n"
-                $aiSummary += "- **Question**: Aucune question IA générée. Vérifier la configuration de l'audit.`n"
-                $aiSummary += "- **Suggestion**: Relancer l'audit avec la phase 14`n`n"
-                
-                $aiSummary += "---`n`n## MÉTRIQUES DE QUALITÉ IA`n`n"
-                $aiSummary += "- **Score de qualité**: N/A`n"
-                $aiSummary += "- **Nombre de questions**: 0`n"
-                $aiSummary += "- **Priorité HAUTE**: 0`n"
-                $aiSummary += "- **Catégories couvertes**: N/A`n"
-                $aiSummary += "- **Spécifique domaine**: Inconnu`n"
-                $aiSummary += "`n"
-            }
+            # Fallback si pas de AIContext (ne devrait pas arriver)
+            $aiSummary += "### SemanticAnalysis`n`n"
+            $aiSummary += "#### [1] NoData - INFO`n"
+            $aiSummary += "- **Fichier**: N/A`n"
+            $aiSummary += "- **Question**: Aucune question IA générée. Vérifier la configuration de l'audit.`n"
+            $aiSummary += "- **Suggestion**: Relancer l'audit avec la phase 14`n`n"
+            
+            $aiSummary += "---`n`n## MÉTRIQUES DE QUALITÉ IA`n`n"
+            $aiSummary += "- **Score de qualité**: N/A`n"
+            $aiSummary += "- **Nombre de questions**: 0`n"
+            $aiSummary += "- **Priorité HAUTE**: 0`n"
+            $aiSummary += "- **Catégories couvertes**: N/A`n"
+            $aiSummary += "- **Spécifique domaine**: Inconnu`n"
+            $aiSummary += "`n"
         
         # Format de reponse attendu
         $aiSummary += "---`n`n## FORMAT DE REPONSE ATTENDU`n`n"

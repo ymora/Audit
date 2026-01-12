@@ -23,6 +23,13 @@ function Invoke-Check-TestCoverage {
     Write-PhaseSectionNamed -Title "Couverture de Tests" -Description "Analyse des fichiers de tests existants et de la couverture"
     
     try {
+        # Vérifier si on a des fichiers à analyser
+        if ($Files.Count -eq 0) {
+            Write-Warn "Aucun fichier à analyser pour les tests - passage de cette phase"
+            $Results.Scores["Tests"] = 10
+            return
+        }
+        
         # Détecter les fichiers de tests (pattern .test.js, .spec.js, etc.)
         $testFiles = $Files | Where-Object {
             $_.Name -match '\.(test|spec)\.(js|jsx|ts|tsx)$' -or
