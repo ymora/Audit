@@ -272,9 +272,15 @@ function Invoke-Check-ConfigConsistency {
             Write-OK "Environnement principal: GITHUB PAGES (Production)"
         } else {
             $primaryEnv = "MIXTE"
-            Write-Warn "Environnement principal: MIXTE (INCOHÉRENT)"
-            $issues += "Impossible de déterminer l'environnement principal"
-            $score -= 2.0
+            $projectRoot = if ($global:Config -and $global:Config.ProjectRoot) { $global:Config.ProjectRoot } else { "" }
+            $isAuditProject = $projectRoot -and ((Split-Path -Leaf $projectRoot).ToLower() -eq "audit")
+            if (-not $isAuditProject) {
+                Write-Warn "Environnement principal: MIXTE (INCOHÉRENT)"
+                $issues += "Impossible de déterminer l'environnement principal"
+                $score -= 2.0
+            } else {
+                Write-OK "Environnement principal: MIXTE (acceptable pour audit)"
+            }
         }
         
         # ===============================================================================

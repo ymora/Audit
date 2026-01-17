@@ -74,8 +74,17 @@ function Normalize-ScoreKey {
 
     $k = $Key.Trim()
     $map = @{
+        "ProjectInventory" = "Inventory"
         "CodeMort" = "Code Mort"
         "DeadCode" = "Code Mort"
+        "CodeQuality" = "Qualité de Code"
+        "ConfigConsistency" = "Cohérence Configuration"
+        "StructureAPI" = "Structure API"
+        "MarkdownQuality" = "MarkdownFiles"
+        "TestCoverage" = "Couverture de Tests"
+        "FunctionalTests-Placeholder" = "Tests Fonctionnels"
+        "HardwareFirmware" = "Firmware"
+        "Tests" = "Couverture de Tests"
         "Optimizations" = "Optimisations"
         "Optimisation" = "Optimisations"
         "Organisation" = "Organization"
@@ -97,16 +106,26 @@ function Calculate-GlobalScore {
     if (-not $weights) {
         # Poids par défaut
         $weights = @{
+            "Inventory" = 0.5
             "Architecture" = 1.0
-            "CodeMort" = 1.5
+            "Organization" = 0.8
+            "Security" = 2.0
+            "Cohérence Configuration" = 1.5
+            "API" = 1.5
+            "Structure API" = 1.0
+            "Database" = 1.0
+            "Routes" = 0.8
+            "UI/UX" = 0.8
+            "Qualité de Code" = 1.5
             "Duplication" = 1.2
             "Complexity" = 1.2
-            "Security" = 2.0
             "Performance" = 1.0
-            "API" = 1.5
-            "Database" = 1.0
-            "Tests" = 0.8
+            "Optimisations" = 1.2
             "Documentation" = 0.5
+            "MarkdownFiles" = 0.3
+            "Couverture de Tests" = 0.8
+            "Tests Fonctionnels" = 0.5
+            "Firmware" = 0.5
         }
     }
     

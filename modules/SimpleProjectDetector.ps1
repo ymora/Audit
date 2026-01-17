@@ -8,6 +8,52 @@ function Get-ProjectInfo {
         [string]$Path
     )
     
+    # Test direct pour le projet audit
+    $auditFiles = @(
+        "audit.ps1",
+        "modules/Checks-CodeQuality.ps1",
+        "config/audit.config.ps1"
+    )
+    
+    $auditScore = 0
+    foreach ($file in $auditFiles) {
+        if (Test-Path (Join-Path $Path $file)) {
+            $auditScore += 3
+        }
+    }
+    
+    if ($auditScore -ge 6) {
+        Write-Log "Projet audit détecté avec score: $auditScore" "SUCCESS"
+        
+        # Charger la configuration audit
+        $configPath = Join-Path $PSScriptRoot "..\projects\audit\config\audit.config.ps1"
+        if (Test-Path $configPath) {
+            $cfg = . $configPath
+            $config = if ($cfg -is [hashtable]) { $cfg } else { Get-DefaultAuditConfig }
+        } else {
+            $config = Get-DefaultAuditConfig
+        }
+        
+        return @{
+            Name = "audit"
+            Type = "Audit System"
+            Framework = "PowerShell"
+            Version = "2.0.0"
+            Language = @("PowerShell")
+            HasBackend = $false
+            HasFrontend = $false
+            PackageManager = $null
+            ProjectSpecific = $true
+            Profile = @{
+                Name = "audit"
+                Score = $auditScore
+                Path = Join-Path $PSScriptRoot "..\projects\audit"
+                ProfileFile = Join-Path $PSScriptRoot "..\projects\audit\project.ps1"
+            }
+            Configuration = $config
+        }
+    }
+    
     # Test direct pour le projet Haies
     $haiesFiles = @(
         "package.json",

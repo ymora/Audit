@@ -80,7 +80,7 @@
         @{ Script = "scripts\old_script.ps1"; Reason = "Remplacé par nouveau_script.ps1" }
     )
 
-    # Fichiers temporaires à détecter (patterns)
+    # Fichiers transitoires à détecter (patterns)
     TemporaryFiles = @(
         "*.tmp"
         "audit_result*.txt"

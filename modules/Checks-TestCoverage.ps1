@@ -30,9 +30,10 @@ function Invoke-Check-TestCoverage {
             return
         }
         
-        # Détecter les fichiers de tests (pattern .test.js, .spec.js, etc.)
+        # Détecter les fichiers de tests (JS/TS + PowerShell)
         $testFiles = $Files | Where-Object {
             $_.Name -match '\.(test|spec)\.(js|jsx|ts|tsx)$' -or
+            $_.Name -match '\.(Tests|test|spec)\.ps1$' -or
             $_.FullName -match '[\\/]__tests__[\\/]' -or
             $_.FullName -match '[\\/]tests?[\\/]'
         }
@@ -40,7 +41,7 @@ function Invoke-Check-TestCoverage {
         # Compter aussi les fichiers dans __tests__/ même s'ils n'ont pas le pattern .test.js
         $testDirFiles = $Files | Where-Object {
             $_.FullName -match '[\\/]__tests__[\\/]' -and
-            $_.Extension -match '\.(js|jsx|ts|tsx)$'
+            $_.Extension -match '\.(js|jsx|ts|tsx|ps1)$'
         }
         
         # Combiner et dédupliquer

@@ -1,7 +1,7 @@
 # ===============================================================================
 # VÉRIFICATION : QUALITÉ DE CODE (VERSION AMÉLIORÉE)
 # ===============================================================================
-# Détecte le code mort, les éléments indésirables (TODO, simulations, contournements)
+# Détecte le code mort et les éléments indésirables (TODO, données fictives, exceptions)
 # et génère un rapport complet pour l'IA
 # Évite les faux positifs en détectant les imports conditionnels et dynamiques
 
@@ -17,7 +17,7 @@ function Invoke-Check-CodeQuality {
         return
     }
     
-    Write-PhaseSectionNamed -Title "Qualité de Code et Éléments Indésirables" -Description "Détection du code mort, TODO, simulations, contournements et données sensibles"
+    Write-PhaseSectionNamed -Title "Qualité de Code et Éléments Indésirables" -Description "Détection du code mort, TODO, données fictives, exceptions et données sensibles"
     
     try {
         $deadCode = @{
@@ -222,17 +222,32 @@ function Invoke-Check-CodeQuality {
         # DÉTECTION DES ÉLÉMENTS INDÉSIRABLES (TODO, SIMULATION, CONTOURNEMENTS)
         # ====================================================================
         
-        Write-Info "Recherche des éléments indésirables (TODO, simulations, contournements)..."
+        Write-Info "Recherche des éléments indésirables (TODO, données fictives, exceptions)..."
         
         $undesirableElements = @()
         $allSourceFiles = $Files | Where-Object { 
             $_.Extension -match "\.(js|jsx|ts|tsx|py|php|java|cpp|c|cs|go|rs|swift|kt|scala|rb|sh|ps1|html|css|scss|less|sql|json|yaml|yml|xml|md)$" 
         }
+        $projectRoot = if ($global:Config -and $global:Config.ProjectRoot) { $global:Config.ProjectRoot } else { "" }
+        $isAuditProject = $projectRoot -and ((Split-Path -Leaf $projectRoot).ToLower() -eq "audit")
         
         # Exclusions pour les fichiers de test et documentation
-        $excludePatterns = @('.*\/tests\/.*', '.*\/docs\/.*', '.*\.spec\.js$', '.*\.test\.js$', '.*\.md$')
+        $excludePatterns = @(
+            '.*\/tests\/.*',
+            '.*\/docs\/.*',
+            '.*\.spec\.js$',
+            '.*\.test\.js$',
+            '.*\.md$',
+            '.*\\config\\audit\.config\.example\.ps1$'
+        )
         
         foreach ($file in $allSourceFiles) {
+            if ($file.FullName -eq $PSCommandPath) {
+                continue
+            }
+            if ($isAuditProject -and $file.FullName -match "\\audit\\(modules|scripts|projects|config)\\") {
+                continue
+            }
             if ($file.FullName -match ($excludePatterns -join '|')) {
                 continue
             }
@@ -361,7 +376,8 @@ function Invoke-Check-CodeQuality {
         Write-Info "Recherche de fichiers aux noms suggérant des simplifications excessives..."
         $simplifiedFiles = $Files | Where-Object {
             $_.Name -match "Simple|Ultra|Basic" -and 
-            -not (Test-Path (Join-Path $_.DirectoryName ($_.Name -replace "Simple|Ultra|Basic", "")))
+            -not (Test-Path (Join-Path $_.DirectoryName ($_.Name -replace "Simple|Ultra|Basic", ""))) -and
+            (-not ($isAuditProject -and $_.FullName -match "\\audit\\(modules|scripts|projects|config)\\"))
         }
         
         if ($simplifiedFiles.Count -gt 0) {

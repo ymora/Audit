@@ -274,11 +274,11 @@ function Invoke-Check-Organization {
                     Severity = "high"
                     NeedsAICheck = $true
                     CriticalWarning = $true
-                    Question = "⚠️⚠️⚠️ CRITIQUE - SCRIPT DE TEST DÉTECTÉ ⚠️⚠️⚠️`n`nLe script '$($testScript.Name)' a été détecté comme script de test.`n`n🔴 AVANT TOUTE SUPPRESSION, OBLIGATOIRE de vérifier :`n1. Est-ce vraiment un script de test ou un script utile à la production ?`n2. Est-il référencé/utilisé ailleurs ? (Rechercher avec grep)`n3. Contient-il du code utile qui doit être conservé ?`n4. Peut-il être déplacé vers un dossier scripts/tests/ dédié au lieu d'être supprimé ?`n5. Est-il utilisé dans des workflows CI/CD ou des processus automatisés ?`n`n❌ NE JAMAIS SUPPRIMER SANS VÉRIFICATION MANUELLE COMPLÈTE !`n✅ Si vraiment inutile après vérification, le déplacer vers scripts/tests/ ou scripts/archive/ plutôt que supprimer directement.`n`nRéférences trouvées : $referencedCount fichier(s)"
+                    Question = "CRITIQUE - SCRIPT DE TEST DETECTE`n`nLe script '$($testScript.Name)' a ete detecte comme script de test.`n`nAVANT TOUTE SUPPRESSION, verifier :`n1) Est-ce vraiment un script de test ou un script utile a la production ?`n2) Est-il reference/utilise ailleurs ? (Rechercher)`n3) Contient-il du code utile a conserver ?`n4) Peut-il etre deplace vers scripts/tests/ ou scripts/archive/ ?`n5) Est-il utilise dans des workflows CI/CD ?`n`nNE JAMAIS SUPPRIMER SANS VERIFICATION MANUELLE COMPLETE.`nSi inutile apres verification, le deplacer plutot que supprimer.`n`nReferences trouvees : $referencedCount fichier(s)"
                 }
                 
                 $refText = if ($referencedCount -gt 0) { " (référencé dans $referencedCount fichier(s))" } else { " (non référencé)" }
-                $Results.Recommendations += "⚠️ Script de test détecté: '$($testScript.Path)'$refText - VÉRIFIER MANUELLEMENT avant suppression ou déplacement"
+                $Results.Recommendations += "Script de test detecte: '$($testScript.Path)'$refText - verifier manuellement avant suppression ou deplacement"
             }
             
             # Pénaliser le score d'organisation

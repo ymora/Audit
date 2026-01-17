@@ -7,7 +7,8 @@ param(
     [string]$Path = "",           # Chemin spécifique pour file/directory
     [string]$Phases = "all",      # all, ou liste: "1,2,3"
     [switch]$Verbose = $true,    # Verbose par défaut pour voir l'exécution
-    [switch]$Quiet = $false
+    [switch]$Quiet = $false,
+    [switch]$ForceGeneric = $false
 )
 
 $allowedTargets = @("project", "file", "directory")
@@ -331,7 +332,7 @@ function Remove-OldAuditResults {
     #>
     param(
         [string]$OutputDir,
-        [int]$KeepCount = 3
+        [int]$KeepCount = 1
     )
     
     try {
@@ -342,7 +343,6 @@ function Remove-OldAuditResults {
         
         if ($auditFiles.Count -le $KeepCount) {
             Write-Log "Nettoyage non nécessaire: $($auditFiles.Count) fichiers trouvés, conservation des $KeepCount plus récents" "INFO"
-            return
         }
         
         # Supprimer les fichiers les plus anciens
@@ -393,6 +393,32 @@ function Remove-OldAuditResults {
             
             if ($deletedPhaseCount -gt 0) {
                 Write-Log "Nettoyage des phases: $deletedPhaseCount fichier(s) de phase supprimé(s)" "SUCCESS"
+            }
+        }
+
+        # Nettoyer les anciens contextes IA (garder le plus récent)
+        $aiContextFiles = Get-ChildItem -Path $OutputDir -Filter "ai-context-*.json" | Sort-Object LastWriteTime -Descending
+        if ($aiContextFiles.Count -gt $KeepCount) {
+            $aiToDelete = $aiContextFiles | Select-Object -Skip $KeepCount
+            foreach ($file in $aiToDelete) {
+                try {
+                    Remove-Item -Path $file.FullName -Force
+                } catch {
+                    Write-Log "Erreur suppression contexte IA $($file.Name): $($_.Exception.Message)" "WARN"
+                }
+            }
+        }
+
+        # Nettoyer les rapports markdown annexes
+        $mdReports = Get-ChildItem -Path $OutputDir -Filter "ANALYSE_MARKDOWN_*.md" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending
+        if ($mdReports.Count -gt $KeepCount) {
+            $mdToDelete = $mdReports | Select-Object -Skip $KeepCount
+            foreach ($file in $mdToDelete) {
+                try {
+                    Remove-Item -Path $file.FullName -Force
+                } catch {
+                    Write-Log "Erreur suppression rapport Markdown $($file.Name): $($_.Exception.Message)" "WARN"
+                }
             }
         }
         
@@ -556,6 +582,24 @@ function Load-AuditConfig {
         Checks = @{ }
     }
 
+    if ($ForceGeneric) {
+        Write-Log "Mode brut: forçage du profil générique" "WARN"
+        $script:ProjectInfo = @{
+            Name = "generic"
+            Type = "Unknown"
+            Framework = "Unknown"
+            ProjectSpecific = $false
+            Profile = @{
+                Name = "generic"
+                Score = 1
+                Id = "generic"
+            }
+        }
+        $script:ProjectProfile = $script:ProjectInfo.Profile
+        $script:AuditConfig = Get-DefaultAuditConfig
+        return Merge-Hashtable -Base $base -Override $script:AuditConfig
+    }
+
     $configPath = Join-Path $PSScriptRoot "config\audit.config.ps1"
     if (Test-Path $configPath) {
         try {
@@ -636,6 +680,27 @@ function Load-AuditConfig {
         }
     }
 
+    # Charger la configuration spécifique si elle existe dans projects/<nom>/config
+    $projectKey = if ($script:ProjectInfo -and $script:ProjectInfo.Name) {
+        $script:ProjectInfo.Name
+    } else {
+        $projectName
+    }
+    if (-not [string]::IsNullOrWhiteSpace($projectKey)) {
+        $projectConfigPath = Join-Path $PSScriptRoot "projects\$projectKey\config\audit.config.ps1"
+        if (Test-Path $projectConfigPath) {
+            try {
+                $projectConfig = . $projectConfigPath
+                if ($projectConfig -is [hashtable]) {
+                    $base = Merge-Hashtable -Base $base -Override $projectConfig
+                    Write-Log "Configuration spécifique $projectKey chargée" "SUCCESS"
+                }
+            } catch {
+                Write-Log "Erreur chargement config ${projectKey}: $($_.Exception.Message)" "WARN"
+            }
+        }
+    }
+
     return $base
 }
 
@@ -655,13 +720,13 @@ function Initialize-AuditContext {
     $script:AuditConfig = Load-AuditConfig
     $global:AuditConfig = $script:AuditConfig  # Assurer la disponibilité globale
 
-    if (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue) {
+    if (-not $ForceGeneric -and (Get-Command Get-ProjectInfo -ErrorAction SilentlyContinue)) {
         try {
             $script:ProjectInfo = Get-ProjectInfo -Path $script:Config.ProjectRoot
         } catch {
             $script:ProjectInfo = @{ }
         }
-    } else {
+    } elseif (-not $ForceGeneric) {
         $script:ProjectInfo = @{ }
     }
     if (-not ($script:ProjectInfo -is [hashtable])) {
@@ -706,6 +771,7 @@ function Initialize-AuditContext {
         Statistics = @{}
         API = @{}
         AIContext = @{}
+        OutputDir = $script:Config.OutputDir
     }
     $global:Results = $script:Results
     $global:ProjectInfo = $script:ProjectInfo
@@ -789,7 +855,7 @@ function Resolve-PhaseExecution {
         }
     }
 
-    # Filtrer les phases spÃ©cifiques projet si non dÃtectÃ
+    # Filtrer les phases spécifiques projet si non détecté
     $availablePhases = @()
     foreach ($phaseId in $allPhases) {
         $phase = $script:AuditPhases | Where-Object { $_.Id -eq $phaseId }
@@ -803,6 +869,15 @@ function Resolve-PhaseExecution {
             # Phase gÃnÃrique : toujours inclure
             $availablePhases += $phaseId
         }
+    }
+
+    # Appliquer les phases désactivées via configuration
+    $disabled = @()
+    if ($script:AuditConfig -and $script:AuditConfig.DisabledPhases) {
+        $disabled = @($script:AuditConfig.DisabledPhases | ForEach-Object { [int]$_ })
+    }
+    if ($disabled.Count -gt 0) {
+        $availablePhases = $availablePhases | Where-Object { $disabled -notcontains $_ }
     }
 
     # Trier par prioritÃ en respectant les dÃpendances (tri topologique)
@@ -943,16 +1018,19 @@ function Initialize-AuditEnvironment {
     Import-AuditDependencies
     Initialize-AuditContext
 
-    $projectKey = if ($script:ProjectInfo -and $script:ProjectInfo.Name) {
+    $projectId = if ($script:ProjectInfo -and $script:ProjectInfo.Name) {
         $script:ProjectInfo.Name
     } else {
         Split-Path -Leaf $script:Config.ProjectRoot
     }
-    $projectKey = $projectKey -replace '[^a-zA-Z0-9_-]', '_'
-    if ([string]::IsNullOrWhiteSpace($projectKey)) { $projectKey = "generic" }
-    $script:Config.OutputDir = Join-Path (Join-Path $PSScriptRoot "resultats") $projectKey
+    $projectId = $projectId -replace '[^a-zA-Z0-9_-]', '_'
+    if ([string]::IsNullOrWhiteSpace($projectId)) { $projectId = "generic" }
+    $script:Config.OutputDir = Join-Path (Join-Path $PSScriptRoot "resultats") $projectId
     if (-not (Test-Path $script:Config.OutputDir)) {
         New-Item -ItemType Directory -Path $script:Config.OutputDir -Force | Out-Null
+    }
+    if ($script:Results) {
+        $script:Results.OutputDir = $script:Config.OutputDir
     }
     if ([string]::IsNullOrWhiteSpace($script:Config.Timestamp)) {
         $script:Config.Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
@@ -1417,8 +1495,8 @@ function Main {
             # Vérifier si l'audit a réussi (pas d'erreurs critiques)
             $hasCriticalErrors = $summary.PhaseResults | Where-Object { $_.Errors -gt 0 }
             if (-not $hasCriticalErrors) {
-                # Configurer le nombre d'audits à conserver (3 par défaut)
-                $keepCount = 3
+                # Configurer le nombre d'audits à conserver (1 par défaut)
+                $keepCount = 1
                 if ($script:AuditConfig -and $script:AuditConfig.Cleanup -and $script:AuditConfig.Cleanup.KeepCount) {
                     $keepCount = $script:AuditConfig.Cleanup.KeepCount
                 }

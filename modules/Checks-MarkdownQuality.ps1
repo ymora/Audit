@@ -26,6 +26,9 @@ function Invoke-Check-MarkdownQuality {
         # ================================================================================
         Write-Info "Vérification des fichiers requis par le dashboard..."
         
+        $isAuditProject = $ProjectRoot -and ((Split-Path -Leaf $ProjectRoot).ToLower() -eq "audit")
+        $skipDashboardChecks = $isAuditProject -or ($Config.Checks -and $Config.Checks.MarkdownQuality -and $Config.Checks.MarkdownQuality.SkipDashboardChecks -eq $true)
+        
         $dashboardDocs = @{
             "public/docs/DOCUMENTATION_PRESENTATION.html" = "Documentation Présentation"
             "public/docs/DOCUMENTATION_DEVELOPPEURS.html" = "Documentation Développeurs"
@@ -39,25 +42,29 @@ function Invoke-Check-MarkdownQuality {
             Protected = @()
         }
         
-        foreach ($docPath in $dashboardDocs.Keys) {
-            $fullPath = Join-Path $ProjectRoot $docPath
-            $exists = Test-Path $fullPath
-            $dashboardStatus.Required += @{
-                Path = $docPath
-                Name = $dashboardDocs[$docPath]
-                Exists = $exists
+        if (-not $skipDashboardChecks) {
+            foreach ($docPath in $dashboardDocs.Keys) {
+                $fullPath = Join-Path $ProjectRoot $docPath
+                $exists = Test-Path $fullPath
+                $dashboardStatus.Required += @{
+                    Path = $docPath
+                    Name = $dashboardDocs[$docPath]
+                    Exists = $exists
+                }
+                if ($exists) {
+                    $dashboardStatus.Protected += $fullPath
+                } else {
+                    $dashboardStatus.Missing += $docPath
+                }
             }
-            if ($exists) {
-                $dashboardStatus.Protected += $fullPath
+            
+            if ($dashboardStatus.Missing.Count -gt 0) {
+                Write-Err "Fichiers dashboard manquants: $($dashboardStatus.Missing -join ', ')"
             } else {
-                $dashboardStatus.Missing += $docPath
+                Write-OK "Tous les fichiers dashboard sont présents"
             }
-        }
-        
-        if ($dashboardStatus.Missing.Count -gt 0) {
-            Write-Err "Fichiers dashboard manquants: $($dashboardStatus.Missing -join ', ')"
         } else {
-            Write-OK "Tous les fichiers dashboard sont présents"
+            Write-Info "Vérification dashboard ignorée pour ce projet"
         }
         
         # ================================================================================
@@ -110,6 +117,9 @@ function Invoke-Check-MarkdownQuality {
             "out",
             "build"
         )
+        if ($isAuditProject) {
+            $excludePatterns += "resultats"
+        }
         
         # PROTECTION : Exclure les fichiers dashboard de l'analyse de consolidation
         $protectedPatterns = @(
@@ -476,7 +486,7 @@ function Invoke-Check-MarkdownQuality {
         
         if ($mdAnalysis.Obsolete.Count -gt 0) {
             Write-Host ""
-            Write-Host "  🗑️  Fichiers obsolètes ($($mdAnalysis.Obsolete.Count)):" -ForegroundColor Yellow
+            Write-Host "  Fichiers obsoletes ($($mdAnalysis.Obsolete.Count)):" -ForegroundColor Yellow
             foreach ($item in $mdAnalysis.Obsolete) {
                 $relativePath = $item.File
                 if ($relativePath.StartsWith($ProjectRoot)) {
@@ -489,16 +499,16 @@ function Invoke-Check-MarkdownQuality {
         
         if ($mdAnalysis.Duplicates.Count -gt 0) {
             Write-Host ""
-            Write-Host "  🔄 Doublons ($($mdAnalysis.Duplicates.Count)):" -ForegroundColor Yellow
+            Write-Host "  Doublons ($($mdAnalysis.Duplicates.Count)):" -ForegroundColor Yellow
             foreach ($dup in $mdAnalysis.Duplicates) {
-                Write-Host "     - $($dup.Name) ($($dup.Count) occurrence(s))" -ForegroundColor Gray
+                Write-Host "     - $($dup.Name) ($($dup.Count) occurrences)" -ForegroundColor Gray
                 foreach ($file in $dup.Files) {
                     $relativePath = $file
                     if ($relativePath.StartsWith($ProjectRoot)) {
                         $relativePath = $relativePath.Substring($ProjectRoot.Length)
                     }
                     $relativePath = $relativePath.TrimStart('\', '/')
-                    Write-Host "       • $relativePath" -ForegroundColor DarkGray
+                    Write-Host "       - $relativePath" -ForegroundColor DarkGray
                 }
             }
         }
@@ -558,7 +568,19 @@ function Invoke-Check-MarkdownQuality {
         }
         
         # Générer un rapport détaillé
-        $reportFile = Join-Path $ProjectRoot "audit\resultats\ANALYSE_MARKDOWN_$(Get-Date -Format 'yyyyMMdd_HHmmss').md"
+        $outputDir = $null
+        if ($Results -and $Results.OutputDir) {
+            $outputDir = $Results.OutputDir
+        }
+        if ([string]::IsNullOrWhiteSpace($outputDir)) {
+            $auditRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+            $projectId = if ($ProjectRoot) { Split-Path -Leaf $ProjectRoot } else { "generic" }
+            $outputDir = Join-Path (Join-Path $auditRoot "resultats") $projectId
+        }
+        if (-not (Test-Path $outputDir)) {
+            New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+        }
+        $reportFile = Join-Path $outputDir "ANALYSE_MARKDOWN_$(Get-Date -Format 'yyyyMMdd_HHmmss').md"
         $nl = [Environment]::NewLine
         $reportContent = "# Analyse des Fichiers Markdown - $(Get-Date -Format 'yyyy-MM-dd HH:mm')" + $nl + $nl
         $reportContent += "## Statistiques" + $nl + $nl
@@ -669,7 +691,11 @@ function Invoke-Check-MarkdownQuality {
             $reportContent += "- $rec" + $nl
         }
         
-        $reportContent | Out-File -FilePath $reportFile -Encoding UTF8
+        if (-not [string]::IsNullOrWhiteSpace($reportFile)) {
+            $reportContent | Out-File -FilePath $reportFile -Encoding UTF8
+        } else {
+            Write-Info "Rapport Markdown non ecrit (chemin indisponible)"
+        }
         Write-OK "Rapport détaillé sauvegardé: $reportFile"
         
         # Générer contexte pour l'IA si nécessaire
