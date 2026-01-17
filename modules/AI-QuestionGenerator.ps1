@@ -90,9 +90,9 @@ function Invoke-AIQuestionGenerator {
         }
         $script:Results.AIContext = $Results.AIContext
         
-        # Générer directement le fichier ai-context pour le generate-ai-summary
+        # Générer directement le fichier ai-context dans le dossier de sortie du projet
         $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-        $contextFile = Join-Path (Split-Path $script:Config.OutputDir) "ai-context-$timestamp.json"
+        $contextFile = Join-Path $script:Config.OutputDir "ai-context-$timestamp.json"
         $Results.AIContext | ConvertTo-Json -Depth 10 | Out-File -FilePath $contextFile -Encoding UTF8
         
         Write-Info "Questions enrichies sauvegardées dans AIContext et $contextFile"
@@ -116,7 +116,7 @@ function Invoke-AIQuestionGenerator {
         # Même en cas d'erreur, générer le fichier
         try {
             $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-            $contextFile = Join-Path (Split-Path $script:Config.OutputDir) "ai-context-$timestamp.json"
+            $contextFile = Join-Path $script:Config.OutputDir "ai-context-$timestamp.json"
             $script:Results.AIContext | ConvertTo-Json -Depth 10 | Out-File -FilePath $contextFile -Encoding UTF8
         } catch {
             Write-Host "[ERROR] Impossible de générer le fichier de contexte" -ForegroundColor Red
@@ -131,6 +131,25 @@ function Invoke-AIQuestionGenerator {
         AIContext = $Results.AIContext
         ProjectType = $projectType
     }
+}
+
+# Wrapper compatible avec le chargeur de modules (Checks-*.ps1)
+function Invoke-Check-AI-QuestionGenerator {
+    param(
+        [Parameter(Mandatory=$true)]
+        [array]$Files,
+        
+        [Parameter(Mandatory=$true)]
+        [hashtable]$Config,
+        
+        [Parameter(Mandatory=$true)]
+        [hashtable]$Results,
+        
+        [Parameter(Mandatory=$true)]
+        [hashtable]$ProjectInfo
+    )
+    
+    return Invoke-AIQuestionGenerator -Files $Files -Config $Config -Results $Results -ProjectInfo $ProjectInfo
 }
 
 # ===============================================================================

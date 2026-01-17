@@ -7,116 +7,104 @@
     qui pourraient causer des erreurs lors du déploiement sur des serveurs comme Render.
     
 .NOTES
-    Version: 1.0.0
+    Version: 1.1.0
     Auteur: Cascade AI Assistant
 #>
 
-param(
-    [Parameter(Mandatory=$true)]
-    [string]$ProjectPath,
-    
-    [Parameter(Mandatory=$false)]
-    [string]$DeploymentRoot = "/var/www/html"
-)
-
-Write-Host "🔍 Vérification des chemins de déploiement PHP..." -ForegroundColor Cyan
-
-# Patterns à rechercher
-$includePatterns = @(
-    'require_once\s+[''"](?![\./])[^''"]+[''"]',  # require sans chemin relatif/absolu
-    'require\s+[''"](?![\./])[^''"]+[''"]',      # require sans chemin relatif/absolu  
-    'include_once\s+[''"](?![\./])[^''"]+[''"]',  # include_once sans chemin relatif/absolu
-    'include\s+[''"](?![\./])[^''"]+[''"]'       # include sans chemin relatif/absolu
-)
-
-$issues = @()
-$phpFiles = @()
-
-# Récupérer tous les fichiers PHP
-Get-ChildItem -Path $ProjectPath -Filter "*.php" -Recurse | ForEach-Object {
-    $phpFiles += $_.FullName
-}
-
-Write-Host "📁 Fichiers PHP analysés: $($phpFiles.Count)" -ForegroundColor Yellow
-
-# Analyser chaque fichier PHP
-foreach ($file in $phpFiles) {
-    $content = Get-Content -Path $file -Raw
-    $lines = $content -split "`n"
-    
-    for ($i = 0; $i -lt $lines.Count; $i++) {
-        $lineNumber = $i + 1
-        $line = $lines[$i]
+function Invoke-Check-Deployment-Paths {
+    param(
+        [Parameter(Mandatory=$false)]
+        [string]$ProjectPath,
         
-        foreach ($pattern in $includePatterns) {
-            if ($line -match $pattern) {
-                $issues += @{
-                    File = $file.Replace($ProjectPath, "").TrimStart('\', '/')
-                    Line = $lineNumber
-                    Content = $line.Trim()
-                    Issue = "Chemin d'inclusion potentiellement problématique en déploiement"
-                    Recommendation = "Utiliser __DIR__ pour un chemin absolu relatif"
+        [Parameter(Mandatory=$false)]
+        [string]$ProjectRoot,
+        
+        [Parameter(Mandatory=$false)]
+        [string]$DeploymentRoot = "/var/www/html"
+    )
+    
+    $root = if (-not [string]::IsNullOrWhiteSpace($ProjectPath)) { $ProjectPath } else { $ProjectRoot }
+    if ([string]::IsNullOrWhiteSpace($root) -or -not (Test-Path $root)) {
+        return @{
+            Errors = 1
+            Warnings = 0
+            Issues = @("Chemin projet invalide pour la vérification de déploiement.")
+            Score = 0
+        }
+    }
+    
+    Write-Host "🔍 Vérification des chemins de déploiement PHP..." -ForegroundColor Cyan
+    
+    # Patterns à rechercher (chemins d'inclusion non relatifs/absolus)
+    $includePatterns = @(
+        'require_once\s+[''"](?![\./])[^''"]+[''"]',
+        'require\s+[''"](?![\./])[^''"]+[''"]',
+        'include_once\s+[''"](?![\./])[^''"]+[''"]',
+        'include\s+[''"](?![\./])[^''"]+[''"]'
+    )
+    
+    $issues = @()
+    $phpFiles = @(Get-ChildItem -Path $root -Filter "*.php" -Recurse -File -ErrorAction SilentlyContinue)
+    
+    Write-Host "📁 Fichiers PHP analysés: $($phpFiles.Count)" -ForegroundColor Yellow
+    
+    foreach ($file in $phpFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        $lines = $content -split "`n"
+        
+        for ($i = 0; $i -lt $lines.Count; $i++) {
+            $lineNumber = $i + 1
+            $line = $lines[$i]
+            
+            foreach ($pattern in $includePatterns) {
+                if ($line -match $pattern) {
+                    $issues += "Chemin d'inclusion potentiellement problématique: $($file.FullName.Replace($root, '').TrimStart('\','/')):$lineNumber"
                 }
             }
         }
     }
-}
-
-# Afficher les résultats
-if ($issues.Count -eq 0) {
-    Write-Host "✅ Aucun problème de chemin de déploiement détecté" -ForegroundColor Green
-} else {
-    Write-Host "⚠️  Problèmes de chemin de déploiement détectés: $($issues.Count)" -ForegroundColor Red
-    Write-Host ""
     
-    foreach ($issue in $issues) {
-        Write-Host "📂 Fichier: $($issue.File):$($issue.Line)" -ForegroundColor Yellow
-        Write-Host "   ❌ $($issue.Content)" -ForegroundColor Red
-        Write-Host "   💡 $($issue.Recommendation)" -ForegroundColor Cyan
-        Write-Host ""
-    }
-    
-    # Score d'impact
-    $score = [math]::Max(0, 100 - ($issues.Count * 10))
-    Write-Host "📊 Score de compatibilité déploiement: $score/100" -ForegroundColor $(if($score -ge 80) { "Green" } elseif($score -ge 60) { "Yellow" } else { "Red" })
-}
-
-# Vérifier les fichiers critiques pour le déploiement Render
-$criticalFiles = @(
-    "api.php",
-    "api/bootstrap.php", 
-    "api/routing/api_router.php",
-    "api/index.php"
-)
-
-Write-Host ""
-Write-Host "🎯 Vérification des fichiers critiques pour Render..." -ForegroundColor Cyan
-
-foreach ($criticalFile in $criticalFiles) {
-    $fullPath = Join-Path $ProjectPath $criticalFile
-    if (Test-Path $fullPath) {
-        Write-Host "✅ $criticalFile trouvé" -ForegroundColor Green
-        
-        # Vérifier spécifiquement les problèmes connus
-        $content = Get-Content -Path $fullPath -Raw
-        if ($content -match "require_once\s+[''"]bootstrap/[^'"]+[''"]") {
-            Write-Host "   ⚠️  Chemin relatif détecté: bootstrap/..." -ForegroundColor Yellow
-        }
+    if ($issues.Count -eq 0) {
+        Write-Host "✅ Aucun problème de chemin de déploiement détecté" -ForegroundColor Green
     } else {
-        Write-Host "❌ $criticalFile manquant" -ForegroundColor Red
+        Write-Host "⚠️  Problèmes de chemin de déploiement détectés: $($issues.Count)" -ForegroundColor Red
+    }
+    
+    # Vérifier les fichiers critiques pour Render
+    $criticalFiles = @(
+        "api.php",
+        "api/bootstrap.php",
+        "api/routing/api_router.php",
+        "api/index.php"
+    )
+    
+    Write-Host ""
+    Write-Host "🎯 Vérification des fichiers critiques pour Render..." -ForegroundColor Cyan
+    
+    foreach ($criticalFile in $criticalFiles) {
+        $fullPath = Join-Path $root $criticalFile
+        if (Test-Path $fullPath) {
+            $content = Get-Content -Path $fullPath -Raw
+            if ($content -match 'require_once\s+[''"]bootstrap/[^''"]+[''"]') {
+                $issues += "Chemin relatif détecté: $criticalFile (bootstrap/...)"
+            }
+        } else {
+            $issues += "Fichier critique manquant: $criticalFile"
+        }
+    }
+    
+    $warnings = $issues.Count
+    $score = if ($warnings -eq 0) { 10 } else { [math]::Max(0, 10 - $warnings) }
+    
+    return @{
+        Errors = 0
+        Warnings = $warnings
+        Issues = $issues
+        Score = $score
+        Recommendation = if ($warnings -gt 0) {
+            "Corriger les chemins d'inclusion relatifs avec __DIR__ pour le déploiement"
+        } else {
+            "Les chemins sont compatibles avec le déploiement"
+        }
     }
 }
-
-# Exporter les résultats
-$auditResult = @{
-    Success = ($issues.Count -eq 0)
-    Issues = $issues
-    Score = if ($issues.Count -eq 0) { 100 } else { [math]::Max(0, 100 - ($issues.Count * 10)) }
-    Recommendation = if ($issues.Count -gt 0) { 
-        "Corriger les chemins d'inclusion relatifs avec __DIR__ pour le deploiement" 
-    } else { 
-        "Les chemins sont compatibles avec le deploiement" 
-    }
-}
-
-return $auditResult

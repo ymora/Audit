@@ -200,18 +200,25 @@ $groupPhases.Controls.Add($checkAll)
 
 # Liste des phases avec checkboxes
 $phases = @(
-    @{Id=1; Name="Inventaire"; Desc="Analyse fichiers"}
-    @{Id=2; Name="Architecture"; Desc="Structure projet"}
-    @{Id=3; Name="Sécurité"; Desc="Vulnérabilités"}
-    @{Id=4; Name="Configuration"; Desc="Docker, env"}
-    @{Id=5; Name="Backend API"; Desc="Endpoints, DB"}
-    @{Id=6; Name="Frontend"; Desc="Routes, UI"}
-    @{Id=7; Name="Qualité Code"; Desc="Code mort, duplication"}
-    @{Id=8; Name="Performance"; Desc="Optimisations"}
-    @{Id=9; Name="Documentation"; Desc="README, MD"}
-    @{Id=10; Name="Tests"; Desc="Unitaires, E2E"}
-    @{Id=11; Name="Déploiement"; Desc="CI/CD"}
-    @{Id=12; Name="Hardware"; Desc="Firmware"}
+    @{Id=1; Label="1"; Name="Inventaire"; Desc="Analyse fichiers"}
+    @{Id=2; Label="2"; Name="Architecture"; Desc="Structure projet"}
+    @{Id=3; Label="3"; Name="Sécurité"; Desc="Vulnérabilités"}
+    @{Id=4; Label="4"; Name="Configuration"; Desc="Docker, env"}
+    @{Id=5; Label="5"; Name="Backend API"; Desc="Endpoints, DB"}
+    @{Id=6; Label="6"; Name="Frontend"; Desc="Routes, UI"}
+    @{Id=7; Label="7"; Name="Qualité Code"; Desc="Code mort, duplication"}
+    @{Id=8; Label="8"; Name="Performance"; Desc="Optimisations"}
+    @{Id=9; Label="9"; Name="Documentation"; Desc="README, MD"}
+    @{Id=10; Label="10"; Name="Tests"; Desc="Unitaires, E2E"}
+    @{Id=11; Label="11"; Name="Déploiement"; Desc="CI/CD"}
+    @{Id=12; Label="12"; Name="Hardware"; Desc="Firmware"}
+    @{Id=13; Label="13a"; Name="IA & Compléments"; Desc="Spécifique OTT"}
+    @{Id=14; Label="14"; Name="Questions IA"; Desc="Cas ambigus"}
+    @{Id=15; Label="15a"; Name="Intelligence Domaine"; Desc="Spécifique Haies"}
+    @{Id=16; Label="15b"; Name="Architecture Intelligente"; Desc="Spécifique Haies"}
+    @{Id=17; Label="15c"; Name="Intelligence Utilisateur"; Desc="Spécifique Haies"}
+    @{Id=18; Label="15d"; Name="Intelligence Écologique"; Desc="Spécifique Haies"}
+    @{Id=19; Label="15e"; Name="Intelligence Documentaire"; Desc="Spécifique Haies"}
 )
 
 $phaseCheckboxes = @()
@@ -219,7 +226,8 @@ $col = 0
 $row = 0
 foreach ($phase in $phases) {
     $cb = New-Object System.Windows.Forms.CheckBox
-    $cb.Text = "$($phase.Id). $($phase.Name)"
+    $label = if ($phase.Label) { $phase.Label } else { $phase.Id }
+    $cb.Text = "$label. $($phase.Name)"
     $cb.Tag = $phase.Id
     $cb.Location = New-Object System.Drawing.Point((15 + $col * 165), (55 + $row * 25))
     $cb.Size = New-Object System.Drawing.Size(155, 20)
@@ -370,17 +378,36 @@ $btnLaunch.Add_Click({
 })
 
 $btnOpenResults.Add_Click({
-    # Ouvrir directement le resume IA (point d'entree unique)
-    $aiSummaryPath = Join-Path $PSScriptRoot "resultats\AI-SUMMARY.md"
-    if (Test-Path $aiSummaryPath) {
+    # Ouvrir directement le resume IA du projet selectionne (ou le plus recent)
+    $resultsRoot = Join-Path $PSScriptRoot "resultats"
+    $aiSummaryPath = $null
+    
+    if ($comboProject.SelectedItem -ne $null -and $comboProject.SelectedItem -ne "") {
+        $projectName = $comboProject.SelectedItem.ToString()
+        $projectFolder = ($projectName -replace '[^a-zA-Z0-9_-]', '_')
+        $candidatePath = Join-Path $resultsRoot "$projectFolder\AI-SUMMARY.md"
+        if (Test-Path $candidatePath) {
+            $aiSummaryPath = $candidatePath
+        }
+    }
+    
+    if (-not $aiSummaryPath) {
+        $latest = Get-ChildItem -Path $resultsRoot -Recurse -Filter "AI-SUMMARY.md" -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+        if ($latest) {
+            $aiSummaryPath = $latest.FullName
+        }
+    }
+    
+    if ($aiSummaryPath -and (Test-Path $aiSummaryPath)) {
         Start-Process notepad.exe -ArgumentList $aiSummaryPath
         $statusBar.Text = "Resume IA ouvert dans Notepad"
         $statusBar.ForeColor = [System.Drawing.Color]::FromArgb(0, 200, 100)
     } else {
         # Fallback: ouvrir le dossier
-        $resultsPath = Join-Path $PSScriptRoot "resultats"
-        if (Test-Path $resultsPath) {
-            Start-Process explorer.exe -ArgumentList $resultsPath
+        if (Test-Path $resultsRoot) {
+            Start-Process explorer.exe -ArgumentList $resultsRoot
         } else {
             [System.Windows.Forms.MessageBox]::Show("Lancez d'abord un audit pour generer le resume IA.", "Information", "OK", "Information")
         }

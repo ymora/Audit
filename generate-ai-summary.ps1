@@ -12,7 +12,17 @@ Write-Host "[IA] Generation du resume IA..." -ForegroundColor Cyan
 
 # Si un projet est spécifié, utiliser son dossier
 if ($ProjectName) {
-    $ResultsDir = Join-Path $ResultsDir $ProjectName.ToLower()
+    $ResultsDir = Join-Path $ResultsDir $ProjectName
+}
+
+# Sinon, tenter de détecter le dernier audit dans les sous-dossiers
+if (-not $ProjectName) {
+    $latestContext = Get-ChildItem -Path $ResultsDir -Filter "ai-context-*.json" -Recurse -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -First 1
+    if ($latestContext) {
+        $ResultsDir = Split-Path $latestContext.FullName -Parent
+    }
 }
 
 # Trouver le dernier fichier AI-SUMMARY existant ou le dernier audit
@@ -22,7 +32,7 @@ $latestContext = Get-ChildItem -Path $ResultsDir -Filter "ai-context-*.json" -Er
     Select-Object -First 1
 
 if (-not $latestContext) {
-    Write-Host "[ERR] Aucun fichier ai-context trouve. Lancez d'abord un audit complet." -ForegroundColor Red
+    Write-Host "[ERR] Aucun fichier ai-context trouve dans $ResultsDir. Lancez d'abord un audit complet." -ForegroundColor Red
     exit 1
 }
 

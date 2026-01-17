@@ -5,9 +5,9 @@
 Système d'audit générique et portable pour analyser la qualité, la sécurité et la structure de projets web (Next.js, React, PHP, etc.).
 
 **Fonctionnalités principales:**
-- 13 phases d'analyse (structure, sécurité, qualité, performance, etc.)
+- 19 phases d'analyse (certaines spécifiques à des projets)
 - Détection automatique du type de projet
-- Export JSON pour analyse IA (333+ questions générées)
+- Export JSON pour analyse IA (nombre de questions variable)
 - Interface graphique Windows + ligne de commande
 - Extensible par projet (surcharges config/modules)
 
@@ -23,7 +23,7 @@ Système d'audit générique et portable pour analyser la qualité, la sécurit�
 ## 🚀 Utilisation en ligne de commande
 
 ```powershell
-# Audit complet (13 phases, dépendances automatiques)
+# Audit complet (19 phases, certaines spécifiques projet)
 .\audit\audit.ps1 -Phases "all" -Verbose
 
 # Audit de phases spécifiques (les dépendances sont ajoutées automatiquement)
@@ -56,7 +56,7 @@ audit/
 ├── audit-gui.ps1      # Interface graphique Windows
 ├── audit-gui.bat      # Lanceur interface graphique (double-clic)
 ├── audit.bat          # Lanceur ligne de commande
-├── modules/           # Modules de vérification (17 actifs)
+├── modules/           # Modules de vérification (24 actifs)
 │   ├── Checks-*.ps1         # Modules de vérification
 │   ├── Utils.ps1            # Utilitaires
 │   ├── FileScanner.ps1      # Scan fichiers
@@ -71,12 +71,17 @@ audit/
 │       ├── config/            # Surcharges config
 │       └── modules/           # Modules spécifiques OTT
 └── resultats/         # Résultats d'audit (générés)
-    ├── audit_summary_<timestamp>.json
-    ├── ai-context-<timestamp>.json    # Export IA
-    └── phase_<id>_<timestamp>.json
+    └── <projet>/      # Un dossier par projet audité
+        ├── audit_summary_<timestamp>.json
+        ├── AI-SUMMARY.md              # Résumé IA unique (par audit)
+        └── ai-context-<timestamp>.json
 ```
 
-## 🎯 Les 13 Phases d'Audit
+## 🎯 Les 19 Phases d'Audit
+
+**Sous-numérotation des phases spécifiques :**
+- `13a` = Phase 13 (spécifique OTT)
+- `15a` à `15e` = Phases 15 à 19 (spécifiques Haies)
 
 | Phase | Nom | Description | Dépendances |
 |-------|-----|-------------|-------------|
@@ -92,7 +97,15 @@ audit/
 | 10 | Tests | Unitaires, E2E | 1,2,5 |
 | 11 | Déploiement | CI/CD | 1,4 |
 | 12 | Hardware | Firmware Arduino/ESP32 | 1 |
-| 13 | IA & Compléments | Tests exhaustifs (spécifique projet) | 1,2,5,10 |
+| 13a | IA & Compléments | Tests exhaustifs, suivi temps (OTT) | 1,2,5,10 |
+| 14 | Questions IA | Cas ambigus à déléguer | 1,2,7 |
+| 15a | Intelligence du Domaine | Expertise métier (Haies) | 1,2 |
+| 15b | Architecture Intelligente | Choix techniques (Haies) | 1,2 |
+| 15c | Intelligence Utilisateur | UX intelligente (Haies) | 1,2 |
+| 15d | Intelligence Écologique | Vision durable (Haies) | 1,2 |
+| 15e | Intelligence Documentaire | Transmission du savoir (Haies) | 1,2 |
+
+**Note :** Certaines phases sont spécifiques à un projet. Par exemple la phase 13 (OTT) et les phases 15 à 19 (Haies).
 
 ## ⚙️ Configuration
 

@@ -2,7 +2,7 @@
 
 ## POINT D'ENTREE UNIQUE
 
-**Fichier:** `audit/resultats/AI-SUMMARY.md`
+**Fichier:** `audit/resultats/<projet>/AI-SUMMARY.md`
 
 Ce fichier est regenere automatiquement a chaque audit et contient:
 - Scores par categorie
@@ -16,7 +16,7 @@ Ce fichier est regenere automatiquement a chaque audit et contient:
 .\audit\audit.ps1 -Phases "all"
 
 # 2. Lire le resume IA
-Get-Content audit\resultats\AI-SUMMARY.md
+Get-Content audit\resultats\<projet>\AI-SUMMARY.md
 ```
 
 ## Architecture 2 Niveaux
@@ -29,32 +29,40 @@ Get-Content audit\resultats\AI-SUMMARY.md
 ## Format du Resume IA
 
 ```markdown
-# RESUME AUDIT POUR L'IA
-> Point d'entree unique - 2026-01-07 10:17
+# AUDIT IA - VERIFICATION ET CORRECTIONS
+> Genere: 2026-01-07 10:17 | Projet: D:\Windsurf\OTT
 
-## Scores
-- [OK] Architecture : 10/10
-- [!] API : 5/10
-- [!!] Structure API : 0/10
+## INSTRUCTIONS
+Pour chaque probleme, verifier le code et repondre:
+- **FAUX POSITIF** : expliquer pourquoi ce n'est pas un vrai probleme
+- **A CORRIGER** : proposer le fix avec extrait de code
 
-## QUESTIONS A VERIFIER
-[ ] [1] Timer UsbContext.js:1662 - cleanup ?
-[ ] [2] Handler handleGetUsers - utilise ?
+## SCORES ACTUELS
+| Categorie | Score | Status |
+|-----------|-------|--------|
 
-## Format reponse: [ID] OUI/NON - raison courte
+## PROBLEMES A ANALYSER
+### API
+#### [1] SQL Injection Risk - IMPORTANT
+- **Fichier**: ``api.php`` ligne 45
+- **Question**: Analyser ce probleme et proposer une solution.
 ```
 
 ## Reponse Attendue de l'IA
 
 ```
-[1] NON - timer dans useEffect avec cleanup ref
-[2] OUI - handler appele dans api_router.php ligne 45
+### [1] Verdict: FAUX POSITIF | A CORRIGER
+Explication: ...
+Fix propose (si applicable):
+// code...
 ```
 
 ## Fichiers
 
 | Fichier | Description |
 |---------|-------------|
-| `audit/resultats/AI-SUMMARY.md` | **SEUL fichier de sortie** |
+| `audit/resultats/<projet>/AI-SUMMARY.md` | Résumé IA principal |
+| `audit/resultats/<projet>/audit_summary_<timestamp>.json` | Résumé JSON global |
+| `audit/resultats/<projet>/ai-context-<timestamp>.json` | Contexte IA brut |
 | `audit/audit.ps1` | Script principal |
 | `audit/modules/*.ps1` | Modules de verification |

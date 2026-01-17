@@ -1,5 +1,5 @@
 # ===============================================================================
-# SYSTÈME D'AUDIT OTT v2.0 - ARCHITECTURE RECONÇUE
+# SYSTÈME D'AUDIT MULTIPROJET v2.0 - ARCHITECTURE RECONÇUE
 # ===============================================================================
 
 param(
@@ -218,7 +218,7 @@ $script:AuditPhases = @(
         Priority = 13
         Modules = @("Checks-FunctionalTests.ps1", "Checks-TestsComplets.ps1", "Checks-TimeTracking.ps1", "AI-TestsComplets.ps1")
         Target = "project"
-        ProjectSpecific = @()  # Plus de restriction - disponible pour tous les projets
+        ProjectSpecific = @("ott")  # Modules uniquement disponibles pour le projet OTT
     },
     
     # PHASE 15: INTELLIGENCE DU DOMAINE (nouvelle phase intelligente)
@@ -664,12 +664,27 @@ function Initialize-AuditContext {
     } else {
         $script:ProjectInfo = @{ }
     }
+    if (-not ($script:ProjectInfo -is [hashtable])) {
+        $script:ProjectInfo = @{}
+    }
+    if (-not $script:ProjectInfo.ContainsKey('ProjectRoot')) {
+        $script:ProjectInfo['ProjectRoot'] = $script:Config.ProjectRoot
+    }
 
     # Déterminer le nom du projet et créer le répertoire de sortie
     $projectName = if ($script:ProjectInfo.Name) { $script:ProjectInfo.Name } else { 
         $script:Config.ProjectRoot.Split('\')[-1] 
     }
     $script:Config.ProjectName = $projectName -replace '[^a-zA-Z0-9_-]', '_'
+    if ([string]::IsNullOrWhiteSpace($script:Config.ProjectName)) {
+        $script:Config.ProjectName = "generic"
+    }
+    if ([string]::IsNullOrWhiteSpace($script:Config.OutputDir)) {
+        $script:Config.OutputDir = Join-Path $PSScriptRoot "resultats"
+    }
+    if ([string]::IsNullOrWhiteSpace($script:Config.Timestamp)) {
+        $script:Config.Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    }
     
     # Créer le répertoire de sortie par projet
     $projectOutputDir = Join-Path $script:Config.OutputDir $script:Config.ProjectName
@@ -677,6 +692,9 @@ function Initialize-AuditContext {
         New-Item -ItemType Directory -Path $projectOutputDir -Force | Out-Null
     }
     $script:Config.OutputDir = $projectOutputDir
+    if ([string]::IsNullOrWhiteSpace($script:Config.OutputDir)) {
+        $script:Config.OutputDir = Join-Path (Join-Path $PSScriptRoot "resultats") $script:Config.ProjectName
+    }
 
     $script:Results = @{
         StartTime = Get-Date
@@ -689,6 +707,9 @@ function Initialize-AuditContext {
         API = @{}
         AIContext = @{}
     }
+    $global:Results = $script:Results
+    $global:ProjectInfo = $script:ProjectInfo
+    $global:Config = @{ ProjectRoot = $script:Config.ProjectRoot }
 
     Write-Log "Collecte des fichiers du projet en cours..." "INFO"
     $collectedFiles = @()
@@ -700,11 +721,13 @@ function Initialize-AuditContext {
         $collectedFiles = @(Get-ChildItem -Path $script:Config.ProjectRoot -Recurse -File -ErrorAction SilentlyContinue)
     }
     $script:Files = $collectedFiles
+    $global:Files = $script:Files
     
     # Ensure files are not empty
     if ($collectedFiles.Count -eq 0) {
         Write-Log "No files collected - using fallback method" "WARN"
         $script:Files = @(Get-ChildItem -Path $script:Config.ProjectRoot -Recurse -File -ErrorAction SilentlyContinue)
+        $global:Files = $script:Files
     }
     
     Write-Log "Files collected : $($script:Files.Count)" "INFO"
@@ -893,6 +916,13 @@ function Initialize-AuditEnvironment {
 
     $script:Config.ProjectRoot = Resolve-TargetRoot
 
+    if ([string]::IsNullOrWhiteSpace($script:Config.OutputDir)) {
+        $script:Config.OutputDir = Join-Path $PSScriptRoot "resultats"
+    }
+    if ([string]::IsNullOrWhiteSpace($script:Config.Timestamp)) {
+        $script:Config.Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    }
+
     $script:OriginalLocation = (Get-Location).Path
 
     try {
@@ -912,6 +942,21 @@ function Initialize-AuditEnvironment {
 
     Import-AuditDependencies
     Initialize-AuditContext
+
+    $projectKey = if ($script:ProjectInfo -and $script:ProjectInfo.Name) {
+        $script:ProjectInfo.Name
+    } else {
+        Split-Path -Leaf $script:Config.ProjectRoot
+    }
+    $projectKey = $projectKey -replace '[^a-zA-Z0-9_-]', '_'
+    if ([string]::IsNullOrWhiteSpace($projectKey)) { $projectKey = "generic" }
+    $script:Config.OutputDir = Join-Path (Join-Path $PSScriptRoot "resultats") $projectKey
+    if (-not (Test-Path $script:Config.OutputDir)) {
+        New-Item -ItemType Directory -Path $script:Config.OutputDir -Force | Out-Null
+    }
+    if ([string]::IsNullOrWhiteSpace($script:Config.Timestamp)) {
+        $script:Config.Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    }
 
     $projectDisplayName = $null
     if ($script:AuditConfig -and $script:AuditConfig.Project -and $script:AuditConfig.Project.Name) {
@@ -1319,7 +1364,8 @@ function Main {
             $aiSummary += "- **Catégories couvertes**: N/A`n"
             $aiSummary += "- **Spécifique domaine**: Inconnu`n"
             $aiSummary += "`n"
-        
+        }
+
         # Format de reponse attendu
         $aiSummary += "---`n`n## FORMAT DE REPONSE ATTENDU`n`n"
         $aiSummary += "Pour chaque probleme:`n"
@@ -1341,14 +1387,14 @@ function Main {
         # Mise à jour du tableau récapitulatif des scores d'audit
         try {
             # Détecter le projet et utiliser le module approprié
-            $projectName = if ($summary -and $summary.ProjectName) { $summary.ProjectName } else { "ott" }
-            $auditScoresUpdatePath = Join-Path $PSScriptRoot "projects\$projectName\modules\Checks-AuditScoresUpdate.ps1"
-            
-            # Fallback sur OTT si le module spécifique n'existe pas
-            if (-not (Test-Path $auditScoresUpdatePath)) {
-                $auditScoresUpdatePath = Join-Path $PSScriptRoot "projects\ott\modules\Checks-AuditScoresUpdate.ps1"
+            $projectName = if ($script:ProjectInfo -and $script:ProjectInfo.Name) {
+                $script:ProjectInfo.Name
+            } elseif ($script:Config.ProjectName) {
+                $script:Config.ProjectName
+            } else {
+                "generic"
             }
-            
+            $auditScoresUpdatePath = Join-Path $PSScriptRoot "projects\$projectName\modules\Checks-AuditScoresUpdate.ps1"
             if (Test-Path $auditScoresUpdatePath) {
                 . $auditScoresUpdatePath
                 
@@ -1360,31 +1406,30 @@ function Main {
                     Write-Log "Erreur lors de la mise à jour des scores: $($updateResult.Error)" "WARN"
                 }
             } else {
-                Write-Log "Module Checks-AuditScoresUpdate.ps1 non trouvé, mise à jour des scores ignorée" "WARN"
+                Write-Log "Module Checks-AuditScoresUpdate.ps1 non trouvé pour '$projectName', mise à jour des scores ignorée" "WARN"
             }
         } catch {
-        Write-Log "Erreur lors de la mise à jour du tableau des scores: $($_.Exception.Message)" "WARN"
-    }
-    
-    # NETTOYAGE AUTOMATIQUE DES ANCIENS AUDITS (uniquement si audit réussi)
-    try {
-        # Vérifier si l'audit a réussi (pas d'erreurs critiques)
-        $hasCriticalErrors = $summary.PhaseResults | Where-Object { $_.Errors -gt 0 }
-        if (-not $hasCriticalErrors) {
-            # Configurer le nombre d'audits à conserver (3 par défaut)
-            $keepCount = 3
-            if ($script:AuditConfig -and $script:AuditConfig.Cleanup -and $script:AuditConfig.Cleanup.KeepCount) {
-                $keepCount = $script:AuditConfig.Cleanup.KeepCount
-            }
-            
-            Remove-OldAuditResults -OutputDir $script:Config.OutputDir -KeepCount $keepCount
-        } else {
-            Write-Log "Nettoyage automatique désactivé: des erreurs critiques ont été détectées" "WARN"
+            Write-Log "Erreur lors de la mise à jour du tableau des scores: $($_.Exception.Message)" "WARN"
         }
-    } catch {
-        Write-Log "Erreur lors du nettoyage automatique: $($_.Exception.Message)" "ERROR"
-    }
-    }
+        
+        # NETTOYAGE AUTOMATIQUE DES ANCIENS AUDITS (uniquement si audit réussi)
+        try {
+            # Vérifier si l'audit a réussi (pas d'erreurs critiques)
+            $hasCriticalErrors = $summary.PhaseResults | Where-Object { $_.Errors -gt 0 }
+            if (-not $hasCriticalErrors) {
+                # Configurer le nombre d'audits à conserver (3 par défaut)
+                $keepCount = 3
+                if ($script:AuditConfig -and $script:AuditConfig.Cleanup -and $script:AuditConfig.Cleanup.KeepCount) {
+                    $keepCount = $script:AuditConfig.Cleanup.KeepCount
+                }
+                
+                Remove-OldAuditResults -OutputDir $script:Config.OutputDir -KeepCount $keepCount
+            } else {
+                Write-Log "Nettoyage automatique désactivé: des erreurs critiques ont été détectées" "WARN"
+            }
+        } catch {
+            Write-Log "Erreur lors du nettoyage automatique: $($_.Exception.Message)" "ERROR"
+        }
 } catch {
     Write-Log "Erreur critique: $($_.Exception.Message)" "ERROR"
     Write-Log "Stack trace: $($_.ScriptStackTrace)" "ERROR"

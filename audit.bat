@@ -12,8 +12,8 @@ REM   - Configuration globale (audit/config/audit.config.ps1)
 REM
 REM Usage: audit.bat [Options] [CheminProjet] [FichierCible]
 REM Exemples:
-REM   audit.bat                          # Audit complet (12 phases)
-REM   audit.bat -Phases "all"            # Audit complet (12 phases)
+REM   audit.bat                          # Audit complet (19 phases, certaines spécifiques projet)
+REM   audit.bat -Phases "all"            # Audit complet (19 phases, certaines spécifiques projet)
 REM   audit.bat "C:\Projets\OTT"         # Audit d'un projet specifique
 REM   audit.bat "" "firmware.ino"        # Audit d'un fichier specifique
 REM   audit.bat -Phases "1,2,3"          # Audit de phases specifiques
