@@ -931,17 +931,65 @@ function Main {
                 $totalWarnings += $phaseResult.WarningCount
                 
                 # 🤖 INTÉGRATION IA AUTOMATIQUE - Validation de phase
-                if (Test-Path "AI-Integration-Auto.ps1") {
+                if (Test-Path "AI-Integration.ps1") {
                     try {
-                        . .\AI-Integration-Auto.ps1
-                        $aiValidation = Invoke-AI-PhaseValidation -PhaseId $phaseId -PhaseName $phase.Name -PhaseResults $phaseResult.Results -ProjectRoot $script:Config.ProjectRoot
+                        . .\AI-Integration.ps1
                         
-                        if ($aiValidation.Reduction -gt 20) {
-                            Write-Log "🤖 IA réduction: $($aiValidation.Reduction)% faux positifs éliminés" "SUCCESS"
+                        # Vérifier si Ollama est disponible
+                        if (Test-AI-Integration) {
+                            # Analyser les problèmes de la phase avec l'IA
+                            $phaseProblems = @()
+                            
+                            # Détecter les problèmes spécifiques à DocSense
+                            if ($PhaseId -eq 12 -and $phase.Name -eq "Hardware/Firmware") {
+                                $phaseProblems += @{
+                                    Type = "Hardware/Firmware non pertinent"
+                                    Context = "Phase 12: Hardware | Projet: DocuSense AI V2 (application web)"
+                                }
+                            }
+                            
+                            if ($PhaseId -eq 5 -and $phase.Name -eq "Backend API") {
+                                if ($phaseResult.ErrorCount -gt 0) {
+                                    $phaseProblems += @{
+                                        Type = "API non accessible"
+                                        Context = "Phase 5: Backend API | Projet: DocSense AI V2 (FastAPI)"
+                                    }
+                                }
+                            }
+                            
+                            if ($PhaseId -eq 7 -and $phase.Name -eq "Qualité Code") {
+                                if ($phaseResult.WarningCount -gt 5) {
+                                    $phaseProblems += @{
+                                        Type = "Fichiers volumineux détectés"
+                                        Context = "Phase 7: Qualité Code | Projet: DocSense AI V2 (complexité normale)"
+                                    }
+                                }
+                            }
+                            
+                            # Analyser chaque problème avec l'IA
+                            $falsePositives = 0
+                            foreach ($problem in $phaseProblems) {
+                                $aiResult = Invoke-AI-Analysis -Problem $problem.Type -Context $problem.Context
+                                
+                                if ($aiResult.Success) {
+                                    if ($aiResult.Verdict -eq "FAUX POSITIF") {
+                                        $falsePositives++
+                                        Write-Log "🤖 IA: $($problem.Type) → FAUX POSITIF ($($aiResult.Reason))" "SUCCESS"
+                                    } else {
+                                        Write-Log "🤖 IA: $($problem.Type) → A CORRIGER ($($aiResult.Reason))" "WARN"
+                                    }
+                                }
+                            }
+                            
+                            # Ajuster les comptes si des faux positifs ont été détectés
+                            if ($falsePositives -gt 0) {
+                                $totalErrors = [math]::Max(0, $totalErrors - $falsePositives)
+                                $reduction = [math]::Round(($falsePositives / [math]::Max($phaseResult.ErrorCount + $phaseResult.WarningCount, 1)) * 100, 1)
+                                Write-Log "🤖 IA réduction: $reduction% faux positifs éliminés" "SUCCESS"
+                            }
+                        } else {
+                            Write-Log "🤖 IA: Ollama non disponible, validation IA ignorée" "WARN"
                         }
-                        
-                        # Ajuster les comptes avec les résultats IA
-                        $totalErrors = [math]::Max(0, $totalErrors - $aiValidation.FalsePositives)
                         
                     } catch {
                         Write-Log "🤖 Erreur intégration IA phase: $($_.Exception.Message)" "WARN"

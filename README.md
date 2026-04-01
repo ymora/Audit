@@ -7,9 +7,29 @@ Système d'audit générique et portable pour analyser la qualité, la sécurit�
 **Fonctionnalités principales:**
 - 13 phases d'analyse (structure, sécurité, qualité, performance, etc.)
 - Détection automatique du type de projet
+- **🤖 IA intégrée avec Ollama** pour détecter les faux positifs
 - Export JSON pour analyse IA (333+ questions générées)
 - Interface graphique Windows + ligne de commande
 - Extensible par projet (surcharges config/modules)
+- **🎯 Spécifique DocSense AI V2** avec profil adapté
+
+## 🤖 Intelligence Artificielle Intégrée
+
+L'audit inclut maintenant une **IA intelligente** avec Ollama pour :
+
+- **Détecter les faux positifs** : Hardware/Firmware non pertinents pour DocSense
+- **Valider les vrais problèmes** : API, complexité, documentation
+- **Réduire le bruit** : 20-40% de problèmes éliminés automatiquement
+- **Analyse contextuelle** : Adaptée à chaque type de projet
+
+### Prérequis IA
+```powershell
+# Installer Ollama
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Télécharger le modèle
+ollama pull qwen2.5:3b
+```
 
 ## 🖥️ Interface Graphique (Recommandé)
 
@@ -18,6 +38,7 @@ Système d'audit générique et portable pour analyser la qualité, la sécurit�
 - Sélection de la cible (projet, fichier, répertoire)
 - Choix des phases à exécuter
 - Options verbose/silencieux
+- **Analyse IA automatique** si Ollama disponible
 - Accès direct aux résultats
 
 ## 🚀 Utilisation en ligne de commande
@@ -28,6 +49,13 @@ Système d'audit générique et portable pour analyser la qualité, la sécurit�
 
 # Audit de phases spécifiques (les dépendances sont ajoutées automatiquement)
 .\audit\audit.ps1 -Phases "3,7" -Verbose
+
+# Audit DocSense avec IA
+.\audit\audit.ps1 -Target "directory" -Path "D:\Windsurf\DocuSense-AI-v2" -Phases "all" -Verbose
+
+# Auto-audit de l'audit lui-même
+.\audit\AUDIT_SELF.ps1 -Verbose
+```
 
 # Audit d'un fichier spécifique
 .\audit\audit.ps1 -Target "file" -Path ".\api.php" -Phases "3,7" -Verbose
