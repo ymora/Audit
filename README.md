@@ -29,10 +29,10 @@ L'audit inclut maintenant une **IA intelligente** avec Ollama pour :
 curl -fsSL https://ollama.ai/install.sh | sh
 
 # Télécharger les modèles recommandés
-ollama pull qwen2.5:3b     # Léger et rapide
-ollama pull qwen2.5:7b     # Bon équilibre
-ollama pull qwen2.5:14b    # Haute qualité
-ollama pull deepseek-r1:14b # Expert raisonnement
+ollama pull qwen2.5:3b     # Léger et rapide (RECOMMANDÉ)
+ollama pull qwen2.5:7b     # Bon équilibre (nécessite prompts spécifiques)
+ollama pull qwen2.5:14b    # Haute qualité (nécessite prompts spécifiques)
+ollama pull deepseek-r1:14b # Expert raisonnement (format invalide)
 ```
 
 ### Benchmark IA
@@ -43,6 +43,15 @@ ollama pull deepseek-r1:14b # Expert raisonnement
 # Test rapide (uniquement le meilleur modèle)
 .\audit\IA_BENCHMARK.ps1 -Quick -Verbose
 ```
+
+**Résultats benchmark (2026-04-01) :**
+- 🥇 **qwen2.5:3b** : 50% succès - 2.05s (RECOMMANDÉ)
+- 🥈 **qwen2.5:7b** : 0% succès - 7.95s (trop sévère)
+- 🥉 **qwen2.5:14b** : 0% succès - 19.19s (trop sévère)
+- ❌ **deepseek-r1:14b** : 0% succès - 33.99s (format invalide)
+- ❌ **llama3.2-vision** : 0% succès - 7.05s (timeout)
+
+**Conclusion :** qwen2.5:3b est le seul modèle fonctionnel pour l'audit actuel. Les modèles plus puissants nécessitent des prompts spécifiques.
 
 Le benchmark génère :
 - **Classement des modèles** par taux de succès et vitesse
