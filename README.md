@@ -21,15 +21,34 @@ L'audit inclut maintenant une **IA intelligente** avec Ollama pour :
 - **Valider les vrais problèmes** : API, complexité, documentation
 - **Réduire le bruit** : 20-40% de problèmes éliminés automatiquement
 - **Analyse contextuelle** : Adaptée à chaque type de projet
+- **Benchmark automatique** : Pour choisir le meilleur modèle IA
 
 ### Prérequis IA
 ```powershell
 # Installer Ollama
 curl -fsSL https://ollama.ai/install.sh | sh
 
-# Télécharger le modèle
-ollama pull qwen2.5:3b
+# Télécharger les modèles recommandés
+ollama pull qwen2.5:3b     # Léger et rapide
+ollama pull qwen2.5:7b     # Bon équilibre
+ollama pull qwen2.5:14b    # Haute qualité
+ollama pull deepseek-r1:14b # Expert raisonnement
 ```
+
+### Benchmark IA
+```powershell
+# Tester tous les modèles et choisir le meilleur
+.\audit\IA_BENCHMARK.ps1 -Verbose
+
+# Test rapide (uniquement le meilleur modèle)
+.\audit\IA_BENCHMARK.ps1 -Quick -Verbose
+```
+
+Le benchmark génère :
+- **Classement des modèles** par taux de succès et vitesse
+- **Recommandation automatique** du meilleur modèle
+- **Configuration sauvegardée** pour l'audit
+- **Rapports détaillés** dans `resultats/`
 
 ## 🖥️ Interface Graphique (Recommandé)
 
@@ -55,6 +74,12 @@ ollama pull qwen2.5:3b
 
 # Auto-audit de l'audit lui-même
 .\audit\AUDIT_SELF.ps1 -Verbose
+
+# Benchmark des modèles IA (pour choisir le meilleur)
+.\audit\IA_BENCHMARK.ps1 -Verbose
+
+# Benchmark rapide (uniquement meilleur modèle)
+.\audit\IA_BENCHMARK.ps1 -Quick -Verbose
 ```
 
 # Audit d'un fichier spécifique
