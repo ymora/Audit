@@ -930,6 +930,24 @@ function Main {
                 $totalErrors += $phaseResult.ErrorCount
                 $totalWarnings += $phaseResult.WarningCount
                 
+                # 🤖 INTÉGRATION IA AUTOMATIQUE - Validation de phase
+                if (Test-Path "AI-Integration-Auto.ps1") {
+                    try {
+                        . .\AI-Integration-Auto.ps1
+                        $aiValidation = Invoke-AI-PhaseValidation -PhaseId $phaseId -PhaseName $phase.Name -PhaseResults $phaseResult.Results -ProjectRoot $script:Config.ProjectRoot
+                        
+                        if ($aiValidation.Reduction -gt 20) {
+                            Write-Log "🤖 IA réduction: $($aiValidation.Reduction)% faux positifs éliminés" "SUCCESS"
+                        }
+                        
+                        # Ajuster les comptes avec les résultats IA
+                        $totalErrors = [math]::Max(0, $totalErrors - $aiValidation.FalsePositives)
+                        
+                    } catch {
+                        Write-Log "🤖 Erreur intégration IA phase: $($_.Exception.Message)" "WARN"
+                    }
+                }
+                
                 # Progression globale
                 $progressPercent = [math]::Round((($i + 1) / $executionPlan.Count) * 100)
                 Write-Log "Progression globale: $progressPercent% ($($i + 1)/$($executionPlan.Count) phases)" "DETAIL"
@@ -960,6 +978,18 @@ function Main {
         }
         
         Write-Log "Rapport complet: $($script:Config.OutputDir)\audit_summary_$($script:Config.Timestamp).json" "INFO"
+
+        # 🤖 INTÉGRATION IA AUTOMATIQUE - Validation globale
+        if (Test-Path "AI-Integration-Auto.ps1") {
+            try {
+                . .\AI-Integration-Auto.ps1
+                Write-Log "" "INFO"
+                Write-Log "🤖 Validation IA Globale..." "INFO"
+                Invoke-AI-GlobalValidation -AllResults $summary -ProjectRoot $script:Config.ProjectRoot
+            } catch {
+                Write-Log "🤖 Erreur intégration IA globale: $($_.Exception.Message)" "WARN"
+            }
+        }
 
         # GÃ©nÃ©ration du rÃ©sumÃ© global
         $summary = @{
