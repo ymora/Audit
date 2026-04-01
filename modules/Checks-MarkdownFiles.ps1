@@ -76,6 +76,9 @@ function Invoke-Check-MarkdownFiles {
         if (Test-Path $hooksPath) {
             $existingHooks = Get-ChildItem -Path $hooksPath -Filter "*.js" -File | ForEach-Object { $_.BaseName }
             
+            # OPTIMISATION DOCUSENSE: Exclure node_modules par défaut
+            $excludedDirs = @('node_modules', '.git', '.pytest_cache', '__pycache__', '.next', 'dist', 'build', 'out', 'vendor', '.venv')
+            
             # Hooks récents à vérifier dans la doc
             $recentHooks = @("useApiCall", "useModalState", "useEntityArchive", "useEntityPermanentDelete", "useEntityRestore")
             foreach ($hook in $recentHooks) {

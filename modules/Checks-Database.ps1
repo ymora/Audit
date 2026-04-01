@@ -18,6 +18,30 @@ function Invoke-Check-Database {
     try {
         $ApiUrl = if ($Config.API -and $Config.API.BaseUrl) { $Config.API.BaseUrl } else { $null }
         
+        # DÉTECTION AMÉLIORÉE : SQLite DocuSense
+        $projectRoot = if ($Config.ProjectRoot) { $Config.ProjectRoot } else { $PSScriptRoot }
+        $sqliteDb = Join-Path $projectRoot "data\defense_docling.db"
+        $backendDb = Join-Path $projectRoot "backend\database.db"
+        
+        $dbScore = 0
+        $dbInfo = @{}
+        
+        if (Test-Path $sqliteDb) {
+            $dbSize = (Get-Item $sqliteDb).Length
+            Write-Info "SQLite principale détectée : $([math]::Round($dbSize/1MB, 2)) MB"
+            $dbScore += 3
+            $dbInfo.MainDb = @{
+                Path = $sqliteDb
+                Size = $dbSize
+                Type = "SQLite"
+            }
+        }
+        
+        if (Test-Path $backendDb) {
+            Write-Info "SQLite backend détectée"
+            $dbScore += 1
+        }
+        
         # Récupérer les headers d'authentification depuis Results si disponibles
         $authHeaders = $null
         if ($Results.API -and $Results.API.AuthHeaders) {

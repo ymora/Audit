@@ -24,6 +24,17 @@ function Invoke-Check-API {
         $apiConfig = if ($Config.Api) { $Config.Api } elseif ($Config.API) { $Config.API } else { $null }
         $ApiUrl = if ($apiConfig -and $apiConfig.BaseUrl) { $apiConfig.BaseUrl } else { $null }
         
+        # DÉTECTION AMÉLIORÉE : FastAPI DocuSense
+        $projectRoot = if ($Config.ProjectRoot) { $Config.ProjectRoot } else { $PSScriptRoot }
+        $fastApiMain = Join-Path $projectRoot "backend\main.py"
+        $fastApiApp = Join-Path $projectRoot "backend\app"
+        
+        if ((Test-Path $fastApiMain) -and (Test-Path $fastApiApp)) {
+            Write-Info "FastAPI DocuSense détecté"
+            $apiScore += 2
+            if (-not $ApiUrl) { $ApiUrl = "http://localhost:8000" }
+        }
+        
         # Credentials peut être dans Api/API ou au niveau racine
         $credentialsConfig = if ($apiConfig -and $apiConfig.Credentials) { 
             $apiConfig.Credentials 
