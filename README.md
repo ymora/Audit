@@ -45,13 +45,15 @@ ollama pull deepseek-r1:14b # Expert raisonnement (format invalide)
 ```
 
 **Résultats benchmark (2026-04-01) :**
-- 🥇 **qwen2.5:3b** : 50% succès - 2.05s (RECOMMANDÉ)
-- 🥈 **qwen2.5:7b** : 0% succès - 7.95s (trop sévère)
+- 🥇 **qwen2.5:3b** : 66.7% succès - 1.19s (LIMITÉ)
+- 🥈 **qwen2.5:7b** : 0% succès - 29.39s (format invalide)
 - 🥉 **qwen2.5:14b** : 0% succès - 19.19s (trop sévère)
-- ❌ **deepseek-r1:14b** : 0% succès - 33.99s (format invalide)
+- ❌ **deepseek-r1:14b** : 0% succès - 33.99s (timeout)
 - ❌ **llama3.2-vision** : 0% succès - 7.05s (timeout)
 
-**Conclusion :** qwen2.5:3b est le seul modèle fonctionnel pour l'audit actuel. Les modèles plus puissants nécessitent des prompts spécifiques.
+**⚠️ CONCLUSION :** L'IA n'est pas encore suffisamment fiable pour l'audit (66.7% de succès seulement). Les modèles ne comprennent pas les nuances techniques des différents types de projets.
+
+**🎯 RECOMMANDATION :** Utiliser l'audit sans IA pour l'instant. Le module benchmark sera utile quand de meilleurs modèles ou prompts spécifiques seront disponibles.
 
 Le benchmark génère :
 - **Classement des modèles** par taux de succès et vitesse
