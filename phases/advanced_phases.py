@@ -404,20 +404,53 @@ class AdvancedPhases:
                 "ai_components": ai_components[:20]
             }
     
-    class SustainabilityPhase(BasePhase):
+    class ExpertisePhase(BasePhase):
         """
-        Phase de durabilité — délègue à DocumentationPhase pour éviter la duplication.
+        Phase d'Expertise Métier — Le "Mix Parfait".
         
-        Maintenue pour compatibilité avec les rapports existants.
+        Portage des règles d'or de l'ancienne version PowerShell :
+        - Détection SQL N+1 (Performance DB)
+        - Patterns React à risque (Hooks)
+        - Vulnérabilités PHP spécifiques (Leak d'erreurs)
+        - Sécurité Docker (Secrets hardcodés)
         """
         
         def execute(self) -> Dict[str, Any]:
-            doc_phase = AdvancedPhases.DocumentationPhase(
-                self.project_path, self.exclude_dirs, self.exclude_files
-            )
-            result = doc_phase.execute()
-            result["summary"] = result.get("summary", "").replace("documentation", "durabilité")
-            return result
+            patterns = {
+                "sql_n_plus_one": (r"SELECT.*FROM.*WHERE.*IN\s*\(.*SELECT", "Risque de requête SQL N+1 détecté (sous-requête inefficace)"),
+                "react_hook_dep": (r"useEffect\(\s*\)\s*\{", "useEffect sans tableau de dépendances (risque de boucle infinie/fuite mémoire)"),
+                "php_error_leak": (r"echo\s+json_encode.*success.*false", "Fuite potentielle d'informations système dans le JSON d'erreur PHP"),
+                "docker_hardcoded": (r"MYSQL_ROOT_PASSWORD|POSTGRES_PASSWORD", "Mot de passe base de données codé en dur dans Docker"),
+                "debug_in_prod": (r"var_dump\(|print_r\(|die\(|console\.log\(", "Code de débogage présent en production")
+            }
+            
+            found_expertise = []
+            for file_path in self.project_path.rglob("*"):
+                if self.is_excluded(file_path): continue
+                if file_path.suffix not in ('.py', '.php', '.js', '.jsx', '.tsx', '.yml', '.yaml'): continue
+                
+                try:
+                    content = file_path.read_text(encoding='utf-8', errors='ignore')
+                    for key, (regex, msg) in patterns.items():
+                        if re.search(regex, content, re.IGNORECASE):
+                            self.add_issue(AuditIssue(
+                                phase="expertise",
+                                severity=Severity.MAJOR if "Sécurité" in msg or "N+1" in msg else Severity.MINOR,
+                                category="domain_expertise",
+                                message=msg,
+                                file_path=str(file_path),
+                                suggestion="Appliquer le pattern de correction métier standard.",
+                                priority_score=60
+                            ))
+                            if key not in found_expertise: found_expertise.append(key)
+                except Exception: continue
+                
+            return {
+                "status": "success",
+                "summary": f"Expertise métier appliquée — {len(found_expertise)} patterns détectés",
+                "patterns_covered": list(patterns.keys()),
+                "found_patterns": found_expertise
+            }
 
     class ReportingPhase(BasePhase):
         """

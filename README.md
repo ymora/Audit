@@ -23,6 +23,9 @@ python audit.py d:/Windsurf/MonProjet
 
 # 3. Mode interactif (Menu de sélection)
 python audit.py --interactive
+
+# 4. Ouvrir le dernier rapport visuel (Le "Frontend" Graal)
+python launch_dashboard.py
 ```
 
 ---
@@ -34,7 +37,7 @@ Le système exécute désormais un pipeline en 4 couches successives :
 | Couche | Phases | Objectif |
 | :--- | :--- | :--- |
 | **Core** | Initialization, Discovery, Quality, Security, Metrics... | Fondations techniques et validité du projet. |
-| **Advanced** | DevOps, UX, Scalability, Innovation, Git History... | Gouvernance, maintenance et évolution temporelle. |
+| **Advanced** | DevOps, UX, Scalability, Innovation, Git History, **Expertise Métier**... | Gouvernance, maintenance et portage des règles d'or (SQL N+1, Patterns React). |
 | **Inventory** | API Inventory, Env Vars, Cyclomatic Complexity... | Cartographie technique précise pour l'IA. |
 | **Specialist** | Security Extended, Performance, AI/ML Extended... | Deep dive sur les risques et composants IA. |
 

@@ -195,6 +195,7 @@ class AuditEngine:
             ("research", AdvancedPhases.ResearchPhase),
             ("excellence", AdvancedPhases.ExcellencePhase),
             ("ai_ml", AdvancedPhases.AIMLPhase),
+            ("expertise", AdvancedPhases.ExpertisePhase),
             ("reporting", AdvancedPhases.ReportingPhase),
             ("finalization", AdvancedPhases.FinalizationPhase)
         ]
