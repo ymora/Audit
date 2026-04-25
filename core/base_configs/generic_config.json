@@ -1,0 +1,63 @@
+{
+  "project_name": "Generic Project",
+  "project_type": "generic",
+  "version": "1.0",
+  "paths": {
+    "root": ".",
+    "backend": "src",
+    "frontend": "frontend",
+    "data": "data",
+    "tests": "tests",
+    "docs": "docs"
+  },
+  "exclusions": {
+    "directories": [
+      "__pycache__",
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      ".venv",
+      "venv"
+    ],
+    "files": [
+      "*.pyc",
+      "*.log",
+      "*.tmp",
+      ".env"
+    ],
+    "patterns": [
+      "test_*.py",
+      "*_test.py"
+    ]
+  },
+  "quality_thresholds": {
+    "max_file_size_mb": 2,
+    "max_lines_per_file": 500,
+    "max_function_length": 30,
+    "max_complexity": 10,
+    "min_test_coverage": 80,
+    "min_documentation_coverage": 70
+  },
+  "security_rules": {
+    "critical_patterns": [
+      "password",
+      "secret",
+      "token",
+      "api_key"
+    ],
+    "allowed_debug": [],
+    "forbidden_patterns": [
+      "eval\\s*\\(",
+      "exec\\s*\\("
+    ]
+  },
+  "project_specific": {},
+  "reporting": {
+    "format": ["json", "markdown"],
+    "include_recommendations": true,
+    "include_action_plan": false,
+    "priority_threshold": "high"
+  },
+  "custom_metrics": {}
+}
