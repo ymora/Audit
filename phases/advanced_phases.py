@@ -381,7 +381,7 @@ class AdvancedPhases:
         def execute(self) -> Dict[str, Any]:
             ai_patterns = [
                 r'tensorflow', r'pytorch', r'sklearn', r'keras',
-                r'ollama', r'openai', r'faiss', r'langchain',
+                r'openai', r'faiss', r'langchain',
                 r'numpy', r'pandas', r'scipy'
             ]
             

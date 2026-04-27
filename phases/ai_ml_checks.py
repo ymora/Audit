@@ -106,7 +106,6 @@ class AIMLChecks(BasePhase):
         """Vérifier l'intégration LLM"""
         llm_patterns = {
             'openai': r'openai',
-            'ollama': r'ollama',
             'langchain': r'langchain',
             'anthropic': r'anthropic',
             'cohere': r'cohere',
